@@ -1,17 +1,20 @@
 [tool.poetry]
-name = "ysuke-be"
+name = "src"
 version = "0.1.0"
 description = ""
 authors = ["DewaSRY <sdewa6645@gmail.com>"]
 readme = "README.md"
-packages = [{include = "ysuke_be", from = "src"}]
+packages = [{ include = "ysuke_be", from = "src" }]
 
 [tool.poetry.dependencies]
 python = "^3.12"
 fastapi = "^0.111.1"
 pyjwt = "^2.8.0"
-passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+passlib = { extras = ["bcrypt"], version = "^1.7.4" }
 sqlalchemy = "^2.0.31"
+pymysql = "^1.1.1"
+cryptography = "^43.0.0"
+annotated-types = "^0.7.0"
 
 
 [build-system]

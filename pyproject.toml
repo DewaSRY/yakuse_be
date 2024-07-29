@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "ysuke-be"
+version = "0.1.0"
+description = ""
+authors = ["DewaSRY <sdewa6645@gmail.com>"]
+readme = "README.md"
+packages = [{include = "ysuke_be", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.111.1"
+pyjwt = "^2.8.0"
+passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+sqlalchemy = "^2.0.31"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

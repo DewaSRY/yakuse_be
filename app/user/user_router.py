@@ -18,15 +18,17 @@ def create_user(user: user_dtos.UserCreateDto, db: Session = Depends(get_db)):
     """This method use to create user"""
     optional = user_services.create_user(db, user)
     if optional.error:
-        raise HTTPException(
-            status_code=HTTPStatus.CONFLICT,
-            detail="Email already Register"
-        )
+        raise optional.error
     return optional.data
 
 
-@router.get("/login")
-async def user_login(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+@router.post("/login", response_model=jwt_dto.AccessTokenDto)
+async def user_login(user: user_dtos.UserLoginPayloadDto, db: Session = Depends(get_db)):
     """use to get all users"""
-
-    return jwt_service.create_access_token()
+    user_optional = user_services.user_login(db=db, user=user)
+    if user_optional.error:
+        raise user_optional.error
+    user_ditch = dict([
+        ("user_id", user_optional.data.id)
+    ])
+    return jwt_service.create_access_token(user_ditch)

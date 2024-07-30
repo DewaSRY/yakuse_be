@@ -28,11 +28,11 @@ def protection_health_check(jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(j
     # protection_health_check
     This end pint use to parse token payload
     """
-    return {"jwt_payload": jwt_token}
+    return jwt_token
 
 
 @router.get("/token", response_model=jwt_dto.AccessTokenDto)
-def protection_health_check():
+def fake_access_token():
     """
     # protection_health_check
     this endpoint use to generate fake jwt token. the fake jwt will contain fake user id,
@@ -41,6 +41,4 @@ def protection_health_check():
     data = dict([
         ("user_id", "this is some id")
     ])
-    return {
-        "access_token": jwt_service.create_access_token(data=data)
-    }
+    return jwt_service.create_access_token(data=data)

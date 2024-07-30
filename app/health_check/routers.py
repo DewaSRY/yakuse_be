@@ -1,13 +1,7 @@
 from typing import Annotated
-from datetime import timedelta
 from fastapi import APIRouter, Depends
-
-from app.libs import jwt_lib
-
-description = """
-# Health check 
-this rout purpose is to check the health of the api
-"""
+from pydantic import BaseModel, fields
+from app.libs.jwt_lib import jwt_dto, jwt_service
 
 router = APIRouter(
     tags=["health_check"],
@@ -15,30 +9,38 @@ router = APIRouter(
 )
 
 
-@router.get("/")
+class MessageDto(BaseModel):
+    message: str
+
+
+@router.get("/", response_model=MessageDto)
 def api_health_check():
     """
-    #api_health_check
+    # api_health_check
     this function use to check the api is running
-    :return:
     """
     return {"message": "hello world"}
 
 
-@router.get("/protect")
-def protection_health_check(jwt_token: Annotated[jwt_lib.TokenData, Depends(jwt_lib.get_jwt_pyload)]):
+@router.get("/protect", response_model=jwt_dto.TokenPayLoad)
+def protection_health_check(jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)]):
     """
     # protection_health_check
-
+    This end pint use to parse token payload
     """
     return {"jwt_payload": jwt_token}
 
 
-@router.get("/token")
+@router.get("/token", response_model=jwt_dto.AccessTokenDto)
 def protection_health_check():
+    """
+    # protection_health_check
+    this endpoint use to generate fake jwt token. the fake jwt will contain fake user id,
+    because almost every end point need valid endpoint this jwt will useless
+    """
     data = dict([
         ("user_id", "this is some id")
     ])
     return {
-        "jwt_token": jwt_lib.create_access_token(data=data, expires_delta=timedelta(weeks=1))
+        "access_token": jwt_service.create_access_token(data=data)
     }

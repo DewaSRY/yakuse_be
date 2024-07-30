@@ -10,7 +10,7 @@ from .libs import sql_alchemy_lib
 app = FastAPI()
 
 app.include_router(health_check.router)
-app.include_router(user.router)
+app.include_router(user.user_router.router)
 
 app.add_middleware(
     CORSMiddleware,

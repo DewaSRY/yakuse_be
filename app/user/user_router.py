@@ -1,8 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException
 from http import HTTPStatus
 from sqlalchemy.orm import Session
+
 from app.libs.sql_alchemy_lib import get_db
-from . import services, user_dtos
+from app.libs.jwt_lib import jwt_service, jwt_dto
+
+from . import user_services, user_dtos
 
 router = APIRouter(
     prefix="/user",
@@ -10,19 +13,20 @@ router = APIRouter(
 )
 
 
-@router.post("/", response_model=user_dtos.UserDto)
+@router.post("/", response_model=user_dtos.UserCreateResponseDto)
 def create_user(user: user_dtos.UserCreateDto, db: Session = Depends(get_db)):
     """This method use to create user"""
-    db_user = services.get_user_by_email(db, email=user.email)
-    if db_user:
+    optional = user_services.create_user(db, user)
+    if optional.error:
         raise HTTPException(
             status_code=HTTPStatus.CONFLICT,
             detail="Email already Register"
         )
-    return services.create_user(db=db, user=user)
+    return optional.data
 
 
-@router.get("/login", response_model=list[user_dtos.UserDto])
+@router.get("/login")
 async def user_login(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     """use to get all users"""
-    return services.get_users(db, skip, limit)
+
+    return jwt_service.create_access_token()

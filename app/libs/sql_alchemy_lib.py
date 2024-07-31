@@ -14,7 +14,7 @@ load_dotenv()
 # engine = create_engine(
 #     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
 # )
-MYSQL_CONNECTOR = os.environ.get("SQLALCHEMY_DATABASE_URL")
+MYSQL_CONNECTOR = os.getenv("SQLALCHEMY_DATABASE_URL", "mysql+pymysql://root:password@localhost/MYDB")
 
 engine = create_engine(MYSQL_CONNECTOR)
 """

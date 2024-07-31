@@ -1,8 +1,8 @@
 import uuid
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
-from sqlalchemy.orm import relationship
 
+from sqlalchemy import Column, String
 from sqlalchemy.dialects.mysql import CHAR
+
 from app.libs import sql_alchemy_lib
 
 

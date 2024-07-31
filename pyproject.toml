@@ -14,7 +14,8 @@ sqlalchemy = "^2.0.31"
 pymysql = "^1.1.1"
 cryptography = "^43.0.0"
 annotated-types = "^0.7.0"
-passlib = {extras = ["hash"], version = "^1.7.4"}
+passlib = { extras = ["hash"], version = "^1.7.4" }
+alembic = "^1.13.2"
 
 
 [build-system]

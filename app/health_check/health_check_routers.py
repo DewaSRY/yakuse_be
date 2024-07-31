@@ -1,6 +1,8 @@
 from typing import Annotated
+
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel, fields
+
 from app.libs.jwt_lib import jwt_dto, jwt_service
 
 router = APIRouter(

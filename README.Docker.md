@@ -1,22 +1,9 @@
-### Building and running your application
+# Docker Info
 
-When you're ready, start your application by running:
-`docker compose up --build`.
+## to set up mysql on docker
 
-Your application will be available at http://localhost:8000.
-
-### Deploying your application to the cloud
-
-First, build your image, e.g.: `docker build -t myapp .`.
-If your cloud uses a different CPU architecture than your development
-machine (e.g., you are on a Mac M1 and your cloud provider is amd64),
-you'll want to build the image for that platform, e.g.:
-`docker build --platform=linux/amd64 -t myapp .`.
-
-Then, push it to your registry, e.g. `docker push myregistry.com/myapp`.
-
-Consult Docker's [getting started](https://docs.docker.com/go/get-started-sharing/)
-docs for more detail on building and pushing.
-
-### References
-* [Docker's Python guide](https://docs.docker.com/language/python/)
+1. run your local docker first.<br/>this stape make sure your docker demon running<br/>and ready to run mysql image
+2. run shel command `docker-compose up --watch -d`<br/>to make this stape works you need run the command on the work
+   directory<br/>which the docker compose file ("compose.yml")file on the root.<br/> this stape use to running the mysql
+   image on background.
+3. after all stape above you already can access the mysql database 

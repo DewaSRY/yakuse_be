@@ -1,5 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
-from http import HTTPStatus
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.libs.sql_alchemy_lib import get_db

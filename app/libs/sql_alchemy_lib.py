@@ -1,17 +1,39 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+import os
+from dotenv import load_dotenv
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app.db"
+load_dotenv()
 # DATABASE_URL = "mysql+pymysql://root:password@localhost/MYDB"
 # SQLALCHEMY_DATABASE_URL = "postgresql://user:password@postgresserver/db"
+"""
+#######################Tis use to create connection with database###########################################
+"""
+# SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app.db"
+# engine = create_engine(
+#     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+# )
+MYSQL_CONNECTOR = os.environ.get("SQLALCHEMY_DATABASE_URL")
 
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-)
+engine = create_engine(MYSQL_CONNECTOR)
+"""
+######################Tis code use to make interact with database object###################################
+######################Mostly to do manipulation to define entity of database###############################
+"""
 session_local = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
+"""
+#########################Base is abstract object use to define table on database############################
+#########################Developer will use it as abstract object to inherit################################
+"""
 Base = declarative_base()
+"""
+############################This code use to get the session, use to manipulation data######################
+############################How to use the code,should by fastapi way#######################################
+############################How to use it have something to do with dependency injection####################
+############################To understand more about the code please read de fastapi document###############
+############################Read this [https://fastapi.tiangolo.com/tutorial/sql-databases/]################
+"""
 
 
 # Dependency to get the database session

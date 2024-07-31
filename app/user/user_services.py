@@ -1,19 +1,23 @@
+from typing import Type
+
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 from fastapi import HTTPException, status
-# from sqlalchemy import
-from typing import Tuple
 
 from .user_model import UserModel
 from . import user_dtos
+
 from app.libs import password_lib
 from app.utils import optional
 
 
-def get_user(db: Session, user_id: int):
-    return (db.query(UserModel)
-            .filter(UserModel.id == user_id)
-            .first())
+def get_user(db: Session, user_id: int) -> optional.Optional[UserModel, Exception]:
+    user_model = db.query(UserModel) \
+        .filter(UserModel.id == user_id) \
+        .first()
+    if not user_model:
+        return optional.build(error=Exception("user not found"))
+    return optional.build(data=user_model)
 
 
 def get_user_by_email(db: Session, email: str) -> optional.Optional[UserModel, Exception]:
@@ -28,21 +32,21 @@ def get_user_by_email(db: Session, email: str) -> optional.Optional[UserModel, E
     ))
 
 
-def get_users(db: Session, skip: int = 0, limit: int = 100):
-    return (db.query(UserModel)
-            .offset(skip)
-            .limit(limit)
-            .all())
+def get_users(db: Session, skip: int = 0, limit: int = 100) -> list[Type[UserModel]]:
+    return db.query(UserModel) \
+        .offset(skip) \
+        .limit(limit) \
+        .all()
 
 
-def create_user(db: Session, user: user_dtos.UserCreateDto):
+def create_user(db: Session, user: user_dtos.UserCreateDto) -> optional.Optional[UserModel, Exception]:
     try:
         hashed_password = password_lib.get_password_hash(password=user.password)
-        db_user = UserModel(**user.model_dump())
-        db_user.password = hashed_password
-        db.add(db_user)
+        user_model = UserModel(**user.model_dump())
+        user_model.password = hashed_password
+        db.add(user_model)
         db.commit()
-        return optional.build(data=db_user)
+        return optional.build(data=user_model)
     except SQLAlchemyError:
         return optional.build(error=HTTPException(
             status_code=status.HTTP_409_CONFLICT,

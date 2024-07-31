@@ -1,8 +1,8 @@
-"""first version
+"""first message
 
-Revision ID: afcaf7976c26
+Revision ID: ac3d8214f35b
 Revises: 
-Create Date: 2024-07-31 10:22:27.746062
+Create Date: 2024-07-31 22:19:55.734982
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 from app.libs.sql_alchemy_lib import Base
 from sqlalchemy.dialects import mysql
 # revision identifiers, used by Alembic.
-revision: str = 'afcaf7976c26'
+revision: str = 'ac3d8214f35b'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None

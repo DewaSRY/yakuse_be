@@ -8,15 +8,17 @@ services:
       - 3306:3306
     volumes:
       - db-data:/var/lib/mysql
-  yasuke_db:
-    build: .
-    ports:
-      - 8000:8000
-    environment:
-      - SQLALCHEMY_DATABASE_URL=mysql+pymysql://root:password@localhost/MYDB
-      - PORT=8000
-    depends_on:
-      - mysqlDB
-
+#  yasuke_db:
+#    build: .
+#    ports:
+#      - 8000:8000
+#    environment:
+#      - SQLALCHEMY_DATABASE_URL=mysql+pymysql://root:password@localhost/MYDB
+#      - PORT=8000
+#    depends_on:
+#      - mysqlDB
+#    volumes:
+#      - ./app:/app  # Mount current directory to /app in the container
+#    restart: unless-stopped
 volumes:
   db-data:

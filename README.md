@@ -14,7 +14,7 @@
 
 1. first you need to install all dependency on poetry, so you need to run `poetry install --no-root`.Before downloading
    the app, please make sure your python version is correct and mathc with the version wrote on `project.toml` file.
-2. after your docker is running and the dependency already installed. run `python run.py` on your shell. it will running
+2. after your docker is running and the dependency already installed. run `python dev.py` on your shell. it will running
    the app on development mode.
 
 > if you are in development mode to run the api just run `python dev.py` on your shall. please make sure your command
@@ -41,48 +41,37 @@ app\                    #app is the name of the application directory, we use it
 ```
 
 > - **app** is the name of the application directory, we use it to organize the main code and prevent other possibility
-    when
-    > there is a need to have another grouping file for several needs.
+    when there is a need to have another grouping file for several needs.
 > - **user** is domain folder, it use for store business logic about on user domain. code every business logic on their
-    own
-    > domain is good practice, its will make the app easy to document and debug
+    own domain is good practice, its will make the app easy to document and debug
 > - **user_models** is folder for defining the sape of entity. on this case the user_model use to define user table on
-    > database. if you are wont to make new table, event it's still about user business please think to make its on it's
-    > separate domain.
+    database. if you are wont to make new table, event it's still about user business please think to make its on it's
+    separate domain.
 > - **user_dto** is folder of define object or `types`. it's necessary to reduce complexity of business logic, so the
-    code we
-    > build will more declarative, because the parameter and return value have they own unique name.
+    code we build will more declarative, because the parameter and return value have they own unique name.
 > - **user_router** is folder of end_point code. its works like dore to access business logic. while writing router
-    please
-    > make sure the code is have clean *hard code logic*, the code on router need to be clean because it's will work as
-    > document for developer, we also put swagger code on it, so it's need to have less hard logic.
+    please make sure the code is have clean *hard code logic*, the code on router need to be clean because it's will
+    work as document for developer, we also put swagger code on it, so it's need to have less hard logic.
 > - **user_service** is folder of the business logic of user, it the please we put hard business logic, like query
-    database,
-    > inserting database, handle error joining table, make a shape of object use dto object, and many other. on tis file
-    > it's oke to wrote intimidate code logic, but if its possible please wrote declarative code, the code hwo reusable
-    and
-    > easy to test.
+    database, inserting database, handle error joining table, make a shape of object use dto object, and many other. on
+    tis file it's oke to wrote intimidate code logic, but if its possible please wrote declarative code, the code hwo
+    reusable
+    and easy to test.
 > - **utils** is please to store global entity code. it's will store the helper code will use every where on code base.
-    the
-    > code wrote on this filee is an original code wrote by developer and clean from third party so make sure its easy
-    to
-    > debug, understand, test and use.
+    the code wrote on this filee is an original code wrote by developer and clean from third party so make sure its easy
+    to debug, understand, test and use.
 > - **optiona** is example of logic `Dewa wrote` the file content logic to handle uncertainty of value, which its only
-    use as
-    > return value. the optional object will store data value and en error value. so the logic will more easy to use.
+    use as return value. the optional object will store data value and en error value. so the logic will more easy to
+    use.
 > - **libs** is folder contain an adapter logic of third party usage. it's necessary to make separate logic to use
-    outside
-    > library, so the developer only focus on what they wont to use.
+    outside library, so the developer only focus on what they wont to use.
 > - **password_libs** is module of password need's, like hashing and verifying it. it's need to be separate because its
-    > dependent with third party and developer only need to focus on the purpose of use the code
+    dependent with third party and developer only need to focus on the purpose of use the code
 > - **jwt_libs** also module of jwt logic dependent third party. i build it as package ("a folder of module, every
-    folder
-    > contain `__init__` file is count as package on python"). its build as package because the logic need to jwt
-    business
-    > is quite complex. so if the code is sound confusing you can ask `Dewa for it`
+    folder contain `__init__` file is count as package on python"). its build as package because the logic need to jwt
+    business is quite complex. so if the code is sound confusing you can ask `Dewa for it`
 > - **sql_alchemy_lib** contain logic about connecting to database, `dewa` wrote several comment on the file so please
-    read
-    > it. developer will use this module alot so make sure developer understand how to use it.
+    read it. developer will use this module alot so make sure developer understand how to use it.
 
 developer should a ware the different global module name and business module name. the business domain module wrote
 without `sufix s` and global logic wrote with `sufix s`.

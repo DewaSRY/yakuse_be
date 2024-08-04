@@ -2,6 +2,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from . import user, health_check
+from .libs import sql_alchemy_lib
+
+# sql_alchemy_lib.Base.metadata.createall
 
 app = FastAPI()
 

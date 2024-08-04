@@ -4,79 +4,88 @@
 
 ...
 
-## How to run the app ?
+## Gimana cara running appnya ?
 
-> if you are in development and already running docker compose file (_read how on README.Docker.md_),make `.env` file
-> and put this variable on it `SQLALCHEMY_DATABASE_URL=mysql+pymysql://root:password@localhost/MYDB`. when you make the
-> file and
-> already wrote the variable on it please make sure to not put spase on it.
+> jika kamu ingin mendevelop app in, pastikan docker compose usdah berjalan. docker compose
+> Perlu berjalan terlebih agar app bisa mengakses mysql yg di jalankan docker.
 >
-
-1. first you need to install all dependency on poetry, so you need to run `poetry install --no-root`.Before downloading
-   the app, please make sure your python version is correct and mathc with the version wrote on `project.toml` file.
-2. after your docker is running and the dependency already installed. run `python dev.py` on your shell. it will running
-   the app on development mode.
-
-> if you are in development mode to run the api just run `python dev.py` on your shall. please make sure your command
-> line are in root directory
+> Untuk ifo lebih lanjut seputar cara menjalankan docker commpose baca file "Readme.Docker.md"
+>
+> sebelum menjalankan app plikasi pastikan sudah terdapat file `.env` dan letakan
+> variable `SQLALCHEMY_DATABASE_URL=mysql+pymysql://root:password@localhost/MYDB`.
+>
+> sekarang dowenload semua dependendcy yg dibutuhkan dengan menjalankan commad
+> `poetry install`. tetapi akan ada masalah ketika mendowenload dependendcy
+> dimana versi paython active dari developer tidak sesuai. untuk mengatasi masalah itu,
+> pastikan versi python yg sedang active sesuai
+>
+>
+> setelah docker compose sudah berjalan dan environment sudah di setup. jalankan
+> applikasi dengan `python run.py`
+>
+>
 
 ## How to develop the app ?
 
-1. first you need to understand the code structure first.
+### first you need to understand the code structure first.
 
 ```bash
-app\                    #app is the name of the application directory, we use it to organize the main code and prevent other possibility when there is a need to have another grouping file for several needs.
-    user\               #user is domain folder, it use for store business logic about on user domain. code every business logic on their own domain is good practice, its will make the app easy to document and debug
-        user_models     #user_models is folder for defining the sape of entity. on this case the user_model use to define user table on database. if you are wont to make new table, event it's still about user business please think to make its on it's separate domain.
-        user_dto        #user_dto is folder of define object or `types`. it's necessary to reduce complexity of business logic, so the code we build will more declarative, because the parameter and return value have they own unique name. 
-        user_router     #user_router is folder of end_point code. its works like dore to access business logic. while writing router please make sure the code is have clean *hard code logic*, the code on router need to be clean because it's will work as document for developer, we also put swagger code on it, so it's need to have less hard logic. 
-        user_services   #user_service is folder of the business logic of user, it the please we put hard business logic, like query database, inserting database, handle error joining table, make a shape of object use dto object, and many other. on tis file it's oke to wrote intimidate code logic, but if its possible please wrote declarative code, the code hwo reusable and easy to test.  
-    utils\              #utils is please to store global entity code. it's will store the helper code will use every where on code base. the code wrote on this filee is an original code wrote by developer and clean from third party so make sure its easy to debug, understand, test and use. 
-         optional       #optiona is example of logic `Dewa wrote` the file content logic to handle uncertainty of value, which its only use as return value. the optional object will store data value and en error value. so the logic will more easy to use.
-    libs\               #libs is folder contain an adapter logic of third party usage. it's necessary to make separate logic to use outside library, so the developer only focus on what they wont to use.  
-        password_lib    #password_libs is module of password need's, like hashing and verifying it. it's need to be separate because its dependent with third party and developer only need to focus on the purpose of use the code
-        jwt_lib         #jwt_libs also module of jwt logic dependent third party. i build it as package ("a folder of module, every folder contain `__init__` file is count as package on python"). its build as package because the logic need to jwt business is quite complex. so if the code is sound confusing you can ask `Dewa for it`
-        sql_alchemy_lib #sql_alchemy_lib contain logic about connecting to database, `dewa` wrote several comment on the file so please read it. developer will use this module alot so make sure  developer understand how to use it.
+app\                    #app is the name of the application directory
+    user\               #user is domain folder 
+        user_models     #user_models is folder for defining the sape of entity.
+        user_dto        #user_dto is folder of define object or `types`. 
+        user_router     #user_router is folder of end_point code. 
+        user_services   #user_service is folder of the business logic of user,
+    utils\              #utils is please to store global entity code.  
+         optional       #optiona is example of logic `Dewa wrote`
+    libs\               #libs is folder contain an adapter logic of third party usage. 
+        password_lib    #password_libs is module of password need's, like hashing and verifying it. 
+        jwt_lib         #jwt_libs also module of jwt logic dependent third party. 
+        sql_alchemy_lib #sql_alchemy_lib contain logic about connecting to database
     main
 ```
 
-> - **app** is the name of the application directory, we use it to organize the main code and prevent other possibility
-    when there is a need to have another grouping file for several needs.
-> - **user** is domain folder, it use for store business logic about on user domain. code every business logic on their
-    own domain is good practice, its will make the app easy to document and debug
-> - **user_models** is folder for defining the sape of entity. on this case the user_model use to define user table on
-    database. if you are wont to make new table, event it's still about user business please think to make its on it's
-    separate domain.
-> - **user_dto** is folder of define object or `types`. it's necessary to reduce complexity of business logic, so the
-    code we build will more declarative, because the parameter and return value have they own unique name.
-> - **user_router** is folder of end_point code. its works like dore to access business logic. while writing router
-    please make sure the code is have clean *hard code logic*, the code on router need to be clean because it's will
-    work as document for developer, we also put swagger code on it, so it's need to have less hard logic.
-> - **user_service** is folder of the business logic of user, it the please we put hard business logic, like query
-    database, inserting database, handle error joining table, make a shape of object use dto object, and many other. on
-    tis file it's oke to wrote intimidate code logic, but if its possible please wrote declarative code, the code hwo
-    reusable
-    and easy to test.
-> - **utils** is please to store global entity code. it's will store the helper code will use every where on code base.
-    the code wrote on this filee is an original code wrote by developer and clean from third party so make sure its easy
-    to debug, understand, test and use.
-> - **optiona** is example of logic `Dewa wrote` the file content logic to handle uncertainty of value, which its only
-    use as return value. the optional object will store data value and en error value. so the logic will more easy to
-    use.
-> - **libs** is folder contain an adapter logic of third party usage. it's necessary to make separate logic to use
-    outside library, so the developer only focus on what they wont to use.
-> - **password_libs** is module of password need's, like hashing and verifying it. it's need to be separate because its
-    dependent with third party and developer only need to focus on the purpose of use the code
-> - **jwt_libs** also module of jwt logic dependent third party. i build it as package ("a folder of module, every
-    folder contain `__init__` file is count as package on python"). its build as package because the logic need to jwt
-    business is quite complex. so if the code is sound confusing you can ask `Dewa for it`
-> - **sql_alchemy_lib** contain logic about connecting to database, `dewa` wrote several comment on the file so please
-    read it. developer will use this module alot so make sure developer understand how to use it.
+> - **app**: adalah directory utama untuk menyimpa semua logic applikasi
+>
+> - **user**: adalah sejenis domain folder. fungsinya untuk menimpan semua logic yg berkaitan
+    > dengan user. seperti authentication atau membuat connection diantara user.
+>
+> - **user_models**: adalah folder yg berisi model database yg berkaitan denga user.
+    > di saat membuat sebuah table, jika table tersebut akan memiliki bisini logic yg cukup padat.
+    > buatlah folder tersendiri untuk itu.
+>
+> - **user_dto**: adalah folder untuk menyimpan data yg terdefinisi, tujuan utamnya untuk
+    > menulis objek yg rapi utnuk di lakukan oprasi.
+>
+> - **user_router**: adalah folder untuk menyimpan end poin untuk di gunakan. saat menulis
+    endpoint logic pastikan logic yg ditulis singkat dikarnkaan folder ini juga akan
+    digunakan untuk kebutuhan documentations.
+>
+> - **user_service**: service folder adalah folder untuk menluis
+    > bussiness logic dari domain, logic di sini bisa beruap penarikan
+    > data, mutasi data dan pendaftaran data.
+> - **utils**: is tempat untuk menyimp global logic.
+>
+> - **optiona**: adalah contoh global logic yg dewa tulis.
+>
+> - **libs** adalah folder yg berisi adaptor dari logic yg
+    > mengunakan third party pada logicnya
+>
+> - **password_libs**: adalah module yg berisi logic untuk
+    > menghashing password dan mengvalidasi hashing password.
+>
+> - **jwt_libs**: adalah module untuk mebuat jwt authentication service.
+>
+> - **sql_alchemy_lib**: adalah module untuk menyimpan logic yg
+    > berkaintan dengan database
+
 
 developer should a ware the different global module name and business module name. the business domain module wrote
 without `sufix s` and global logic wrote with `sufix s`.
 
-2. to writing logic, you need to write the dependency on the top, and make sure its organize.
+### disaat menulis logic, pastikan dependency yg digunaakan tersusun
+
+rapi.
 
 ```python
 # on the top write the python standard library module.
@@ -93,10 +102,41 @@ from app.libs import password_lib
 from app.utils import optional
 ```
 
-3. to define new table, developer need to run alambic command line after it
+### membuat tabe pada database
 
-> 1. After define a table, developer should go to `migrations/env.py` file to import the table there.it's necessary so
-     the alembic will know the table developer create is exist.
-> 2. After define new table please run `alembic revision --autogenerate -m "<comit message>"`. then
-     run `alembic upgrade head`.
+> 1. buat database seuai bussnes domainnya.
+> 2. import database tersebut pada fodlder `migrations/env.py.`
+> 3. setelah mengimport table pada `migrations/env.py.`jalankan code
+     > `alembic revision --autogenerate -m "<comit message>"`. then
+     > run `alembic upgrade head`.
 
+akan ada masalah di saat anda menjalankan comment migration.
+masalah dapat di indentifikasi dengan terdapat error pada log
+pada shell. atau disaat anda melihat isi folder terbaru pada
+directory "migrations/versions" fungsi upgrade berisi pass
+
+```python
+## Contoh migration yg berhasi.
+def upgrade() -> None:
+    # ### commands auto generated by Alembic - please adjust! ###
+    op.create_table('users',
+                    sa.Column('id', mysql.CHAR(length=36), nullable=False),
+                    sa.Column('username', sa.String(length=50), nullable=True),
+                    sa.Column('email', sa.String(length=50), nullable=True),
+                    sa.Column('password', sa.String(length=100), nullable=True),
+                    sa.PrimaryKeyConstraint('id')
+                    )
+    op.create_index(op.f('ix_users_email'), 'users', ['email'], unique=True)
+    op.create_index(op.f('ix_users_id'), 'users', ['id'], unique=True)
+    op.create_index(op.f('ix_users_username'), 'users', ['username'], unique=True)
+    # ### end Alembic commands ###
+
+
+def downgrade() -> None:
+    # ### commands auto generated by Alembic - please adjust! ###
+    op.drop_index(op.f('ix_users_username'), table_name='users')
+    op.drop_index(op.f('ix_users_id'), table_name='users')
+    op.drop_index(op.f('ix_users_email'), table_name='users')
+    op.drop_table('users')
+    # ### end Alembic commands ###
+```

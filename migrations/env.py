@@ -1,5 +1,6 @@
 from pathlib import Path
 import os
+import logging
 
 from logging.config import fileConfig
 from sqlalchemy import engine_from_config
@@ -80,6 +81,9 @@ def run_migrations_online() -> None:
 # BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # config.set_main_option("sqlalchemy.url", f"sqlite:///{DB_path}")
 config.set_main_option("sqlalchemy.url", sql_alchemy_lib.MYSQL_CONNECTOR)
+logger = logging.getLogger('alembic')
+logger.info(f"Using database URL: {sql_alchemy_lib.MYSQL_CONNECTOR}")
+
 
 if context.is_offline_mode():
     run_migrations_offline()

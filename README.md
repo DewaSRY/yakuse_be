@@ -83,9 +83,7 @@ app\                    #app is the name of the application directory
 developer should a ware the different global module name and business module name. the business domain module wrote
 without `sufix s` and global logic wrote with `sufix s`.
 
-### disaat menulis logic, pastikan dependency yg digunaakan tersusun
-
-rapi.
+### disaat menulis logic, pastikan dependency yg digunaakan tersusun rapi.
 
 ```python
 # on the top write the python standard library module.

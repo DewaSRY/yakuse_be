@@ -15,6 +15,7 @@ from app.libs import sql_alchemy_lib
 ##################################################################################
 """
 from app.user.user_model import UserModel
+from app.health_check.health_check_model import HealthCheckModel
 
 """
 ##################################################################################

@@ -1,4 +1,7 @@
 # Byte-compiled / optimized / DLL files
+serviceAccountKey.json
+.env
+
 
 
 __pycache__/

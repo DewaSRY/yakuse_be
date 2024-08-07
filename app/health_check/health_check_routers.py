@@ -50,6 +50,7 @@ def fake_access_token():
 @router.post("/files")
 async def create_upload_file(file: UploadFile):
     opt_content = await create_image_service(upload_file=file, domain="health_check")
+
     if opt_content.error:
         raise opt_content.error
 

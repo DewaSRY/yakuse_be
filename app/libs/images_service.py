@@ -9,14 +9,20 @@ IMAGES_DIRECTORY = "images"
 ALLOWED_EXTENSION = [".png", ".jpg"]
 
 
+def sum(num_1: int) -> int:
+    return num_1 + 3
+
+
 async def create_image_service(upload_file: UploadFile, domain: str) -> optional.Optional:
     content = await upload_file.read()
 
     if not _is_extension_valid(file_name=upload_file.filename):
         return _raise_exception()
     image_dir = f"{IMAGES_DIRECTORY}/{domain}/{upload_file.filename}"
+
     with open(image_dir, "wb") as f:
         f.write(content)
+
     image_url = f"{os.getenv("HOST_URL", "http://127.0.0.1:8000/")}{image_dir}"
     return optional.build(data=image_url)
 

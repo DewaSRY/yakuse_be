@@ -16,7 +16,11 @@ from app.libs import sql_alchemy_lib
 """
 from app.user.user_model import UserModel
 from app.health_check.health_check_model import HealthCheckModel
-
+from app.business_category.business_category_model import BusinessCategory
+from app.business.business_model import Business
+from app.rating.rating_model import Rating
+from app.user_need.user_need_model import UserNeeds
+from app.article.article_model import Article
 """
 ##################################################################################
 #########Import all Your model Here so Alembic will know the model is exists######

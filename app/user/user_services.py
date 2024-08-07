@@ -9,6 +9,7 @@ from . import user_dtos
 
 from app.libs import password_lib
 from app.utils import optional
+from app.libs.jwt_lib import jwt_service
 
 
 def get_user(db: Session, user_id: int) -> optional.Optional[UserModel, Exception]:
@@ -42,8 +43,11 @@ def get_users(db: Session, skip: int = 0, limit: int = 100) -> list[Type[UserMod
 def create_user(db: Session, user: user_dtos.UserCreateDto) -> optional.Optional[UserModel, Exception]:
     try:
         hashed_password = password_lib.get_password_hash(password=user.password)
-        user_model = UserModel(**user.model_dump())
-        user_model.password = hashed_password
+        user_model = UserModel()
+        user_model.email = user.email
+        user_model.username = user.username
+        user_model.fullname = user.fullname
+        user_model.hash_password = hashed_password
         db.add(user_model)
         db.commit()
         return optional.build(data=user_model)
@@ -56,12 +60,23 @@ def create_user(db: Session, user: user_dtos.UserCreateDto) -> optional.Optional
 
 def user_login(db: Session, user: user_dtos.UserLoginPayloadDto) -> optional.Optional[UserModel, Exception]:
     user_optional = get_user_by_email(db, user.email)
+    user_mode = user_optional.data
+
     if user_optional.error:
         print("check get email")
         return user_optional
-    if not password_lib.verify_password(plain_password=user.password, hashed_password=user_optional.data.password):
+
+    if not password_lib.verify_password(plain_password=user.password,
+                                        hashed_password=user_mode.hash_password):
         return optional.build(error=HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="password not match"
         ))
     return user_optional
+
+
+def service_access_token(user_id: str):
+    user_ditch = dict([
+        ("id", user_id.id)
+    ])
+    return jwt_service.create_access_token(user_ditch)

@@ -13,7 +13,9 @@ class Business(sql_alchemy_lib.Base):
     description = Column(Text)
     photo_url = Column(String(255))
     location = Column(Text)
-    created_at = Column(DateTime(timezone=True), server_default=func.now()) 
+    contact = Column(CHAR(36))
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
     fk_business_category_id = Column(Integer, ForeignKey('business_category.id'))
     fk_owner_id = Column(CHAR(36), ForeignKey('users.id'))

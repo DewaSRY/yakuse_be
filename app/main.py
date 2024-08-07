@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from . import user, health_check
+from . import user, health_check, business
 from .libs import sql_alchemy_lib
 
 from fastapi.staticfiles import StaticFiles
@@ -10,6 +10,7 @@ from fastapi.staticfiles import StaticFiles
 This user to auto create all table
 Dewa Wont to change database to use SQLite along development
 """
+
 """
 INIT ALL Database Here
 """
@@ -28,6 +29,7 @@ app = FastAPI()
 
 app.include_router(health_check.router)
 app.include_router(user.user_router.router)
+app.include_router(business.business_router.router)
 
 app.add_middleware(
     CORSMiddleware,
@@ -38,3 +40,7 @@ app.add_middleware(
 )
 
 app.mount("/images", StaticFiles(directory="images"), name="images")
+
+"""
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijg0NzdiZWJhLWM4ZjQtNGVkZi1iN2NlLTUzZTQ3NGFlMmFlMiIsImV4cCI6MTcyMzY0Njk4Nn0.y973u9V7QBjqmL7tbakHYPHPMSEllCOjFKlsL4ghSVs
+"""

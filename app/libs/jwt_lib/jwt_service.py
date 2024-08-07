@@ -27,7 +27,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None) -> A
 async def get_jwt_pyload(token: Annotated[HTTPAuthorizationCredentials, Depends(bare_token)]) -> TokenPayLoad:
     try:
         payload = jwt.decode(jwt=token.credentials, key=SECRET_KEY, algorithms=[ALGORITHM])
-        return TokenPayLoad(user_id=payload.get("user_id"))
+        return TokenPayLoad(id=payload.get("id"))
     except InvalidTokenError as e:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

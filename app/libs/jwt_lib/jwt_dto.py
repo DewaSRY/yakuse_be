@@ -6,4 +6,4 @@ class AccessTokenDto(BaseModel):
 
 
 class TokenPayLoad(BaseModel):
-    user_id: str
+    id: str

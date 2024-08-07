@@ -11,8 +11,6 @@ from . import user_services, user_dtos
 
 load_dotenv()
 
-# login firebase admin
-
 cred = credentials.Certificate(os.getenv('JSON_CONFIG'))
 initialize_app(cred)
 
@@ -34,10 +32,7 @@ async def user_login(user: user_dtos.UserLoginPayloadDto, db: Session = Depends(
     user_optional = user_services.user_login(db=db, user=user)
     if user_optional.error:
         raise user_optional.error
-    user_ditch = dict([
-        ("user_id", user_optional.data.id)
-    ])
-    return jwt_service.create_access_token(user_ditch)
+    return user_services.service_access_token(user_optional.data.id)
 
 
 @router.post("/login/firebase", response_model=jwt_dto.AccessTokenDto)
@@ -58,9 +53,6 @@ async def firebase_login(data: user_dtos.FirebaseLoginDto, db: Session = Depends
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
         """token creation"""
-        user_ditch = dict([
-            ("user_id", user_optional.data.id)
-        ])
-        return jwt_service.create_access_token(user_ditch)
+        return user_services.service_access_token(user_optional.data.id)
     except auth.AuthError as e:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token")

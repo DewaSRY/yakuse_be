@@ -5,6 +5,7 @@ class UserCreateDto(BaseModel):
     username: str
     email: str
     password: str
+    fullname: str
 
 
 class UserCreateResponseDto(BaseModel):

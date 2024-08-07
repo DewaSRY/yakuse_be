@@ -8,6 +8,11 @@ class Optional[DataType, ErrorTypes]:
     data: DataType | None = None
     error: ErrorTypes | None = None
 
+    def unwrap(self):
+        if self.error:
+            raise self.error
+        return self.data
+
 
 def build(data: DataType = None, error: ErrorTypes = None):
     obj = Optional[DataType, ErrorTypes]()

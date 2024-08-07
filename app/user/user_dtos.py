@@ -16,5 +16,6 @@ class UserLoginPayloadDto(BaseModel):
     email: str
     password: str
 
+
 class FirebaseLoginDto(BaseModel):
     id_token: str

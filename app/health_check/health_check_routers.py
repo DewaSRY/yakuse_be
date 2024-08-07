@@ -1,9 +1,10 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, File, UploadFile
 from pydantic import BaseModel, fields
 
 from app.libs.jwt_lib import jwt_dto, jwt_service
+from app.libs.images_service import create_image_service
 
 router = APIRouter(
     tags=["health_check"],
@@ -44,3 +45,12 @@ def fake_access_token():
         ("user_id", "this is some id")
     ])
     return jwt_service.create_access_token(data=data)
+
+
+@router.post("/files")
+async def create_upload_file(file: UploadFile):
+    opt_content = await create_image_service(upload_file=file, domain="health_check")
+    if opt_content.error:
+        raise opt_content.error
+
+    return {"filename": opt_content.data}

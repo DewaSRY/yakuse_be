@@ -1,16 +1,7 @@
 from typing import Annotated
 
-from typing import Annotated
-
-from fastapi import APIRouter, Depends, File, UploadFile
-from pydantic import BaseModel, fields
-
-from app.libs.jwt_lib import jwt_dto, jwt_service
-from app.libs.images_service import create_image_service
-
 from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, File, UploadFile
-from pydantic import BaseModel, fields
 
 from app.libs.sql_alchemy_lib import get_db
 from app.libs.jwt_lib import jwt_dto, jwt_service

@@ -8,15 +8,15 @@ load_dotenv()
 # DATABASE_URL = "mysql+pymysql://root:password@localhost/MYDB"
 # SQLALCHEMY_DATABASE_URL = "postgresql://user:password@postgresserver/db"
 """
-#######################Tis use to create connection with database###########################################
+#######################This use to create connection with database###########################################
 """
-# SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app.db"
-# engine = create_engine(
-#     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-# )
-MYSQL_CONNECTOR = os.getenv("SQLALCHEMY_DATABASE_URL", "mysql+pymysql://root:password@localhost/MYDB")
+SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app.db"
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+)
 
-engine = create_engine(MYSQL_CONNECTOR)
+# MYSQL_CONNECTOR = os.getenv("SQLALCHEMY_DATABASE_URL", "mysql+pymysql://root:password@localhost/MYDB")
+# engine = create_engine(MYSQL_CONNECTOR)
 """
 ######################Tis code use to make interact with database object###################################
 ######################Mostly to do manipulation to define entity of database###############################

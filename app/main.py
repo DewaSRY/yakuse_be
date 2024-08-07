@@ -4,7 +4,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from . import user, health_check
 from .libs import sql_alchemy_lib
 
-# sql_alchemy_lib.Base.metadata.createall
+from fastapi.staticfiles import StaticFiles
+
+"""
+This user to auto create all table
+Dewa Wont to change database to use SQLite along development
+"""
+sql_alchemy_lib.Base \
+    .metadata.create_all(bind=sql_alchemy_lib.engine)
 
 app = FastAPI()
 
@@ -18,3 +25,5 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.mount("/images", StaticFiles(directory="images"), name="images")

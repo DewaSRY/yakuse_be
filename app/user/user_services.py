@@ -1,6 +1,7 @@
 from typing import Type
 from urllib import request
 
+from sqlalchemy import update
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 from fastapi import HTTPException, status
@@ -10,7 +11,7 @@ from . import user_dtos
 
 from app.libs import password_lib
 from app.utils import optional
-from app.libs.jwt_lib import jwt_service
+from app.libs.jwt_lib import jwt_dto, jwt_service
 
 
 def get_user(db: Session, user_id: str) -> optional.Optional[UserModel, Exception]:
@@ -93,45 +94,26 @@ def get_user_profile(db: Session, user_id: str) -> optional.Optional[UserModel, 
         return data
 
 # user-edit
-def user_edit(db: Session, user:user_dtos.UserEditProfileDto, user_id:str):
+def user_edit(db: Session, user: user_dtos.UserEditProfileDto, user_id:str)-> optional.Optional[UserModel, Exception]:
     try:
-        user_model = db.query(UserModel).filter(UserModel.id == user_id).first()
-        if not user_model:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="User not found"
-            )
-
-        user_model.email = request.form.get('email', user.email)
-        user_model.username = request.form.get('username', user.username)
-        user_model.fullname = request.form.get ('fullname', user.fullname)
-        user_model.phone = request.form.get('phone', user.phone)
-        user_model.about_me = request.form.get('about_me', user.about_me)
-        
-        db.session.commit()
-        response_data = {
-           "fullname" : user_model.fullname,
-           "username" : user_model.username,
-           "email" : user_model.email,
-           "password" : user_model.hash_password,
-           "created_at" : user_model.created_at,
-           "updated_at": user_model.updated_at
-        }
-        return optional.build(data=response_data)
-    
-    except SQLAlchemyError:
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="Conflict occurred while updating user profile"
+        edit_profile = update(UserModel).where(UserModel.id == user_id).values(
+            email = user.email,
+            username = user.username,
+            fullname = user.fullname,
+            phone=user.phone,
+            about_me=user.about_me
         )
-
-            # required_fields = ['phone', 'address', 'about_me']
-            # for field in required_fields:
-            #     if field not in data:
-            #         setattr(user, field, data[field])
-
-            # db.session.commit()
-            # response_data = user.as_dict()
+        
+        db.execute(edit_profile)
+        db.commit()
+        
+        db_user = db.query(UserModel).filter(UserModel.id == user_id).first()
+        if db_user:
+            return db_user
+    
+    except SQLAlchemyError as e:
+        db.rollback()  # Rollback transaksi jika terjadi error
+        raise Exception(f"Database error occurred: {str(e)}")
 
 # user-token
 def service_access_token(user_id: str):
@@ -139,3 +121,12 @@ def service_access_token(user_id: str):
         ("id", user_id)
     ])
     return jwt_service.create_access_token(user_ditch)
+
+
+# async def get_jwt_pyload():
+#     # Mock function to simulate JWT payload retrieval
+#     return jwt_dto.TokenPayLoad(id="user_id_example")
+
+# async def get_db():
+#     # Mock function to simulate database session
+#     pass

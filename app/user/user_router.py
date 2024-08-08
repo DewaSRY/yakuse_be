@@ -44,7 +44,7 @@ async def get_user_profile_by_id(
     return user_services.get_user_profile(db, jwt_token.id)
     # return {"message":"hello world"}
 
-@router.put("/edit", response_model=user_dtos.UserEditProfileDto)
+@router.put("/edit", response_model=user_dtos.UserCreateResponseDto)
 async def update_user_profile(
     user: user_dtos.UserEditProfileDto,
     jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],

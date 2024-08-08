@@ -28,21 +28,21 @@ router = APIRouter(
 @router.post("/", response_model=business_dtos.BusinessCreateDto)
 def create_business(
         business: business_dtos.BusinessCreateDto,
-        jwt_toke: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
+        jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
         db: Session = Depends(get_db),
 ):
-    return business_services.create_business(db, business, jwt_toke.id).unwrap()
+    return business_services.create_business(db, business, jwt_token.id).unwrap()
 
 
 @router.get("/", response_model=list[business_dtos.BusinessResponse])
 def get_all_business(
-        jwt_toke: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
+        jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
         db: Session = Depends(get_db)):
-    return business_services.get_business_by_user_id(db, jwt_toke.id)
+    return business_services.get_business_by_user_id(db, jwt_token.id)
 
 
 @router.get("/public", response_model=list[business_dtos.BusinessResponse])
 def get_all_public_business(
-        jwt_toke: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
+        jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
         db: Session = Depends(get_db)):
     return business_services.get_business(db)

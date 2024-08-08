@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from pydantic import BaseModel
 
 
@@ -7,6 +9,32 @@ class UserCreateDto(BaseModel):
     password: str
     fullname: str
 
+class UserEditProfileDto(BaseModel):
+    username: str
+    email: str
+    fullname: str
+    phone: str
+    address: str
+    about_me: str
+
+class UserGetProfileDto(BaseModel):
+    id: str
+    fullname: str
+    username: str
+    email: str
+    password: str
+    phone: str
+    about_me: str
+    created_at: datetime
+    updated_at: datetime
+
+class UserGetProfilTestDto(BaseModel):
+    username: str
+    email: str
+    password: str
+    fullname: str
+    created_at: datetime
+    updated_at: datetime
 
 class UserCreateResponseDto(BaseModel):
     username: str

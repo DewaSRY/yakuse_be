@@ -10,11 +10,11 @@ class UserCreateDto(BaseModel):
     fullname: str
 
 class UserEditProfileDto(BaseModel):
-    username: str
-    email: str
-    fullname: str
     phone: str
-    address: str
+    about_me: str
+
+class UserEditResponseDto(BaseModel):
+    phone: str
     about_me: str
 
 class UserGetProfileDto(BaseModel):

@@ -96,24 +96,29 @@ def get_user_profile(db: Session, user_id: str) -> optional.Optional[UserModel, 
 # user-edit
 def user_edit(db: Session, user: user_dtos.UserEditProfileDto, user_id:str)-> optional.Optional[UserModel, Exception]:
     try:
-        edit_profile = update(UserModel).where(UserModel.id == user_id).values(
-            email = user.email,
-            username = user.username,
-            fullname = user.fullname,
-            phone=user.phone,
-            about_me=user.about_me
-        )
-        
-        db.execute(edit_profile)
-        db.commit()
-        
-        db_user = db.query(UserModel).filter(UserModel.id == user_id).first()
-        if db_user:
-            return db_user
-    
+        user_model = db.query(UserModel).filter(UserModel.id == user_id).first()
+
+        if user_model:
+            # Data user sudah diisi dari request body melalui parameter 'user'
+            for field, value in user.dict().items():
+                setattr(user_model, field, value)
+
+            db.commit()
+            db.refresh(user_model)
+
+            # response_data = {
+            #     "phone": user_model.phone,
+            #     "about_me": user_model.about_me
+            # }
+
+            return user_model
+            
+        else:
+            raise HTTPException(status_code=404, detail="User not found")
+
     except SQLAlchemyError as e:
-        db.rollback()  # Rollback transaksi jika terjadi error
-        raise Exception(f"Database error occurred: {str(e)}")
+        db.rollback()
+        raise HTTPException(status_code=409, detail="Database conflict: " + str(e))
 
 # user-token
 def service_access_token(user_id: str):
@@ -130,3 +135,19 @@ def service_access_token(user_id: str):
 # async def get_db():
 #     # Mock function to simulate database session
 #     pass
+
+
+        # edit_profile = update(UserModel).where(UserModel.id == user_id).values(
+        #     email = user.email,
+        #     username = user.username,
+        #     fullname = user.fullname,
+        #     phone=user.phone,
+        #     about_me=user.about_me
+        # )
+        
+        # db.execute(edit_profile)
+        # db.commit()
+        
+        # db_user = db.query(UserModel).filter(UserModel.id == user_id).first()
+        # if db_user:
+        #     return db_user

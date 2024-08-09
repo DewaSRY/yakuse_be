@@ -15,5 +15,6 @@ class UserModel(sql_alchemy_lib.Base):
     hash_password = Column(String(100))
     phone = Column(String(50), unique=True, index=True)
     about_me = Column(Text)
+    image_url = Column(Text)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())

@@ -9,13 +9,16 @@ class UserCreateDto(BaseModel):
     password: str
     fullname: str
 
+
 class UserEditProfileDto(BaseModel):
     phone: str
     about_me: str
 
+
 class UserEditResponseDto(BaseModel):
     phone: str
     about_me: str
+
 
 class UserGetProfileDto(BaseModel):
     id: str
@@ -28,6 +31,7 @@ class UserGetProfileDto(BaseModel):
     created_at: datetime
     updated_at: datetime
 
+
 class UserGetProfilTestDto(BaseModel):
     username: str
     email: str
@@ -35,6 +39,7 @@ class UserGetProfilTestDto(BaseModel):
     fullname: str
     created_at: datetime
     updated_at: datetime
+
 
 class UserCreateResponseDto(BaseModel):
     username: str

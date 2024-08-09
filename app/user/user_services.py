@@ -41,6 +41,7 @@ def get_users(db: Session, skip: int = 0, limit: int = 100) -> list[Type[UserMod
         .limit(limit) \
         .all()
 
+
 # user-register
 def create_user(db: Session, user: user_dtos.UserCreateDto) -> optional.Optional[UserModel, Exception]:
     try:
@@ -59,6 +60,7 @@ def create_user(db: Session, user: user_dtos.UserCreateDto) -> optional.Optional
             detail="Email already Register"
         ))
 
+
 # user-login
 def user_login(db: Session, user: user_dtos.UserLoginPayloadDto) -> optional.Optional[UserModel, Exception]:
     user_optional = get_user_by_email(db, user.email)
@@ -76,49 +78,57 @@ def user_login(db: Session, user: user_dtos.UserLoginPayloadDto) -> optional.Opt
         ))
     return user_optional
 
+
 # user-profile
 def get_user_profile(db: Session, user_id: str) -> optional.Optional[UserModel, Exception]:
-        user_model = db.query(UserModel).filter(UserModel.id == user_id).first()
-        if not user_model:
-            return optional.build(error=Exception("user not found"))
-        
-        data = {
-           "fullname" : user_model.fullname,
-           "username" : user_model.username,
-           "email" : user_model.email,
-           "password" : user_model.hash_password,
-           "created_at" : user_model.created_at,
-           "updated_at": user_model.updated_at
-        }
+    user_model = db.query(UserModel).filter(UserModel.id == user_id).first()
+    if not user_model:
+        return optional.build(error=Exception("user not found"))
 
-        return data
+    data = {
+        "fullname": user_model.fullname,
+        "username": user_model.username,
+        "email": user_model.email,
+        "password": user_model.hash_password,
+        "created_at": user_model.created_at,
+        "updated_at": user_model.updated_at
+    }
+
+    return data
+
+
+"""
+Source of how to edit user model [https://stackoverflow.com/questions/63143731/update-sqlalchemy-orm-existing-model-from-posted-pydantic-model-in-fastapi]
+"""
+
 
 # user-edit
-def user_edit(db: Session, user: user_dtos.UserEditProfileDto, user_id:str)-> optional.Optional[UserModel, Exception]:
+def user_edit(db: Session, user_update: user_dtos.UserEditProfileDto,
+              user_id: str) -> optional.Optional[UserModel, Exception]:
     try:
-        user_model = db.query(UserModel).filter(UserModel.id == user_id).first()
+        # find user from database, if not found return None
+        user_model = db.query(UserModel) \
+            .filter(UserModel.id == user_id) \
+            .one_or_none()
+        # if user mode is None return optional error
+        if user_model is None:
+            return optional.build(error=HTTPException(
+                status_code=404, detail="User not found"))  # user not found
 
-        if user_model:
-            # Data user sudah diisi dari request body melalui parameter 'user'
-            for field, value in user.dict().items():
+        for field, value in vars(user_update).items():
+            if value is not None:
                 setattr(user_model, field, value)
 
-            db.commit()
-            db.refresh(user_model)
-
-            # response_data = {
-            #     "phone": user_model.phone,
-            #     "about_me": user_model.about_me
-            # }
-
-            return user_model
-            
-        else:
-            raise HTTPException(status_code=404, detail="User not found")
+        db.commit()
+        db.refresh(user_model)
+        return optional.build(data=user_model)
 
     except SQLAlchemyError as e:
         db.rollback()
-        raise HTTPException(status_code=409, detail="Database conflict: " + str(e))
+        raise optional.build(
+            error=HTTPException(
+                status_code=409, detail="Database conflict: " + str(e)))
+
 
 # user-token
 def service_access_token(user_id: str):
@@ -126,7 +136,6 @@ def service_access_token(user_id: str):
         ("id", user_id)
     ])
     return jwt_service.create_access_token(user_ditch)
-
 
 # async def get_jwt_pyload():
 #     # Mock function to simulate JWT payload retrieval
@@ -137,17 +146,17 @@ def service_access_token(user_id: str):
 #     pass
 
 
-        # edit_profile = update(UserModel).where(UserModel.id == user_id).values(
-        #     email = user.email,
-        #     username = user.username,
-        #     fullname = user.fullname,
-        #     phone=user.phone,
-        #     about_me=user.about_me
-        # )
-        
-        # db.execute(edit_profile)
-        # db.commit()
-        
-        # db_user = db.query(UserModel).filter(UserModel.id == user_id).first()
-        # if db_user:
-        #     return db_user
+# edit_profile = update(UserModel).where(UserModel.id == user_id).values(
+#     email = user.email,
+#     username = user.username,
+#     fullname = user.fullname,
+#     phone=user.phone,
+#     about_me=user.about_me
+# )
+
+# db.execute(edit_profile)
+# db.commit()
+
+# db_user = db.query(UserModel).filter(UserModel.id == user_id).first()
+# if db_user:
+#     return db_user

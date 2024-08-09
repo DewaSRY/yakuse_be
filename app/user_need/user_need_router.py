@@ -36,3 +36,7 @@ def get_all_public_user_need(
     db: Session = Depends(get_db)
 ):
     return get_user_need_service(db)
+
+@router.delete("/")
+def delete_to_hide_user_need():
+    '''as a user, user can make their needs to be hide in public'''

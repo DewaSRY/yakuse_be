@@ -8,6 +8,7 @@ class ArticleCreateDto(BaseModel):
     image_url: str
 
 class ArticleResponseDto(BaseModel):
+    id: str
     title: str
     description: str
     image_url: str

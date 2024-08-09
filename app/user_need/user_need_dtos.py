@@ -12,6 +12,7 @@ class UserNeedUpdateDto(BaseModel):
     is_visible: bool
 
 class UserNeedResponseDto(BaseModel):
+    id: int
     title: str
     description: str
     is_visible: bool

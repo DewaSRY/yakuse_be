@@ -1,3 +1,4 @@
+from typing import Optional
 from datetime import datetime
 
 from pydantic import BaseModel
@@ -36,13 +37,15 @@ class UserGetProfileDto(BaseModel):
     created_at: datetime
     updated_at: datetime
 class UserGetProfilTestDto(BaseModel):
+    id: str
     username: str
     email: str
     password: str
     fullname: str
-    phone: str
-    address: str
-    about_me: str
+    phone: Optional[str] = None
+    address: Optional[str] = None
+    photo_url: Optional[str] = None
+    about_me: Optional[str] = None
     created_at: datetime
     updated_at: datetime
 

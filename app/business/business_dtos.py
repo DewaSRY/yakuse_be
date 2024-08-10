@@ -9,11 +9,12 @@ class BusinessCreateDto(BaseModel):
     description: str
     location: str
     contact: str
-
+    fk_business_category_id: int
 class BusinessPhotoProfileDto(BaseModel):
     photo_url: str
 
 class BusinessResponse(BaseModel):
+    id: str
     name: str
     description: str
     photo_url: Optional[str] = None
@@ -21,13 +22,17 @@ class BusinessResponse(BaseModel):
     contact: str
     created_at: datetime
     updated_at: datetime
+    category: Optional[str] = None
+    owner: Optional[str] = None
+    rating: Optional[int] = None
 
 class BusinessAllPost(BaseModel):
     id: str
     name: str
-    photo_url: Optional[str] = None    
-    rating: Optional[int] = None
-    category: Optional[str] = None
+    description: str
+    photo_url: Optional[str] = None
+    location: str
+    contact: str
     created_at: datetime
     updated_at: datetime
 

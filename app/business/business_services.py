@@ -7,6 +7,7 @@ from fastapi import HTTPException, UploadFile, status
 
 from app.business_category.business_category_model import BusinessCategory
 from app.libs.images_service import create_image_service
+from app.user.user_model import UserModel
 
 from . import business_dtos
 from .business_model import Business
@@ -75,7 +76,7 @@ def business_edit(db: Session, business: business_dtos.BusinessEdiDto, user_id:s
         raise optional.build(error=HTTPException(status_code=409, detail="Database conflict: " + str(e)))
 
 
-def get_business(db: Session, skip: int = 0, limit: int = 100) -> list[Type[Business]]:
+def get_all_business(db: Session, skip: int = 0, limit: int = 100)-> list[Type[Business]]:
     return db.query(Business) \
         .offset(skip) \
         .limit(limit) \
@@ -112,22 +113,47 @@ def get_businesses_with_testing(db: Session, skip: int = 0, limit: int = 100):
         .limit(limit) \
         .all()
 
-def get_businesses_by_user_id_with_testing(db: Session, user_id:str, skip: int = 0, limit: int = 100):
+def get_businesses_by_user_login_with_testing(db: Session, user_id:str, skip: int = 0, limit: int = 100):
     return db.query(
             Business.id, 
             Business.name,
-            Business.photo_url, 
+            Business.photo_url,
+            Business.contact,
+            Business.location,
+            Business.description, 
             Business.created_at,
             Business.updated_at,
-            BusinessCategory.name.label('category')
+            BusinessCategory.name.label('category'),
+            UserModel.fullname.label('owner'),
+            func.avg(Rating.rating_count).label('rating')
         ) \
         .join(BusinessCategory, Business.fk_business_category_id == BusinessCategory.id) \
+        .join(UserModel, Business.fk_owner_id == UserModel.id) \
+        .join(Rating, Rating.fk_business_id == Business.id) \
         .filter(Business.fk_owner_id == user_id).order_by(Business.updated_at) \
         .offset(skip) \
         .limit(limit) \
         .all()
 
-
+# detail-business-by-uuid
+def get_businesses_by_user_id(db: Session, user_id: str):
+    # Pastikan user_id diperlakukan sebagai string
+    business_models = db.query(
+            Business.id, 
+            Business.name,
+            Business.photo_url,
+            Business.contact,
+            Business.location,
+            Business.description, 
+            Business.created_at,
+            Business.updated_at,
+            BusinessCategory.name.label('category'),
+            UserModel.fullname.label('owner')
+        )\
+        .join(BusinessCategory, Business.fk_business_category_id == BusinessCategory.id) \
+        .join(UserModel, Business.fk_owner_id == UserModel.id) \
+        .filter(Business.fk_owner_id == user_id).all()
+    return business_models
 
 
 # def get_businesses_with_category_and_rating(db: Session, skip: int = 0, limit: int = 100):

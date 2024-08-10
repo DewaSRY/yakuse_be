@@ -44,16 +44,25 @@ async def update_business_profile(
     """This method use to update user profile"""
     return business_services.business_edit(db, business, jwt_token.id).unwrap()
 
+# get-detail-business-by-user-uuid
+@router.get("/{user_id}", response_model=list[business_dtos.BusinessResponse])
+def get_detail_business_by_id(
+        user_id: str,
+        jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
+        db: Session = Depends(get_db)):
+    return business_services.get_businesses_by_user_id(db, user_id)
+
+
 # get-all-business-by-login-user-id
-@router.get("/", response_model=list[business_dtos.BusinessAllPost])
+@router.get("/my_business", response_model=list[business_dtos.BusinessResponse])
 def get_all_business(
         jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
         db: Session = Depends(get_db)):
-    return business_services.get_businesses_by_user_id_with_testing(db, jwt_token.id)
+    return business_services.get_businesses_by_user_login_with_testing(db, jwt_token.id)
 
 # get-all-business-public
-@router.get("/public", response_model=list[business_dtos.BusinessAllPostTest])
+@router.get("/", response_model=list[business_dtos.BusinessAllPost])
 def get_all_public_business(
         jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
         db: Session = Depends(get_db)):
-    return business_services.get_businesses_with_testing(db)
+    return business_services.get_all_business(db)

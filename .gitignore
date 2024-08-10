@@ -8,6 +8,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+sql_app.db
 
 
 # Byte-compiled / optimized / DLL files

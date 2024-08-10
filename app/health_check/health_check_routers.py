@@ -47,7 +47,7 @@ def fake_access_token():
     return jwt_service.create_access_token(data=data)
 
 
-@router.post("/files")
+@router.put("/files")
 async def create_upload_file(file: UploadFile):
     opt_content = await create_image_service(upload_file=file, domain="health_check")
 

@@ -2,6 +2,7 @@ import uuid
 
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Text, func
 from sqlalchemy.dialects.mysql import CHAR
+from sqlalchemy.orm import relationship, backref
 
 from app.libs import sql_alchemy_lib
 
@@ -19,3 +20,9 @@ class Business(sql_alchemy_lib.Base):
 
     fk_business_category_id = Column(Integer, ForeignKey('business_category.id'))
     fk_owner_id = Column(CHAR(36), ForeignKey('users.id'))
+
+    # Relationship to Rating
+    ratings = relationship("Rating", back_populates="business")
+
+    # New relationship to BusinessCategory
+    business_category = relationship("BusinessCategory", backref=backref("business", lazy=True))

@@ -15,7 +15,7 @@ router = APIRouter(
     prefix="/business",
 )
 
-
+# create-bisnis
 @router.post("/", response_model=business_dtos.BusinessCreateDto)
 def create_business(
         business: business_dtos.BusinessCreateDto,
@@ -24,16 +24,36 @@ def create_business(
 ):
     return business_services.create_business(db, business, jwt_token.id).unwrap()
 
+# upload-photo-business
+@router.post("/post_photo", response_model=business_dtos.BusinessPhotoProfileDto)
+async def upload_photo_business(
+    file: UploadFile = File(...),  # Untuk menerima file upload
+    jwt_token: jwt_dto.TokenPayLoad = Depends(jwt_service.get_jwt_pyload),
+    db: Session = Depends(get_db)
+):
+    """This Method use to upload and update the photo profile of a business"""
+    business = await business_services.upload_photo_business(db, jwt_token.id, file)
+    return business_dtos.BusinessPhotoProfileDto(photo_url=business.photo_url)
 
-@router.get("/", response_model=list[business_dtos.BusinessResponse])
+# edit-profile-business
+@router.put("/edit", response_model=business_dtos.BusinessEdiDto)
+async def update_business_profile(
+        business: business_dtos.BusinessEdiDto,
+        jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
+        db: Session = Depends(get_db)):
+    """This method use to update user profile"""
+    return business_services.business_edit(db, business, jwt_token.id).unwrap()
+
+# get-all-business-by-login-user-id
+@router.get("/", response_model=list[business_dtos.BusinessAllPost])
 def get_all_business(
         jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
         db: Session = Depends(get_db)):
-    return business_services.get_business_by_user_id(db, jwt_token.id)
+    return business_services.get_businesses_with_category_and_rating_by_user_id(db, jwt_token.id)
 
-
-@router.get("/public", response_model=list[business_dtos.BusinessResponse])
+# get-all-business-public
+@router.get("/public", response_model=list[business_dtos.BusinessAllPostTest])
 def get_all_public_business(
         jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
         db: Session = Depends(get_db)):
-    return business_services.get_business(db)
+    return business_services.get_businesses_with_testing(db)

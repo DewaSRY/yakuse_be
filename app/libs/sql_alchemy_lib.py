@@ -1,22 +1,30 @@
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy import Engine
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
-# DATABASE_URL = "mysql+pymysql://root:password@localhost/MYDB"
-# SQLALCHEMY_DATABASE_URL = "postgresql://user:password@postgresserver/db"
 """
 #######################This use to create connection with database###########################################
 """
-SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app.db"
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-)
+APP_DEVELOPMENT = os.getenv("APP_DEVELOPMENT", True)
+engine: Engine
+if APP_DEVELOPMENT:
+    SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app.db"
+    IS_TESTING = bool(os.getenv("IS_TESTING", "False"))
 
-# MYSQL_CONNECTOR = os.getenv("SQLALCHEMY_DATABASE_URL", "mysql+pymysql://root:password@localhost/MYDB")
-# engine = create_engine(MYSQL_CONNECTOR)
+    if IS_TESTING:
+        SQLALCHEMY_DATABASE_URL = "sqlite:///./test_app.db"
+
+    engine = create_engine(
+        SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+    )
+else:
+    # letter we will use postgrest for easier service
+    MYSQL_CONNECTOR = os.getenv("SQLALCHEMY_DATABASE_URL", "mysql+pymysql://root:password@localhost/MYDB")
+    engine = create_engine(MYSQL_CONNECTOR)
+
 """
 ######################Tis code use to make interact with database object###################################
 ######################Mostly to do manipulation to define entity of database###############################

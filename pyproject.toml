@@ -21,6 +21,9 @@ firebase-admin = "^6.5.0"
 python-multipart = "^0.0.9"
 
 
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.2"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"

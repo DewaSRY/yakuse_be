@@ -21,7 +21,9 @@ def get_user(db: Session, user_id: str) -> optional.Optional[UserModel, Exceptio
         .filter(UserModel.id == user_id) \
         .first()
     if not user_model:
-        return optional.build(error=Exception("user not found"))
+        return optional.build(error=HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"))
+    
     return optional.build(data=user_model)
 
 
@@ -43,6 +45,7 @@ def get_users(db: Session, skip: int = 0, limit: int = 100) -> list[Type[UserMod
         .limit(limit) \
         .all()
 
+
 # user-register
 def create_user(db: Session, user: user_dtos.UserCreateDto) -> optional.Optional[UserModel, Exception]:
     try:
@@ -61,6 +64,7 @@ def create_user(db: Session, user: user_dtos.UserCreateDto) -> optional.Optional
             detail="Email already Register"
         ))
 
+
 # user-login
 def user_login(db: Session, user: user_dtos.UserLoginPayloadDto) -> optional.Optional[UserModel, Exception]:
     user_optional = get_user_by_email(db, user.email)
@@ -78,8 +82,10 @@ def user_login(db: Session, user: user_dtos.UserLoginPayloadDto) -> optional.Opt
         ))
     return user_optional
 
+
 # user-profile
 def get_user_profile(db: Session, user_id: str) -> optional.Optional[UserModel, Exception]:
+  try:
         user_model = db.query(UserModel).filter(UserModel.id == user_id).first()
         if not user_model:
             return optional.build(error=Exception("user not found"))
@@ -99,9 +105,14 @@ def get_user_profile(db: Session, user_id: str) -> optional.Optional[UserModel, 
         }
 
         return optional.build(data=response_data)
+      
+   except SQLAlchemyError as e:
+        db.rollback()
+        raise optional.build(error=HTTPException(status_code=409, detail="Database conflict: " + str(e)))
+
 
 # user-edit
-def user_edit(db: Session, user: user_dtos.UserEditProfileDto, user_id:str)-> optional.Optional[UserModel, Exception]:
+def user_edit(db: Session, user: user_dtos.UserEditProfileDto, user_id: str) -> optional.Optional[UserModel, Exception]:
     try:
         user_model = db.query(UserModel).filter(UserModel.id == user_id).first()
 
@@ -114,13 +125,14 @@ def user_edit(db: Session, user: user_dtos.UserEditProfileDto, user_id:str)-> op
             db.refresh(user_model)
 
             return optional.build(data=user_model)
-            
+
         else:
             raise optional.build(error=HTTPException(status_code=404, detail="User not found"))
 
     except SQLAlchemyError as e:
         db.rollback()
         raise optional.build(error=HTTPException(status_code=409, detail="Database conflict: " + str(e)))
+
 
 # update-photo-profile
 async def update_user_photo(db: Session, user_id: int, file: UploadFile) -> UserModel:
@@ -136,7 +148,7 @@ async def update_user_photo(db: Session, user_id: int, file: UploadFile) -> User
             db.refresh(user)
 
             return user  # Pastikan ini mengembalikan UserModel
-        
+
         else:
             raise HTTPException(status_code=404, detail="User not found")
 
@@ -151,8 +163,6 @@ def service_access_token(user_id: str):
         ("id", user_id)
     ])
     return jwt_service.create_access_token(user_ditch)
-
-
 
 # """
 # Source of how to edit user model [https://stackoverflow.com/questions/63143731/update-sqlalchemy-orm-existing-model-from-posted-pydantic-model-in-fastapi]

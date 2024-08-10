@@ -93,39 +93,6 @@ def get_businesses_with_ratings(db: Session, skip: int = 0, limit: int = 100):
         .all()
 
 
-def get_businesses_with_category_and_rating(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(
-            Business.id, 
-            Business.name, 
-            BusinessCategory.name.label('category'), 
-            func.avg(Rating.rating_count).label('rating')
-        ) \
-        .join(Rating, Rating.fk_business_id == Business.id) \
-        .join(BusinessCategory, Business.fk_business_category_id == BusinessCategory.id) \
-        .group_by(Business.id, Business.name, BusinessCategory.name, Business.updated_at) \
-        .order_by(Business.updated_at) \
-        .offset(skip) \
-        .limit(limit) \
-        .all()
-
-def get_businesses_with_category_and_rating_by_user_id(db: Session, user_id:str, skip: int = 0, limit: int = 100)-> list[Type[Business]]:
-    print(user_id)
-    return db.query(
-            Business.id, 
-            Business.name,
-            Business.photo_url, 
-            BusinessCategory.name.label('category'), 
-            func.avg(Rating.rating_count).label('rating')
-        ) \
-        .join(Rating, Rating.fk_business_id == Business.id) \
-        .join(BusinessCategory, Business.fk_business_category_id == BusinessCategory.id) \
-        .group_by(Business.id) \
-        .filter(Business.fk_owner_id == user_id) \
-        .order_by(Business.updated_at) \
-        .offset(skip) \
-        .limit(limit) \
-        .all()
-
 def get_business_by_user_id(db: Session, user_id: str) -> list[Type[Business]]:
     print(user_id)
     return db.query(Business) \
@@ -145,3 +112,53 @@ def get_businesses_with_testing(db: Session, skip: int = 0, limit: int = 100):
         .limit(limit) \
         .all()
 
+def get_businesses_by_user_id_with_testing(db: Session, user_id:str, skip: int = 0, limit: int = 100):
+    return db.query(
+            Business.id, 
+            Business.name,
+            Business.photo_url, 
+            Business.created_at,
+            Business.updated_at,
+            BusinessCategory.name.label('category')
+        ) \
+        .join(BusinessCategory, Business.fk_business_category_id == BusinessCategory.id) \
+        .filter(Business.fk_owner_id == user_id).order_by(Business.updated_at) \
+        .offset(skip) \
+        .limit(limit) \
+        .all()
+
+
+
+
+# def get_businesses_with_category_and_rating(db: Session, skip: int = 0, limit: int = 100):
+#     return db.query(
+#             Business.id, 
+#             Business.name, 
+#             BusinessCategory.name.label('category'), 
+#             func.avg(Rating.rating_count).label('rating')
+#         ) \
+#         .join(Rating, Rating.fk_business_id == Business.id) \
+#         .join(BusinessCategory, Business.fk_business_category_id == BusinessCategory.id) \
+#         .group_by(Business.id, Business.name, BusinessCategory.name, Business.updated_at) \
+#         .order_by(Business.updated_at) \
+#         .offset(skip) \
+#         .limit(limit) \
+#         .all()
+
+# def get_businesses_with_category_and_rating_by_user_id(db: Session, user_id:str, skip: int = 0, limit: int = 100)-> list[Type[Business]]:
+#     print(user_id)
+#     return db.query(
+#             Business.id, 
+#             Business.name,
+#             Business.photo_url, 
+#             BusinessCategory.name.label('category'), 
+#             func.avg(Rating.rating_count).label('rating')
+#         ) \
+#         .join(Rating, Rating.fk_business_id == Business.id) \
+#         .join(BusinessCategory, Business.fk_business_category_id == BusinessCategory.id) \
+#         .group_by(Business.id) \
+#         .filter(Business.fk_owner_id == user_id) \
+#         .order_by(Business.updated_at) \
+#         .offset(skip) \
+#         .limit(limit) \
+#         .all()

@@ -28,6 +28,8 @@ class BusinessAllPost(BaseModel):
     photo_url: Optional[str] = None    
     rating: Optional[int] = None
     category: Optional[str] = None
+    created_at: datetime
+    updated_at: datetime
 
 class BusinessAllPostTest(BaseModel):
     id: str

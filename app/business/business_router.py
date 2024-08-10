@@ -49,7 +49,7 @@ async def update_business_profile(
 def get_all_business(
         jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
         db: Session = Depends(get_db)):
-    return business_services.get_businesses_with_category_and_rating_by_user_id(db, jwt_token.id)
+    return business_services.get_businesses_by_user_id_with_testing(db, jwt_token.id)
 
 # get-all-business-public
 @router.get("/public", response_model=list[business_dtos.BusinessAllPostTest])

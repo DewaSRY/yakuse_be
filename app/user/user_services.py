@@ -27,8 +27,8 @@ def get_user(db: Session, user_id: str) -> optional.Optional[UserModel, Exceptio
     return optional.build(data=user_model)
 
 
-def get_user_by_email(db: Session, email: str) -> optional.Optional[UserModel, Exception]:
-    user_model = db.query(UserModel) \
+def get_user_by_email(db: Session, email: str) -> optional.Optional[UserModel, HTTPException]:
+    user_model: UserModel = db.query(UserModel) \
         .filter(UserModel.email.like("%{email}%".format(email=email))) \
         .first()
     if user_model:

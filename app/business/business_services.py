@@ -1,5 +1,5 @@
 from typing import Type
-
+import uuid
 from sqlalchemy import func
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy.exc import SQLAlchemyError
@@ -29,6 +29,7 @@ def create_business(db: Session, business: business_dtos.BusinessCreateDto, user
             detail="failed to create business"
         ))
 
+
 # update-photo-profile
 async def upload_photo_business(db: Session, user_id: str, file: UploadFile) -> Business:
     try:
@@ -44,7 +45,7 @@ async def upload_photo_business(db: Session, user_id: str, file: UploadFile) -> 
             db.refresh(business)
 
             return business  # Mengembalikan objek Business tanpa 'await'
-        
+
         else:
             raise HTTPException(status_code=404, detail="Business not found")
 
@@ -52,8 +53,10 @@ async def upload_photo_business(db: Session, user_id: str, file: UploadFile) -> 
         db.rollback()
         raise HTTPException(status_code=409, detail="Database conflict: " + str(e))
 
+
 # business-edit
-def business_edit(db: Session, business: business_dtos.BusinessEdiDto, user_id:str)-> optional.Optional[Business, Exception]:
+def business_edit(db: Session, business: business_dtos.BusinessEdiDto, user_id: str) -> optional.Optional[
+    Business, Exception]:
     try:
         business_model = db.query(Business).filter(Business.fk_owner_id == user_id).first()
 
@@ -67,7 +70,7 @@ def business_edit(db: Session, business: business_dtos.BusinessEdiDto, user_id:s
             db.refresh(business_model)
 
             return optional.build(data=business_model)
-            
+
         else:
             raise optional.build(error=HTTPException(status_code=404, detail="User not found"))
 
@@ -76,18 +79,19 @@ def business_edit(db: Session, business: business_dtos.BusinessEdiDto, user_id:s
         raise optional.build(error=HTTPException(status_code=409, detail="Database conflict: " + str(e)))
 
 
-def get_all_business(db: Session, skip: int = 0, limit: int = 100)-> list[Type[Business]]:
+def get_all_business(db: Session, skip: int = 0, limit: int = 100) -> list[Type[Business]]:
     return db.query(Business) \
         .offset(skip) \
         .limit(limit) \
         .all()
 
+
 def get_businesses_with_ratings(db: Session, skip: int = 0, limit: int = 100):
     return db.query(
-            Business.id, 
-            Business.name, 
-            Rating.rating_count
-        ) \
+        Business.id,
+        Business.name,
+        Rating.rating_count
+    ) \
         .join(Rating) \
         .offset(skip) \
         .limit(limit) \
@@ -100,33 +104,35 @@ def get_business_by_user_id(db: Session, user_id: str) -> list[Type[Business]]:
         .filter(Business.fk_owner_id == user_id) \
         .all()
 
+
 def get_businesses_with_testing(db: Session, skip: int = 0, limit: int = 100):
     return db.query(
-            Business.id, 
-            Business.name,
-            Business.photo_url, 
-            BusinessCategory.name.label('category'), 
-        ) \
+        Business.id,
+        Business.name,
+        Business.photo_url,
+        BusinessCategory.name.label('category'),
+    ) \
         .join(BusinessCategory, Business.fk_business_category_id == BusinessCategory.id) \
         .order_by(Business.updated_at) \
         .offset(skip) \
         .limit(limit) \
         .all()
 
-def get_businesses_by_user_login_with_testing(db: Session, user_id:str, skip: int = 0, limit: int = 100):
+
+def get_businesses_by_user_login_with_testing(db: Session, user_id: str, skip: int = 0, limit: int = 100):
     return db.query(
-            Business.id, 
-            Business.name,
-            Business.photo_url,
-            Business.contact,
-            Business.location,
-            Business.description, 
-            Business.created_at,
-            Business.updated_at,
-            BusinessCategory.name.label('category'),
-            UserModel.fullname.label('owner'),
-            func.avg(Rating.rating_count).label('rating')
-        ) \
+        Business.id,
+        Business.name,
+        Business.photo_url,
+        Business.contact,
+        Business.location,
+        Business.description,
+        Business.created_at,
+        Business.updated_at,
+        BusinessCategory.name.label('category'),
+        UserModel.fullname.label('owner'),
+        func.avg(Rating.rating_count).label('rating')
+    ) \
         .join(BusinessCategory, Business.fk_business_category_id == BusinessCategory.id) \
         .join(UserModel, Business.fk_owner_id == UserModel.id) \
         .join(Rating, Rating.fk_business_id == Business.id) \
@@ -135,26 +141,33 @@ def get_businesses_by_user_login_with_testing(db: Session, user_id:str, skip: in
         .limit(limit) \
         .all()
 
-# detail-business-by-uuid
-def get_businesses_by_user_id(db: Session, user_id: str):
-    # Pastikan user_id diperlakukan sebagai string
-    business_models = db.query(
-            Business.id, 
-            Business.name,
-            Business.photo_url,
-            Business.contact,
-            Business.location,
-            Business.description, 
-            Business.created_at,
-            Business.updated_at,
-            BusinessCategory.name.label('category'),
-            UserModel.fullname.label('owner')
-        )\
-        .join(BusinessCategory, Business.fk_business_category_id == BusinessCategory.id) \
-        .join(UserModel, Business.fk_owner_id == UserModel.id) \
-        .filter(Business.fk_owner_id == user_id).all()
-    return business_models
 
+# detail-business-by-uuid
+
+
+# detail-business-by-uuid
+def get_detail_business_by_id(db: Session, business_id: uuid.UUID) -> optional.Optional:
+    business_id_str = str(business_id)
+    try:
+        business_model = db.query(Business) \
+            .filter(Business.id == business_id_str) \
+            .first()
+
+        if business_model is None:
+            return optional.build(error=HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"business with id {business_id} not found"
+            ))
+        print(business_model.owner)
+        print("hallo there")
+        return optional.build(data=business_model)
+
+    except Exception as e:
+        print(e)
+        return optional.build(error=HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="failed to fetch business"
+        ))
 
 # def get_businesses_with_category_and_rating(db: Session, skip: int = 0, limit: int = 100):
 #     return db.query(

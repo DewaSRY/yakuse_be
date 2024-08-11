@@ -6,6 +6,8 @@ from app import business_category, rating
 from . import user, health_check, business, user_need, article
 from .libs import sql_alchemy_lib
 
+from .business_category import business_category_service, business_category_dtos
+
 from fastapi.staticfiles import StaticFiles
 
 """
@@ -44,6 +46,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+# if len(business_category_service.get_business_category(sql_alchemy_lib.get_db())) == 0:
+#     business_category_service.create_business_category(
+#         sql_alchemy_lib.get_db(),
+#         business_category_dtos.BusinessCategoryCreateDto()
+#     )
 
 app.mount("/images", StaticFiles(directory="images"), name="images")
 

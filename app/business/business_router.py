@@ -1,5 +1,5 @@
 from typing import Annotated
-
+from uuid import UUID
 from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, File, UploadFile
 
@@ -15,6 +15,7 @@ router = APIRouter(
     prefix="/business",
 )
 
+
 # create-bisnis
 @router.post("/", response_model=business_dtos.BusinessCreateDto)
 def create_business(
@@ -24,16 +25,18 @@ def create_business(
 ):
     return business_services.create_business(db, business, jwt_token.id).unwrap()
 
+
 # upload-photo-business
 @router.post("/post_photo", response_model=business_dtos.BusinessPhotoProfileDto)
 async def upload_photo_business(
-    file: UploadFile = File(...),  # Untuk menerima file upload
-    jwt_token: jwt_dto.TokenPayLoad = Depends(jwt_service.get_jwt_pyload),
-    db: Session = Depends(get_db)
+        file: UploadFile = File(...),  # Untuk menerima file upload
+        jwt_token: jwt_dto.TokenPayLoad = Depends(jwt_service.get_jwt_pyload),
+        db: Session = Depends(get_db)
 ):
     """This Method use to upload and update the photo profile of a business"""
     business = await business_services.upload_photo_business(db, jwt_token.id, file)
     return business_dtos.BusinessPhotoProfileDto(photo_url=business.photo_url)
+
 
 # edit-profile-business
 @router.put("/edit", response_model=business_dtos.BusinessEdiDto)
@@ -44,14 +47,15 @@ async def update_business_profile(
     """This method use to update user profile"""
     return business_services.business_edit(db, business, jwt_token.id).unwrap()
 
-# get-detail-business-by-user-uuid
-@router.get("/{user_id}", response_model=list[business_dtos.BusinessResponse])
-def get_detail_business_by_id(
-        user_id: str,
-        jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
-        db: Session = Depends(get_db)):
-    return business_services.get_businesses_by_user_id(db, user_id)
 
+# get-detail-business-by-user-uuid
+# @router.get("/{user_id}", response_model=list[business_dtos.BusinessResponse])
+# def get_detail_business_by_id(
+#         user_id: str,
+#         jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
+#         db: Session = Depends(get_db)):
+#     return business_services.get_businesses_by_user_id(db, user_id)
+#
 
 # get-all-business-by-login-user-id
 @router.get("/my_business", response_model=list[business_dtos.BusinessResponse])
@@ -60,9 +64,19 @@ def get_all_business(
         db: Session = Depends(get_db)):
     return business_services.get_businesses_by_user_login_with_testing(db, jwt_token.id)
 
+
 # get-all-business-public
 @router.get("/", response_model=list[business_dtos.BusinessAllPost])
 def get_all_public_business(
         jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
         db: Session = Depends(get_db)):
     return business_services.get_all_business(db)
+
+
+@router.get("/detail/{business_id}", response_model=business_dtos.BusinessResponse)
+def get_detail_business_by_id(
+        business_id: UUID,
+        jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
+        db: Session = Depends(get_db)):
+    print("hallo")
+    return business_services.get_detail_business_by_id(db, business_id).unwrap()

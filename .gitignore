@@ -8,6 +8,8 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+
+
 sql_app.db
 test_app.db
 poetry.lock

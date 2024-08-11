@@ -1,7 +1,7 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, File, UploadFile
-from pydantic import BaseModel, fields
+from fastapi import APIRouter, Depends, UploadFile
+from pydantic import BaseModel
 
 from app.libs.jwt_lib import jwt_dto, jwt_service
 from app.libs.images_service import create_image_service

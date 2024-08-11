@@ -5,10 +5,10 @@ from pydantic import BaseModel, Field, EmailStr
 
 
 class UserCreateDto(BaseModel):
-    username: str = Field(default="some user Name")
-    email: EmailStr = Field(default="example@Example.com")
+    username: str = Field(default="username")
+    email: EmailStr = Field(default="Example@Example.com")
     password: str = Field(default="somePassword")
-    fullname: str = Field(default="someFullName")
+    fullname: str = Field(default="SomeFullName")
 
 
 class UserCreateResponseDto(BaseModel):
@@ -60,8 +60,8 @@ class UserGetProfilTestDto(BaseModel):
 
 
 class UserLoginPayloadDto(BaseModel):
-    email: str
-    password: str
+    email: EmailStr = Field(default="Example@Example.com")
+    password: str = Field(default="somePassword")
 
 
 class FirebaseLoginDto(BaseModel):

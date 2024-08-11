@@ -20,7 +20,7 @@ def drop_all_table():
         .metadata.drop_all(bind=engine)
 
 
-@pytest.fixture
+@pytest.fixture()
 def get_db():
     create_all_table()
     database = session_local()
@@ -28,3 +28,4 @@ def get_db():
         yield database
     finally:
         database.close()
+        drop_all_table()

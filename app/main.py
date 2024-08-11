@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app import business_category, rating
+
 from . import user, health_check, business, user_need, article
 from .libs import sql_alchemy_lib
 
@@ -30,6 +32,8 @@ app = FastAPI()
 app.include_router(health_check.router)
 app.include_router(user.user_router.router)
 app.include_router(business.business_router.router)
+app.include_router(business_category.business_category_router.router)
+app.include_router(rating.rating_router.router)
 app.include_router(user_need.user_need_router.router)
 app.include_router(article.article_router.router)
 

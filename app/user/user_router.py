@@ -23,7 +23,7 @@ router = APIRouter(
 )
 
 # user--register
-@router.post("/", response_model=user_dtos.UserCreateResponseDto)
+@router.post("/register", response_model=user_dtos.UserCreateResponseDto)
 def create_user(user: user_dtos.UserCreateDto, db: Session = Depends(get_db)):
     """This method use to create user"""
     return user_services.create_user(db, user).unwrap()
@@ -62,7 +62,7 @@ async def update_user_photo_profile(
     jwt_token: jwt_dto.TokenPayLoad = Depends(jwt_service.get_jwt_pyload),
     db: Session = Depends(get_db)
 ):
-    """Method ini digunakan untuk memperbarui foto profil pengguna"""
+    """This Method use to Update Photo Profile of User"""
     user = await user_services.update_user_photo(db, jwt_token.id, file)
     return user_dtos.UserEditPhotoProfileDto(photo_url=user.photo_url)
 

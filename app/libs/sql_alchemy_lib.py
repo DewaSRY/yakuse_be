@@ -12,11 +12,6 @@ APP_DEVELOPMENT = os.getenv("APP_DEVELOPMENT", True)
 engine: Engine
 if APP_DEVELOPMENT:
     SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app.db"
-    IS_TESTING = bool(os.getenv("IS_TESTING", "False"))
-
-    if IS_TESTING:
-        SQLALCHEMY_DATABASE_URL = "sqlite:///./test_app.db"
-
     engine = create_engine(
         SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
     )

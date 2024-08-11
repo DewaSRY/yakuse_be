@@ -4,6 +4,7 @@ import subprocess
 
 def main():
     # subprocess.call(["fastapi", "dev", "app/main.py"])
+    # os.environ["IS_TESTING"] = "False"
     os.system("fastapi dev app/main.py")
 
 

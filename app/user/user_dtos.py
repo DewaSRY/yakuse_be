@@ -1,28 +1,35 @@
 from datetime import datetime
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, EmailStr
 
 
 class UserCreateDto(BaseModel):
-    username: str
-    email: str
-    password: str
-    fullname: str
+    username: str = Field(default="some user Name")
+    email: EmailStr = Field(default="example@Example.com")
+    password: str = Field(default="somePassword")
+    fullname: str = Field(default="someFullName")
+
+
 class UserCreateResponseDto(BaseModel):
     username: str
     email: str
+
 
 class UserEditProfileDto(BaseModel):
     phone: str
     address: str
     about_me: str
+
+
 class UserEditResponseDto(BaseModel):
     phone: str
     address: str
     about_me: str
 
+
 class UserEditPhotoProfileDto(BaseModel):
     photo_url: str
+
 
 class UserGetProfileDto(BaseModel):
     id: str
@@ -35,6 +42,8 @@ class UserGetProfileDto(BaseModel):
     about_me: str
     created_at: datetime
     updated_at: datetime
+
+
 class UserGetProfilTestDto(BaseModel):
     username: str
     email: str

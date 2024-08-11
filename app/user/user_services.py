@@ -23,7 +23,7 @@ def get_user(db: Session, user_id: str) -> optional.Optional[UserModel, Exceptio
     if not user_model:
         return optional.build(error=HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="User not found"))
-    
+
     return optional.build(data=user_model)
 
 
@@ -71,7 +71,6 @@ def user_login(db: Session, user: user_dtos.UserLoginPayloadDto) -> optional.Opt
     user_mode = user_optional.data
 
     if user_optional.error:
-        print("check get email")
         return user_optional
 
     if not password_lib.verify_password(plain_password=user.password,

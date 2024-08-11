@@ -1,4 +1,4 @@
-sql_app.db
+
 # Environments
 path/
 .env
@@ -9,6 +9,7 @@ ENV/
 env.bak/
 venv.bak/
 sql_app.db
+test_app.db
 poetry.lock
 
 # Byte-compiled / optimized / DLL files

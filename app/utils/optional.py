@@ -14,7 +14,7 @@ class Optional[DataType, ErrorTypes]:
         return self.data
 
 
-def build(data: DataType = None, error: ErrorTypes = None):
+def build(data: DataType = None, error: ErrorTypes = None) -> Optional[DataType, ErrorTypes]:
     obj = Optional[DataType, ErrorTypes]()
     obj.error = error
     obj.data = data

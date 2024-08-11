@@ -31,5 +31,10 @@ serviceAccountKey.json
 **/obj
 **/secrets.dev.yaml
 **/values.dev.yaml
+**/tests
 LICENSE
 README.md
+
+sql_app.db
+test_app.db
+poetry.lock

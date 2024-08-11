@@ -26,3 +26,29 @@ class Business(sql_alchemy_lib.Base):
 
     # New relationship to BusinessCategory
     business_category = relationship("BusinessCategory", backref=backref("business", lazy=True))
+
+    @property
+    def owner(self) -> str:
+        from app.user.user_model import UserModel
+        session = next(sql_alchemy_lib.get_db())
+        user_models: UserModel = session.query(UserModel) \
+            .filter(UserModel.id.like(f"%{self.fk_owner_id}%")) \
+            .first()
+
+        return user_models.username if user_models else ""
+
+    @property
+    def rating(self):
+        from app.rating.rating_model import Rating
+        session = next(sql_alchemy_lib.get_db())
+        ratting_list: list[Rating] = session.query(Rating) \
+            .filter(Rating.fk_business_id.like(f"%{self.id}%")) \
+            .all()
+        if len(ratting_list) == 0:
+            return 0
+        
+        total_ratting = 0
+        for ratting in ratting_list:
+            total_ratting += ratting.rating_count
+
+        return total_ratting / len(ratting_list)

@@ -1,7 +1,7 @@
 from typing import Optional
 from datetime import datetime
 
-from pydantic import BaseModel, validator, field_validator
+from pydantic import BaseModel, validator, field_validator, Field
 
 
 class BusinessCreateDto(BaseModel):
@@ -10,8 +10,11 @@ class BusinessCreateDto(BaseModel):
     location: str
     contact: str
     fk_business_category_id: int
+
+
 class BusinessPhotoProfileDto(BaseModel):
-    photo_url: str
+    photo_url: Optional[str]
+
 
 class BusinessResponse(BaseModel):
     id: str
@@ -26,6 +29,7 @@ class BusinessResponse(BaseModel):
     owner: Optional[str] = None
     rating: Optional[int] = None
 
+
 class BusinessAllPost(BaseModel):
     id: str
     name: str
@@ -36,11 +40,13 @@ class BusinessAllPost(BaseModel):
     created_at: datetime
     updated_at: datetime
 
+
 class BusinessAllPostTest(BaseModel):
     id: str
     name: str
-    photo_url: Optional[str] = None    
+    photo_url: Optional[str] = None
     category: Optional[str] = None
 
-class BusinessEdiDto(BaseModel):   
+
+class BusinessEdiDto(BaseModel):
     fk_business_category_id: int

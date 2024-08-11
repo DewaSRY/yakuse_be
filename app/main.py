@@ -6,6 +6,8 @@ from app import business_category, rating
 from . import user, health_check, business, user_need, article
 from .libs import sql_alchemy_lib
 
+from .business_category import business_category_seed
+
 from fastapi.staticfiles import StaticFiles
 
 """
@@ -27,17 +29,17 @@ from app.article.article_model import Article
 sql_alchemy_lib.Base \
     .metadata.create_all(bind=sql_alchemy_lib.engine)
 
-app = FastAPI()
+App = FastAPI()
 
-app.include_router(health_check.router)
-app.include_router(user.user_router.router)
-app.include_router(business.business_router.router)
-app.include_router(business_category.business_category_router.router)
-app.include_router(rating.rating_router.router)
-app.include_router(user_need.user_need_router.router)
-app.include_router(article.article_router.router)
+App.include_router(health_check.router)
+App.include_router(user.user_router.router)
+App.include_router(business.business_router.router)
+App.include_router(business_category.business_category_router.router)
+App.include_router(rating.rating_router.router)
+App.include_router(user_need.user_need_router.router)
+App.include_router(article.article_router.router)
 
-app.add_middleware(
+App.add_middleware(
     CORSMiddleware,
     allow_origins=['*'],
     allow_credentials=True,
@@ -45,8 +47,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.mount("/images", StaticFiles(directory="images"), name="images")
-
-"""
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijg0NzdiZWJhLWM4ZjQtNGVkZi1iN2NlLTUzZTQ3NGFlMmFlMiIsImV4cCI6MTcyMzY0Njk4Nn0.y973u9V7QBjqmL7tbakHYPHPMSEllCOjFKlsL4ghSVs
-"""
+if business_category_seed.get_business_category_length() == 0:
+    business_category_seed.init_business_category()
+#
+App.mount("/images", StaticFiles(directory="images"), name="images")

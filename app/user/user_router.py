@@ -65,11 +65,11 @@ async def update_user_photo_profile(
     return user_dtos.UserEditPhotoProfileDto(photo_url=user.photo_url)
 
 
-# login-with-firebase
-@router.post("/login/firebase", response_model=jwt_dto.AccessTokenDto)
-async def firebase_login(data: user_dtos.FirebaseLoginDto, db: Session = Depends(get_db)):
-    """Authenticate user with Firebase ID token"""
-    user_optional = await user_firebase_services.firebase_login(db=db, data=data)
-    if user_optional.error:
-        raise user_optional.error
-    return user_services.service_access_token(user_optional.data.id)
+# @router.post("/login/firebase", response_model=jwt_dto.AccessTokenDto)
+# async def firebase_login(data: user_dtos.FirebaseLoginDto, db: Session = Depends(get_db)):
+#     """Authenticate user with Firebase ID token"""
+#     user_optional = await user_firebase_services.firebase_login(db=db, data=data)
+#     if user_optional.error:
+#         raise user_optional.error
+#     return user_services.service_access_token(user_optional.data.id)
+

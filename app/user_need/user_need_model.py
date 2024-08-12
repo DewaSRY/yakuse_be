@@ -7,7 +7,6 @@ from app.libs import sql_alchemy_lib
 from .user_need_dtos import UserNeedsUserInfoDto
 
 """
-
     owner_username: str
     user_profile_url: str
 """

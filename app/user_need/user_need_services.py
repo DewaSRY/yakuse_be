@@ -29,7 +29,11 @@ def get_user_need_service(db: Session, skip: int = 0, limit: int = 100) -> list[
         return build(error=HTTPException(detail=f"{e}"))
 # GET
 def get_user_need_by_user_id_service(db: Session, user_id: str) -> list[Type[UserNeeds]]:
-    return db.query(UserNeeds).filter(UserNeeds.fk_user_id == user_id).all()
+    try:
+        user_need = db.query(UserNeeds).filter(UserNeeds.fk_user_id == user_id).all()
+        return build(data=user_need)
+    except SQLAlchemyError as e:
+        return build(error=HTTPException(detail=f"{e}"))
 # GET
 def get_user_need_by_id_service(db: Session, user_need_id: str) -> Type[UserNeeds]:
     try:

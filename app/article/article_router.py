@@ -15,7 +15,7 @@ router = APIRouter(
     prefix="/article",
 )
 
-
+# POST
 @router.post("/", response_model=ArticleCreateDto, status_code=status.HTTP_201_CREATED)
 async def create_article(
     article: ArticleCreateDto,
@@ -24,17 +24,19 @@ async def create_article(
 ):
     return create_article_service(db, article, jwt_token.id).unwrap()
 
+# GET
 @router.get("/", response_model=list[ArticleResponseDto], status_code=status.HTTP_200_OK)
 async def get_all_our_articles(
     jwt_token: Annotated[TokenPayLoad, Depends(get_jwt_pyload)],
     db: Session = Depends(get_db)
 ):
     return get_article_by_user_id_service(db, jwt_token.id)
-
+# GET
 @router.get("/public", response_model=list[ArticleResponseDto], status_code=status.HTTP_200_OK)
 async def get_all_public_articles(db: Session = Depends(get_db)):
     return get_article_service(db)
 
+# DELETE
 @router.delete("/delete/{article_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_article_by_id(
     article_id: str,
@@ -44,5 +46,3 @@ async def delete_article_by_id(
     '''still error 500'''
     return delete_article_by_id_service(db, jwt_token.id, article_id)
 
-
-# eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImU3MzA3NjNiLWI1OTctNDM0ZS1hODIwLWM2NDYzZTUxYzA1ZSIsImV4cCI6MTcyMzc5MTEwOX0.8uAQ7krabjyTnDGwwueLv9ezFVvyB5KDbwUrkmtoqo0

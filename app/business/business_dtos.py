@@ -1,15 +1,15 @@
 from typing import Optional
 from datetime import datetime
 
-from pydantic import BaseModel, validator, field_validator, Field
+from pydantic import BaseModel, Field
 
 
 class BusinessCreateDto(BaseModel):
-    name: str
-    description: str
-    location: str
-    contact: str
-    fk_business_category_id: int
+    name: str = Field(default="someBusiness")
+    description: str = Field(default="this is coll business")
+    location: str = Field(default="some where on earth")
+    contact: str = Field(default="0000 0000 0000")
+    fk_business_category_id: int = Field(default=1)
 
 
 class BusinessPhotoProfileDto(BaseModel):

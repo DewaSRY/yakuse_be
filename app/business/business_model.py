@@ -27,6 +27,9 @@ class Business(sql_alchemy_lib.Base):
     # New relationship to BusinessCategory
     business_category = relationship("BusinessCategory", backref=backref("business", lazy=True))
 
+    def __repr__(self):
+        return f"{self.name} {self.id}"
+
     @property
     def owner(self) -> str:
         from app.user.user_model import UserModel
@@ -46,7 +49,7 @@ class Business(sql_alchemy_lib.Base):
             .all()
         if len(ratting_list) == 0:
             return 0
-        
+
         total_ratting = 0
         for ratting in ratting_list:
             total_ratting += ratting.rating_count

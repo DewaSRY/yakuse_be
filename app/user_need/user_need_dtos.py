@@ -22,7 +22,7 @@ class UserNeedsUserInfoDto(BaseModel):
 class UserNeedResponseDto(BaseModel):
     id: int
     title: str
-    user_info: "UserNeedsUserInfo"
+    user_info: UserNeedsUserInfoDto
     description: str
     is_visible: bool
     created_at: datetime

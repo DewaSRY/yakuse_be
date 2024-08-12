@@ -30,22 +30,23 @@ class BusinessResponse(BaseModel):
     rating: Optional[int] = None
 
 
+# class BusinessAllPost(BaseModel):
+#     id: str
+#     name: str
+#     description: str
+#     photo_url: Optional[str] = None
+#     location: str
+#     contact: str
+#     created_at: datetime
+#     updated_at: datetime
+
+
 class BusinessAllPost(BaseModel):
-    id: str
-    name: str
-    description: str
-    photo_url: Optional[str] = None
-    location: str
-    contact: str
-    created_at: datetime
-    updated_at: datetime
-
-
-class BusinessAllPostTest(BaseModel):
     id: str
     name: str
     photo_url: Optional[str] = None
     category: Optional[str] = None
+    rating: Optional[int] = None
 
 
 class BusinessEdiDto(BaseModel):

@@ -31,6 +31,16 @@ class Business(sql_alchemy_lib.Base):
         return f"{self.name} {self.id}"
 
     @property
+    def category(self) -> str:
+        from app.business_category.business_category_model import BusinessCategory
+        session = next(sql_alchemy_lib.get_db())
+        business_category_model: BusinessCategory = session.query(BusinessCategory) \
+            .filter(BusinessCategory.id.like(f"%{self.fk_business_category_id}%")) \
+            .first()
+
+        return business_category_model.name if business_category_model else ""
+
+    @property
     def owner(self) -> str:
         from app.user.user_model import UserModel
         session = next(sql_alchemy_lib.get_db())

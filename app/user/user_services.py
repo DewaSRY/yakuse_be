@@ -135,7 +135,7 @@ def user_edit(db: Session, user: user_dtos.UserEditProfileDto, user_id: str) -> 
 
 
 # update-photo-profile
-async def update_user_photo(db: Session, user_id: int, file: UploadFile) -> UserModel:
+async def update_user_photo(db: Session, user_id: str, file: UploadFile) -> UserModel:
     try:
         opt_content = await create_image_service(upload_file=file, domain="user")
 

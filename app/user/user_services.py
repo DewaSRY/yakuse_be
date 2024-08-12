@@ -89,20 +89,21 @@ def get_user_profile(db: Session, user_id: str) -> optional.Optional[UserModel, 
         if not user_model:
             return optional.build(error=Exception("user not found"))
 
-        response_data = {
-            "id": user_model.id,
-            "fullname": user_model.fullname,
-            "username": user_model.username,
-            "photo_url": user_model.photo_url,
-            "email": user_model.email,
-            "password": user_model.hash_password,
-            "phone": user_model.phone,
-            "address": user_model.address,
-            "about_me": user_model.about_me,
-            "created_at": user_model.created_at,
-            "updated_at": user_model.updated_at
-        }
-        return optional.build(data=response_data)
+        # response_data = {
+        #     "id": user_model.id,
+        #     "fullname": user_model.fullname,
+        #     "username": user_model.username,
+        #     "photo_url": user_model.photo_url,
+        #     "email": user_model.email,
+        #     "password": user_model.hash_password,
+        #     "phone": user_model.phone,
+        #     "address": user_model.address,
+        #     "about_me": user_model.about_me,
+        #     "created_at": user_model.created_at,
+        #     "updated_at": user_model.updated_at
+        # }
+        # return optional.build(data=response_data)
+        return optional.build(data=user_model)
 
 
     except SQLAlchemyError as e:

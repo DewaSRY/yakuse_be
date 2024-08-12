@@ -49,7 +49,7 @@ class UserGetProfilTestDto(BaseModel):
     id: str
     username: str
     email: str
-    password: str
+    hash_password :str
     fullname: str
     phone: Optional[str] = None
     address: Optional[str] = None

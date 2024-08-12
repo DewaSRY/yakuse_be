@@ -53,7 +53,7 @@ async def update_user_profile(
     """This method use to update user profile"""
     return user_services.user_edit(db, user, jwt_token.id).unwrap()
 
-
+# edit-post-user-photo-profile
 @router.put("/edit/photo", response_model=user_dtos.UserEditPhotoProfileDto)
 async def update_user_photo_profile(
         file: UploadFile = File(...),  # Untuk menerima file upload
@@ -65,6 +65,7 @@ async def update_user_photo_profile(
     return user_dtos.UserEditPhotoProfileDto(photo_url=user.photo_url)
 
 
+# login-with-firebase
 @router.post("/login/firebase", response_model=jwt_dto.AccessTokenDto)
 async def firebase_login(data: user_dtos.FirebaseLoginDto, db: Session = Depends(get_db)):
     """Authenticate user with Firebase ID token"""

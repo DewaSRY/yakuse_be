@@ -1,7 +1,6 @@
 import pytest
 
 from app.user import user_services, user_dtos
-
 from app.business import business_services, business_dtos
 
 

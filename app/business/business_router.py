@@ -78,5 +78,4 @@ def get_detail_business_by_id(
         business_id: UUID,
         jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
         db: Session = Depends(get_db)):
-    print("hallo")
     return business_services.get_detail_business_by_id(db, business_id).unwrap()

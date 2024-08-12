@@ -6,9 +6,6 @@ from app.libs.sql_alchemy_lib import get_db
 
 
 def get_business_category_length(session: Session = next(get_db())) -> int:
-    all_category = session.query(BusinessCategory).all()
-    for c in all_category:
-        print(c)
     return session.query(BusinessCategory).count()
 
 

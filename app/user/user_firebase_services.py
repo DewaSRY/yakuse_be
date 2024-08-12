@@ -33,6 +33,8 @@ cred = credentials.Certificate({
 })
 initialize_app(cred)
 
+print("FIREBASE_PRIVATE_KEY:", os.environ.get('FIREBASE_PRIVATE_KEY'))
+
 
 async def firebase_login(data: user_dtos.FirebaseLoginDto, db: Session) \
         -> optional.Optional[user_model.UserModel, HTTPException]:

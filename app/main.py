@@ -26,20 +26,19 @@ from app.rating.rating_model import Rating
 from app.user_need.user_need_model import UserNeeds
 from app.article.article_model import Article
 
-sql_alchemy_lib.Base \
-    .metadata.create_all(bind=sql_alchemy_lib.engine)
+sql_alchemy_lib.Base.metadata.create_all(bind=sql_alchemy_lib.engine)
 
-App = FastAPI()
+app = FastAPI()
 
-App.include_router(health_check.router)
-App.include_router(user.user_router.router)
-App.include_router(business.business_router.router)
-App.include_router(business_category.business_category_router.router)
-App.include_router(rating.rating_router.router)
-App.include_router(user_need.user_need_router.router)
-App.include_router(article.article_router.router)
+app.include_router(health_check.router)
+app.include_router(user.user_router.router)
+app.include_router(business.business_router.router)
+app.include_router(business_category.business_category_router.router)
+app.include_router(rating.rating_router.router)
+app.include_router(user_need.user_need_router.router)
+app.include_router(article.article_router.router)
 
-App.add_middleware(
+app.add_middleware(
     CORSMiddleware,
     allow_origins=['*'],
     allow_credentials=True,
@@ -49,5 +48,5 @@ App.add_middleware(
 
 if business_category_seed.get_business_category_length() == 0:
     business_category_seed.init_business_category()
-#
-App.mount("/images", StaticFiles(directory="images"), name="images")
+
+app.mount("/images", StaticFiles(directory="images"), name="images")

@@ -31,6 +31,7 @@ FROM base AS final
 ENV PYTHONDONTWRITEBYTECODE=1
 # Keeps Python from buffering stdout and stderr
 ENV PYTHONUNBUFFERED=1
+ENV APP_DEVELOPMENT=False
 
 ENV VIRTUAL_ENV=/usr/src/app/.venv \
     PATH="/usr/src/app/.venv/bin:$PATH"

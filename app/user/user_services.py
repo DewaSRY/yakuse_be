@@ -49,16 +49,12 @@ def get_users(db: Session, skip: int = 0, limit: int = 100) -> list[Type[UserMod
 # user-register
 def create_user(db: Session, user: user_dtos.UserCreateDto) -> optional.Optional[UserModel, Exception]:
     try:
-        hashed_password = password_lib.get_password_hash(password=user.password)
-        user_model = UserModel()
-        user_model.email = user.email
-        user_model.username = user.username
-        user_model.fullname = user.fullname
-        user_model.hash_password = hashed_password
+        user_model = UserModel(**user.model_dump(exclude=['password']))
+        user_model.hash_password = password_lib.get_password_hash(password=user.password)
         db.add(user_model)
         db.commit()
         return optional.build(data=user_model)
-    except SQLAlchemyError:
+    except SQLAlchemyError as e:
         return optional.build(error=HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail="Email already Register"

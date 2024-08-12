@@ -35,7 +35,7 @@ async def user_login(user: user_dtos.UserLoginPayloadDto, db: Session = Depends(
 
 
 # get-user-profile
-@router.get("/profile", response_model=user_dtos.UserGetProfilTestDto)
+@router.get("/profile", response_model=user_dtos.UserCreateResponseDto)
 async def get_user_profile_by_id(
         jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
         db: Session = Depends(get_db)):
@@ -53,6 +53,7 @@ async def update_user_profile(
     """This method use to update user profile"""
     return user_services.user_edit(db, user, jwt_token.id).unwrap()
 
+
 # edit-post-user-photo-profile
 @router.put("/edit/photo", response_model=user_dtos.UserEditPhotoProfileDto)
 async def update_user_photo_profile(
@@ -64,7 +65,6 @@ async def update_user_photo_profile(
     user = await user_services.update_user_photo(db, jwt_token.id, file)
     return user_dtos.UserEditPhotoProfileDto(photo_url=user.photo_url)
 
-
 # @router.post("/login/firebase", response_model=jwt_dto.AccessTokenDto)
 # async def firebase_login(data: user_dtos.FirebaseLoginDto, db: Session = Depends(get_db)):
 #     """Authenticate user with Firebase ID token"""
@@ -72,4 +72,3 @@ async def update_user_photo_profile(
 #     if user_optional.error:
 #         raise user_optional.error
 #     return user_services.service_access_token(user_optional.data.id)
-

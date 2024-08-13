@@ -14,17 +14,23 @@ class UserNeedUpdateDto(BaseModel):
     is_visible: bool = Field(False)
 
 
-class UserNeedsUserInfoDto(BaseModel):
+class UserNeedUserInfoDto(BaseModel):
     user_id: str
     owner_username: str = Field("someName")
     user_profile_url: Optional[str] = Field("some url")
 
 
+class UserNeedBusinessCategoryDto(BaseModel):
+    id: int
+    name: str
+
+
 class UserNeedResponseDto(BaseModel):
     id: int
     title: str = Field("some title")
-    user_info: UserNeedsUserInfoDto
+    user_info: UserNeedUserInfoDto
     description: str = Field("some desc")
     is_visible: bool = Field(True)
+    category: UserNeedBusinessCategoryDto
     created_at: datetime
     updated_at: datetime

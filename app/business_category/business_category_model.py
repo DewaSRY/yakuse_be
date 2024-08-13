@@ -8,6 +8,7 @@ from app.libs import sql_alchemy_lib
 
 class BusinessCategory(sql_alchemy_lib.Base):
     __tablename__ = "business_category"
+    
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     name = Column(String(50), unique=True, index=True)
     describe = Column(Text)

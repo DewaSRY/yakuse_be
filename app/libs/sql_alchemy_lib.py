@@ -9,7 +9,6 @@ load_dotenv()
 #######################This use to create connection with database###########################################
 """
 APP_DEVELOPMENT = os.getenv("APP_DEVELOPMENT", True)
-print(APP_DEVELOPMENT)
 engine: Engine
 if APP_DEVELOPMENT == "True":
     SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app.db"

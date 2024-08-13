@@ -16,5 +16,6 @@ def test_create_user(get_db, get_create_user_dto):
 def test_create_duplicate_user_will_create_error(get_db, get_create_user_dto):
     user_opt_1 = user_services.create_user(get_db, get_create_user_dto)
     user_opt_2 = user_services.create_user(get_db, get_create_user_dto)
+    print(user_opt_2.error)
     assert user_opt_1.data is not None
     assert user_opt_2.error is not None

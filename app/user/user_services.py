@@ -1,9 +1,10 @@
-from typing import Type
+from typing import Type, Optional, Callable
 from urllib import request
 
 from sqlalchemy import update
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy import BinaryExpression
 from fastapi import HTTPException, UploadFile, status
 
 from app.libs.images_service import create_image_service
@@ -12,7 +13,7 @@ from .user_model import UserModel
 from . import user_dtos
 
 from app.libs import password_lib
-from app.utils import optional
+from app.utils import optional, find_errr_from_args
 from app.libs.jwt_lib import jwt_dto, jwt_service
 
 
@@ -27,12 +28,28 @@ def get_user(db: Session, user_id: str) -> optional.Optional[UserModel, Exceptio
     return optional.build(data=user_model)
 
 
-def get_user_by_email(db: Session, email: str) -> optional.Optional[UserModel, HTTPException]:
-    user_model: UserModel = db.query(UserModel) \
-        .filter(UserModel.email.like("%{email}%".format(email=email))) \
-        .first()
+def get_user_by_property(
+        db: Session, filter: Callable[[Type[UserModel]], BinaryExpression[bool]]) \
+        -> optional.Optional[UserModel, HTTPException]:
+    user_model: Optional[UserModel] = db.query(UserModel).filter(filter(UserModel)).first()
     if user_model:
         return optional.build(data=user_model)
+    else:
+        return optional.build(error=HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="user not found"
+        ))
+
+
+def get_user_by_email(db: Session, user_email: str) -> optional.Optional[UserModel, HTTPException]:
+    def user_filter(user_model: Type[UserModel]):
+        return user_model.email.like(f"{user_email}")
+
+    user_opt = get_user_by_property(db=db, filter=user_filter)
+
+    if user_opt.data:
+        return user_opt
+
     return optional.build(error=HTTPException(
         status_code=status.HTTP_404_NOT_FOUND,
         detail="email is not register"
@@ -57,7 +74,9 @@ def create_user(db: Session, user: user_dtos.UserCreateDto) -> optional.Optional
     except SQLAlchemyError as e:
         return optional.build(error=HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail="Email already Register"
+            detail="{property} already use".format(
+                property=find_errr_from_args("users", str(e.args))
+            )
         ))
 
 

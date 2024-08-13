@@ -1,10 +1,14 @@
 import uuid
 
 from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, Text, func
+from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.mysql import CHAR
 
-from app.libs import sql_alchemy_lib
 from .user_need_dtos import UserNeedUserInfoDto, UserNeedBusinessCategoryDto
+
+from app.libs import sql_alchemy_lib
+from app.user.user_model import UserModel
+from app.business_category.business_category_model import BusinessCategory
 
 """
     owner_username: str
@@ -23,6 +27,9 @@ class UserNeeds(sql_alchemy_lib.Base):
     is_visible = Column(Boolean, default=True)
     fk_business_category_id = Column(Integer, ForeignKey('business_category.id'))
     fk_user_id = Column(CHAR(36), ForeignKey('users.id'))
+
+    user_info = relationship("UserModel", backref="user_needs")
+    business_category = relationship("BusinessCategory", backref="user_needs")
 
     @property
     def user_info(self) -> dict[str, str]:

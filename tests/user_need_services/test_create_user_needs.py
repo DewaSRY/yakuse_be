@@ -12,6 +12,10 @@ def get_user_model(get_db):
 def test_create_user_needs(get_db, get_user_model):
     actual = user_need_services.create_user_need_service(
         db=get_db, user_need=user_need_dtos.UserNeedCreateDto(), user_id=get_user_model.id)
+    
+    print(actual.data.title)
+    print(actual.data.description)
+    print(actual.data.fk_business_category_id)
 
     assert actual.data is not None
     assert actual.error is None

@@ -6,12 +6,14 @@ from pydantic import BaseModel, Field
 class UserNeedCreateDto(BaseModel):
     title: str = Field(default="some needs from cool guy")
     description: str = Field(default="he is handsome and needs a girl friends")
+    fk_business_category_id: int = Field(default=1)
 
 
 class UserNeedUpdateDto(BaseModel):
     title: str = Field("some needs from hot guy")
     description: str = Field("he is handsome and needs a woman")
     is_visible: bool = Field(False)
+    fk_business_category_id: int = Field(2)
 
 
 class UserNeedUserInfoDto(BaseModel):

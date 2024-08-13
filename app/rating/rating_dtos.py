@@ -9,22 +9,23 @@ class BusinessRatingCreateDto(BaseModel):
     review_description: str
     fk_business_id: str
 
+
 class BusinessRatingAllResponseDto(BaseModel):
-    id : str
-    rating_count : int
-    review_description : Optional[str] = None
-    created_at : datetime
-    updated_at : datetime
-    business_name : Optional[str] = None
-    rater_name : Optional[str] = None
+    id: str
+    rating_count: int
+    review_description: Optional[str] = None
+    created_at: datetime
+    updated_at: datetime
+    business_name: Optional[str] = None
+    rater_name: Optional[str] = None
+
 
 class BusinessRatingDto(BaseModel):
-    id : str
+    id: str
     rating_count: int
     review_description: str
     business_name: Optional[str] = None
-    rater_name : Optional[str] = None
+    rater_name: Optional[str] = None
 
     class Config:
-        orm_mode = True
         from_attributes = True

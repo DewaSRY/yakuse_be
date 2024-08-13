@@ -53,7 +53,9 @@ async def upload_photo_business(db: Session, user_id: str, file: UploadFile) -> 
         db.rollback()
         raise HTTPException(status_code=409, detail="Database conflict: " + str(e))
 
-async def upload_photo_business_by_business_id(db: Session, business_id:uuid.UUID , user_id: str, file: UploadFile) -> optional.Optional[Business, Exception]:
+
+async def upload_photo_business_by_business_id(db: Session, business_id: uuid.UUID, user_id: str, file: UploadFile) -> \
+        optional.Optional[Business, Exception]:
     try:
         # Panggil fungsi async dengan await
         opt_content = await create_image_service(upload_file=file, domain="business")
@@ -71,11 +73,11 @@ async def upload_photo_business_by_business_id(db: Session, business_id:uuid.UUI
 
         else:
             print("Business not found")
-            raise optional.build(error= HTTPException(status_code=404, detail="Business not found"))
+            raise optional.build(error=HTTPException(status_code=404, detail="Business not found"))
 
     except SQLAlchemyError as e:
         db.rollback()
-        raise optional.build(error= HTTPException(status_code=409, detail="Database conflict: " + str(e)))
+        raise optional.build(error=HTTPException(status_code=409, detail="Database conflict: " + str(e)))
 
 
 # business-edit
@@ -102,19 +104,23 @@ def business_edit(db: Session, business: business_dtos.BusinessEdiDto, user_id: 
         db.rollback()
         raise optional.build(error=HTTPException(status_code=409, detail="Database conflict: " + str(e)))
 
+
 # get-all-list-business-public
 def get_all_business(db: Session, skip: int = 0, limit: int = 100) -> optional.Optional[Business, Exception]:
-    try:    
-        business_model = db.query(Business).order_by(desc(Business.updated_at)).offset(skip).limit(limit).all()
+    try:
+        business_model = db.query(Business) \
+            .order_by(desc(Business.updated_at)).offset(skip).limit(limit).all()
 
-        if business_model:
+        if business_model:  # if the bisniss is not zero
             return optional.build(data=business_model)
         else:
-            raise optional.build(error=HTTPException(status_code=404, detail="Business list can not access"))
+            return optional.build(
+                error=HTTPException(status_code=404, detail="please create the business to access all busines"))
 
     except SQLAlchemyError as e:
         db.rollback()
         raise optional.build(error=HTTPException(status_code=409, detail="Database conflict: " + str(e)))
+
 
 # get_all_mybusiness
 def get_business_by_user_id(db: Session, user_id: str) -> list[Type[Business]]:
@@ -122,6 +128,7 @@ def get_business_by_user_id(db: Session, user_id: str) -> list[Type[Business]]:
     return db.query(Business) \
         .filter(Business.fk_owner_id == user_id) \
         .all()
+
 
 # detail-business-by-uuid
 def get_detail_business_by_id(db: Session, business_id: uuid.UUID) -> optional.Optional:

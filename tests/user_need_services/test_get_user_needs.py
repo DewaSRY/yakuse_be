@@ -9,6 +9,7 @@ from app.libs import sql_alchemy_lib
 def get_user_model(get_db):
     return user_services.create_user(get_db, user_dtos.UserCreateDto()).data
 
+
 @pytest.fixture()
 def get_user_model_2(get_db):
     return user_services.create_user(
@@ -16,12 +17,13 @@ def get_user_model_2(get_db):
         user_dtos.UserCreateDto(username="a", email="a@a.a", password="a", fullname="a")
     ).data
 
-def test_get_user_need_by_id(get_db, get_user_model):
-    user_need_create = user_need_services.create_user_need_service(
-        db=get_db, user_need=user_need_dtos.UserNeedCreateDto(), user_id=get_user_model.id).data
-    
-    return user_services.create_user(
-        get_db, user_dtos.UserCreateDto()).data
+
+# def test_get_user_need_by_id(get_db, get_user_model):
+#     user_need_create = user_need_services.create_user_need_service(
+#         db=get_db, user_need=user_need_dtos.UserNeedCreateDto(), user_id=get_user_model.id).data
+#
+#     return user_services.create_user(
+#         get_db, user_dtos.UserCreateDto()).data
 
 
 @pytest.fixture()
@@ -41,6 +43,7 @@ def test_get_user_need_by_id(get_db, get_user_needs_model, monkeypatch):
     )
     assert actual.data is not None
     assert actual.error is None
+
 
 def test_get_all_our_user_needs_should_return_10(get_db, get_user_model):
     list_user_need = []
@@ -73,8 +76,8 @@ def test_get_all_public_user_needs(get_db, get_user_model, get_user_model_2):
         list_user_need_1.append(create_user_need)
     for n in range(total_user_need_2):
         create_user_need = user_need_dtos.UserNeedCreateDto(
-            title=f"title {total_user_need_1+n}",
-            description=f"description {total_user_need_1+n}"
+            title=f"title {total_user_need_1 + n}",
+            description=f"description {total_user_need_1 + n}"
         )
         list_user_need_2.append(create_user_need)
     for user_need in list_user_need_1:
@@ -86,7 +89,8 @@ def test_get_all_public_user_needs(get_db, get_user_model, get_user_model_2):
             db=get_db, user_need=user_need, user_id=get_user_model_2.id
         )
 
-    assert len(user_need_services.get_user_need_service(get_db).data) == total_user_need_1+total_user_need_2
+    assert len(user_need_services.get_user_need_service(get_db).data) == total_user_need_1 + total_user_need_2
+
 
 def test_get_user_needs_by_user_id(get_db, get_user_model, get_user_model_2):
     list_user_need_1 = []
@@ -101,8 +105,8 @@ def test_get_user_needs_by_user_id(get_db, get_user_model, get_user_model_2):
         list_user_need_1.append(create_user_need)
     for n in range(total_user_need_2):
         create_user_need = user_need_dtos.UserNeedCreateDto(
-            title=f"title {total_user_need_1+n}",
-            description=f"description {total_user_need_1+n}"
+            title=f"title {total_user_need_1 + n}",
+            description=f"description {total_user_need_1 + n}"
         )
         list_user_need_2.append(create_user_need)
     for user_need in list_user_need_1:
@@ -115,5 +119,5 @@ def test_get_user_needs_by_user_id(get_db, get_user_model, get_user_model_2):
         )
 
     assert len(user_need_services.get_user_need_by_user_id_service(get_db, get_user_model.id).data) == total_user_need_1
-    assert len(user_need_services.get_user_need_by_user_id_service(get_db, get_user_model_2.id).data) == total_user_need_2
-
+    assert len(
+        user_need_services.get_user_need_by_user_id_service(get_db, get_user_model_2.id).data) == total_user_need_2

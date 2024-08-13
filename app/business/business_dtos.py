@@ -31,8 +31,8 @@ class BusinessResponse(BaseModel):
     owner: Optional[str] = None
     rating: Optional[int] = None
     rating_list: List[BusinessRatingDto]
+
     class Config:
-        orm_mode = True
         from_attributes = True
 
 

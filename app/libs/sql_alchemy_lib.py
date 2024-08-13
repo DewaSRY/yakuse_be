@@ -9,17 +9,27 @@ load_dotenv()
 #######################This use to create connection with database###########################################
 """
 APP_DEVELOPMENT = os.getenv("APP_DEVELOPMENT", True)
+print(APP_DEVELOPMENT)
 engine: Engine
-if APP_DEVELOPMENT:
+if APP_DEVELOPMENT == "True":
     SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app.db"
     engine = create_engine(
         SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
     )
 else:
-    # letter we will use postgrest for easier service
-    MYSQL_CONNECTOR = os.getenv("SQLALCHEMY_DATABASE_URL", "mysql+pymysql://root:password@localhost/MYDB")
-    engine = create_engine(MYSQL_CONNECTOR)
+    SQLALCHEMY_DATABASE_URL = "sqlite:///./prod_app.db"
+    engine = create_engine(
+        SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+    )
 
+    # letter we will use postgrest for easier service
+    # MYSQL_CONNECTOR = os.getenv("SQLALCHEMY_DATABASE_URL", "mysql+pymysql://root:password@localhost/MYDB")
+    # engine = create_engine(MYSQL_CONNECTOR)
+
+# SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app.db"
+# engine = create_engine(
+#     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+# )
 """
 ######################Tis code use to make interact with database object###################################
 ######################Mostly to do manipulation to define entity of database###############################

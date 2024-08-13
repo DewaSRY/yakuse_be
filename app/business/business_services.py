@@ -1,6 +1,6 @@
 from typing import Type
 import uuid
-from sqlalchemy import func
+from sqlalchemy import desc, func
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy.exc import SQLAlchemyError
 from fastapi import HTTPException, UploadFile, status
@@ -53,6 +53,30 @@ async def upload_photo_business(db: Session, user_id: str, file: UploadFile) -> 
         db.rollback()
         raise HTTPException(status_code=409, detail="Database conflict: " + str(e))
 
+async def upload_photo_business_by_business_id(db: Session, business_id:uuid.UUID , user_id: str, file: UploadFile) -> optional.Optional[Business, Exception]:
+    try:
+        # Panggil fungsi async dengan await
+        opt_content = await create_image_service(upload_file=file, domain="business")
+        print(f"Querying for business_id: {business_id} and user_id: {user_id}")
+        business = db.query(Business).filter(Business.fk_owner_id == user_id, Business.id == business_id).first()
+
+        if business:
+            print(f"Found business: {business}")
+            # Update photo_url di tabel business
+            business.photo_url = opt_content.data
+            db.commit()
+            db.refresh(business)
+
+            return optional.build(data=business)  # Mengembalikan objek Business tanpa 'await'
+
+        else:
+            print("Business not found")
+            raise optional.build(error= HTTPException(status_code=404, detail="Business not found"))
+
+    except SQLAlchemyError as e:
+        db.rollback()
+        raise optional.build(error= HTTPException(status_code=409, detail="Database conflict: " + str(e)))
+
 
 # business-edit
 def business_edit(db: Session, business: business_dtos.BusinessEdiDto, user_id: str) -> optional.Optional[
@@ -78,72 +102,26 @@ def business_edit(db: Session, business: business_dtos.BusinessEdiDto, user_id: 
         db.rollback()
         raise optional.build(error=HTTPException(status_code=409, detail="Database conflict: " + str(e)))
 
+# get-all-list-business-public
+def get_all_business(db: Session, skip: int = 0, limit: int = 100) -> optional.Optional[Business, Exception]:
+    try:    
+        business_model = db.query(Business).order_by(desc(Business.updated_at)).offset(skip).limit(limit).all()
 
-def get_all_business(db: Session, skip: int = 0, limit: int = 100) -> list[Type[Business]]:
-    return db.query(Business) \
-        .offset(skip) \
-        .limit(limit) \
-        .all()
+        if business_model:
+            return optional.build(data=business_model)
+        else:
+            raise optional.build(error=HTTPException(status_code=404, detail="Business list can not access"))
 
+    except SQLAlchemyError as e:
+        db.rollback()
+        raise optional.build(error=HTTPException(status_code=409, detail="Database conflict: " + str(e)))
 
-def get_businesses_with_ratings(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(
-        Business.id,
-        Business.name,
-        Rating.rating_count
-    ) \
-        .join(Rating) \
-        .offset(skip) \
-        .limit(limit) \
-        .all()
-
-
+# get_all_mybusiness
 def get_business_by_user_id(db: Session, user_id: str) -> list[Type[Business]]:
     print(user_id)
     return db.query(Business) \
         .filter(Business.fk_owner_id == user_id) \
         .all()
-
-
-def get_businesses_with_testing(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(
-        Business.id,
-        Business.name,
-        Business.photo_url,
-        BusinessCategory.name.label('category'),
-    ) \
-        .join(BusinessCategory, Business.fk_business_category_id == BusinessCategory.id) \
-        .order_by(Business.updated_at) \
-        .offset(skip) \
-        .limit(limit) \
-        .all()
-
-
-def get_businesses_by_user_login_with_testing(db: Session, user_id: str, skip: int = 0, limit: int = 100):
-    return db.query(
-        Business.id,
-        Business.name,
-        Business.photo_url,
-        Business.contact,
-        Business.location,
-        Business.description,
-        Business.created_at,
-        Business.updated_at,
-        BusinessCategory.name.label('category'),
-        UserModel.fullname.label('owner'),
-        func.avg(Rating.rating_count).label('rating')
-    ) \
-        .join(BusinessCategory, Business.fk_business_category_id == BusinessCategory.id) \
-        .join(UserModel, Business.fk_owner_id == UserModel.id) \
-        .join(Rating, Rating.fk_business_id == Business.id) \
-        .filter(Business.fk_owner_id == user_id).order_by(Business.updated_at) \
-        .offset(skip) \
-        .limit(limit) \
-        .all()
-
-
-# detail-business-by-uuid
-
 
 # detail-business-by-uuid
 def get_detail_business_by_id(db: Session, business_id: uuid.UUID) -> optional.Optional:

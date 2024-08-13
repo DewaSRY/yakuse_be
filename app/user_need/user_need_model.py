@@ -7,7 +7,6 @@ from app.libs import sql_alchemy_lib
 from .user_need_dtos import UserNeedsUserInfoDto
 
 """
-
     owner_username: str
     user_profile_url: str
 """
@@ -15,6 +14,7 @@ from .user_need_dtos import UserNeedsUserInfoDto
 
 class UserNeeds(sql_alchemy_lib.Base):
     __tablename__ = "user_needs"
+    
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     title = Column(String(100), unique=True, index=True)
     description = Column(Text)
@@ -33,6 +33,7 @@ class UserNeeds(sql_alchemy_lib.Base):
             .filter(UserModel.id == self.fk_user_id).first()
 
         return UserNeedsUserInfoDto(
+            user_id=user_model.id,
             owner_username=user_model.username,
             user_profile_url=user_model.photo_url
         ).model_dump()

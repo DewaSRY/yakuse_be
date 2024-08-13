@@ -9,21 +9,22 @@ class UserNeedCreateDto(BaseModel):
 
 
 class UserNeedUpdateDto(BaseModel):
-    title: str
-    description: str
-    is_visible: bool
+    title: str = Field("some needs from hot guy")
+    description: str = Field("he is handsome and needs a woman")
+    is_visible: bool = Field(False)
 
 
 class UserNeedsUserInfoDto(BaseModel):
+    user_id: str
     owner_username: str = Field("someName")
     user_profile_url: Optional[str] = Field("some url")
 
 
 class UserNeedResponseDto(BaseModel):
     id: int
-    title: str
+    title: str = Field("some title")
     user_info: UserNeedsUserInfoDto
-    description: str
-    is_visible: bool
+    description: str = Field("some desc")
+    is_visible: bool = Field(True)
     created_at: datetime
     updated_at: datetime

@@ -19,3 +19,24 @@ class Rating(sql_alchemy_lib.Base):
 
     # Relationship to Business
     business = relationship("Business", back_populates="ratings")
+
+
+    @property
+    def business_name(self) -> str:
+        from app.business.business_model import Business
+        session = next(sql_alchemy_lib.get_db())
+        business_model: Business = session.query(Business) \
+            .filter(Business.id.like(f"%{self.fk_business_id}%")) \
+            .first()
+
+        return business_model.name if business_model else ""
+
+    @property
+    def rater_name(self) -> str:
+        from app.user.user_model import UserModel
+        session = next(sql_alchemy_lib.get_db())
+        user_models: UserModel = session.query(UserModel) \
+            .filter(UserModel.id.like(f"%{self.fk_rater_id}%")) \
+            .first()
+
+        return user_models.username if user_models else ""

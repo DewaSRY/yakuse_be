@@ -1,7 +1,9 @@
-from typing import Optional
+from typing import List, Optional
 from datetime import datetime
 
 from pydantic import BaseModel, Field
+
+from app.rating.rating_dtos import BusinessRatingDto
 
 
 class BusinessCreateDto(BaseModel):
@@ -28,6 +30,10 @@ class BusinessResponse(BaseModel):
     category: Optional[str] = None
     owner: Optional[str] = None
     rating: Optional[int] = None
+    rating_list: List[BusinessRatingDto]
+    class Config:
+        orm_mode = True
+        from_attributes = True
 
 
 # class BusinessAllPost(BaseModel):

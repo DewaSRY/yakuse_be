@@ -62,7 +62,7 @@ async def update_business_profile(
 
 # get-all-business-by-login-user-id
 @router.get("/my_business", response_model=list[business_dtos.BusinessResponse])
-def get_all_business(
+def get_all_my_business(
         jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
         db: Session = Depends(get_db)):
     return business_services.get_business_by_user_id(db, jwt_token.id)

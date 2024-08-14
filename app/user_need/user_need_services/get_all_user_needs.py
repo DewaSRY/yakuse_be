@@ -1,5 +1,6 @@
 from typing import Type
 
+from sqlalchemy import desc
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 from fastapi import HTTPException, status
@@ -12,9 +13,9 @@ from app.utils.optional import Optional, build
 
 def get_all_user_needs(db: Session, skip: int = 0, limit: int = 100) -> Optional:
     try:
-        user_needs = db.query(UserNeeds).offset(skip).limit(limit).all()
+        user_needs = db.query(UserNeeds).order_by(desc(UserNeeds.updated_at)).offset(skip).limit(limit).all()
 
-        user_need_dtos = [user_need.to_dto() for user_need in user_needs]
+        user_need_dtos = [user_need.to_response_dto() for user_need in user_needs]
 
         return build(data=user_need_dtos)
     except SQLAlchemyError as e:

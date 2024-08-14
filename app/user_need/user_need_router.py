@@ -28,7 +28,7 @@ def get_all_our_user_need(
     jwt_token: Annotated[TokenPayLoad, Depends(get_jwt_pyload)],
     db: Session = Depends(get_db)
 ):
-    return user_need_services.get_user_need_by_user_id(db, jwt_token.id)
+    return user_need_services.get_user_need_by_user_id(db, jwt_token.id).unwrap()
 
 @router.get("/public", response_model=list[user_need_dtos.UserNeedResponseDto], status_code=status.HTTP_200_OK)
 def get_all_public_user_need(
@@ -41,7 +41,7 @@ def get_user_need_by_id(
     user_need_id: str,
     db: Session = Depends(get_db)
 ):
-    return user_need_services.get_user_need_by_user_id(db, user_need_id)
+    return user_need_services.get_user_need_by_user_id(db, user_need_id).unwrap()
 
 @router.put("/{user_need_id}", response_model=user_need_dtos.UserNeedResponseDto)
 async def update_user_need_by_id(

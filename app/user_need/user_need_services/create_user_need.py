@@ -23,7 +23,7 @@ def create_user_need(db: Session, user_need: user_need_dtos.UserNeedCreateDto, u
         db.commit()
         db.refresh(user_need_model)
 
-        user_need_dto = user_need_model.to_dto()
+        user_need_dto = user_need_model.to_response_dto()
 
         return build(data=user_need_dto)
     except SQLAlchemyError as e:

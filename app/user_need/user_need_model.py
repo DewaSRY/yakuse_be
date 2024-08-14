@@ -52,7 +52,7 @@ class UserNeeds(sql_alchemy_lib.Base):
             name=business_category_model.name
         ).model_dump()
     
-    def to_dto(self) -> user_need_dtos.UserNeedResponseDto:
+    def to_response_dto(self) -> user_need_dtos.UserNeedResponseDto:
         return user_need_dtos.UserNeedResponseDto(
             id=self.id,
             title=self.title,

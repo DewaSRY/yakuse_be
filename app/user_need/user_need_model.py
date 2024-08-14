@@ -34,7 +34,8 @@ class UserNeeds(sql_alchemy_lib.Base):
 
         return user_need_dtos.UserNeedUserInfoDto(
             user_id=user_model.id,
-            owner_username=user_model.username,
+            fullname=user_model.fullname,
+            username=user_model.username,
             user_profile_url=user_model.photo_url
         ).model_dump()
     

@@ -34,7 +34,7 @@ def get_all_our_user_need(
 def get_all_public_user_need(
     db: Session = Depends(get_db)
 ):
-    return user_need_services.get_all_user_needs(db)
+    return user_need_services.get_all_user_needs(db).unwrap()
 
 @router.get("/{user_need_id}", response_model=user_need_dtos.UserNeedResponseDto, status_code=status.HTTP_200_OK)
 def get_user_need_by_id(

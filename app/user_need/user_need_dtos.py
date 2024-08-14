@@ -18,7 +18,8 @@ class UserNeedUpdateDto(BaseModel):
 
 class UserNeedUserInfoDto(BaseModel):
     user_id: str
-    owner_username: str
+    fullname: str
+    username: str
     user_profile_url: Optional[str]
 
 

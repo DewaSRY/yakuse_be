@@ -44,7 +44,6 @@ class Business(sql_alchemy_lib.Base):
         user_models: UserModel = session.query(UserModel) \
             .filter(UserModel.id.like(f"%{self.fk_owner_id}%")) \
             .first()
-
         return user_models.username if user_models else ""
 
     @property

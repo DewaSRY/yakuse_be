@@ -37,15 +37,16 @@ class BusinessResponse(BaseModel):
         from_attributes = True
 
 
-# class BusinessAllPost(BaseModel):
-#     id: str
-#     name: str
-#     description: str
-#     photo_url: Optional[str] = None
-#     location: str
-#     contact: str
-#     created_at: datetime
-#     updated_at: datetime
+class BusinessCreateWithPhotoDto(BaseModel):
+    id: Optional[str]  # Bisa None
+    name: str
+    description: str
+    photo_url: Optional[str] = None  # Bisa None
+    location: str
+    contact: str
+    fk_business_category_id: int = Field(default=1)
+    created_at: Optional[datetime] = None  # Bisa None
+    updated_at: Optional[datetime] = None  # Bisa None
 
 
 class BusinessAllPost(BaseModel):
@@ -54,7 +55,7 @@ class BusinessAllPost(BaseModel):
     photo_url: Optional[str] = None
     category: Optional[str] = None
     rating: Optional[int] = None
-
+    created_at: datetime
 
 class BusinessEdiDto(BaseModel):
     fk_business_category_id: int

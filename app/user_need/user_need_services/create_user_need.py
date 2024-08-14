@@ -16,7 +16,7 @@ def create_user_need(db: Session, user_need: user_need_dtos.UserNeedCreateDto, u
             title=user_need.title,
             description=user_need.description,
             fk_business_category_id=user_need.fk_business_category_id,
-            fk_user_id=user_id
+            fk_user_id=user_id,
         )
 
         db.add(user_need_model)

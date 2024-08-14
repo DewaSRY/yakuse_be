@@ -10,7 +10,7 @@ from app.user_need.user_need_model import UserNeeds
 from app.utils.optional import Optional, build
 
 
-def update_user_need_by_id_service(db: Session, user_id: str, user_need_id: str,
+def update_user_need_by_id(db: Session, user_id: str, user_need_id: str,
                                    user_need_update: UserNeedUpdateDto) -> Optional:
     try:
         user_need_model = db.query(UserNeeds).filter(UserNeeds.fk_user_id == user_id).filter(

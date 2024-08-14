@@ -10,7 +10,7 @@ from app.user_need.user_need_model import UserNeeds
 from app.utils.optional import Optional, build
 
 
-def get_user_need_by_user_id_service(db: Session, user_id: str) -> list[Type[UserNeeds]]:
+def get_user_need_by_user_id(db: Session, user_id: str) -> list[Type[UserNeeds]]:
     try:
         user_need = db.query(UserNeeds).filter(UserNeeds.fk_user_id == user_id).all()
         return build(data=user_need)

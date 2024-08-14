@@ -54,6 +54,15 @@ class Business(sql_alchemy_lib.Base):
 
         total_rating = sum(rating.rating_count for rating in self.ratings)
         return total_rating / len(self.ratings)
+    
+    @property
+    def total_rater(self):
+        if not self.ratings:
+            return 0
+
+        # Hitung jumlah unik user_id dari ratings
+        unique_raters = {rating.fk_rater_id for rating in self.ratings}
+        return len(unique_raters)
 
     @property
     def rating_list(self):

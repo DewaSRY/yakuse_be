@@ -17,7 +17,7 @@ router = APIRouter(
 
 
 # create-bisnis
-@router.post("/", response_model=business_dtos.BusinessCreateDto)
+@router.post("/", response_model=business_dtos.BusinessResponse)
 def create_business(
         business: business_dtos.BusinessCreateDto,
         jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],

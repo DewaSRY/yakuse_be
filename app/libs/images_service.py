@@ -28,7 +28,6 @@ async def create_image_service(upload_file: UploadFile, domain: str) -> optional
 
 def _is_extension_valid(file_name: str):
     result = re.findall(r"\.[a-zA-Z]{3,}", file_name)[0]
-    print(result in ALLOWED_EXTENSION)
     return result in ALLOWED_EXTENSION
 
 
@@ -37,7 +36,3 @@ def _raise_exception() -> optional.Optional:
         status_code=status.HTTP_404_NOT_FOUND,
         detail="not allowed extension"
     ))
-
-
-if __name__ == "__main__":
-    print(_is_extension_valid("hallo.jpg"))

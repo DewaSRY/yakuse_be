@@ -42,7 +42,7 @@ WORKDIR /usr/src/app
 COPY --from=build /usr/src/app/.venv .venv
 # Copy the application code to the container
 COPY . /usr/src/app
-COPY images /usr/src/app/images
+
 
 
 # See https://docs.docker.com/go/dockerfile-user-best-practices/

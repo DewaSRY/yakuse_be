@@ -6,11 +6,7 @@ import os
 
 load_dotenv()
 IMAGES_DIRECTORY = "images"
-ALLOWED_EXTENSION = [".png", ".jpg"]
-
-
-def sum(num_1: int) -> int:
-    return num_1 + 3
+ALLOWED_EXTENSION = [".png", ".jpg", ".webp"]
 
 
 async def create_image_service(upload_file: UploadFile, domain: str) -> optional.Optional:
@@ -18,12 +14,15 @@ async def create_image_service(upload_file: UploadFile, domain: str) -> optional
 
     if not _is_extension_valid(file_name=upload_file.filename):
         return _raise_exception()
+
     image_dir = f"{IMAGES_DIRECTORY}/{domain}/{upload_file.filename}"
 
     with open(image_dir, "wb") as f:
         f.write(content)
 
-    image_url = f"{os.getenv("HOST_URL", "http://127.0.0.1:8000/")}{image_dir}"
+    host_url = os.getenv("HOST_URL", "http://127.0.0.1:8000/")
+    image_url = f"{host_url}/{image_dir}"
+
     return optional.build(data=image_url)
 
 

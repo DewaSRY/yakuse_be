@@ -10,9 +10,12 @@ from app.user_need.user_need_model import UserNeeds
 from app.utils.optional import Optional, build
 
 
-def get_user_need_by_id(db: Session, user_need_id: str) -> Type[UserNeeds]:
+def get_user_need_by_id(db: Session, user_need_id: int) -> Optional:
     try:
-        user_need = db.query(UserNeeds).filter(UserNeeds.id.like(f"%{user_need_id}%")).first()
-        return build(data=user_need)
+        user_need = db.query(UserNeeds).filter(UserNeeds.id == user_need_id).first()
+
+        user_need_dto = user_need.to_response_dto()
+
+        return build(data=user_need_dto)
     except SQLAlchemyError as e:
         return build(error=HTTPException(detail=f"{e}"))

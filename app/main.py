@@ -10,6 +10,8 @@ from .business_category import business_category_seed
 
 from fastapi.staticfiles import StaticFiles
 
+import os
+
 """
 This user to auto create all table
 Dewa Wont to change database to use SQLite along development
@@ -49,4 +51,6 @@ app.add_middleware(
 if business_category_seed.get_business_category_length() == 0:
     business_category_seed.init_business_category()
 
-app.mount("/images", StaticFiles(directory="images"), name="images")
+root_directory = os.getcwd()  # Gets the current working directory
+images_directory = os.path.join(root_directory, "images")
+app.mount("/images", StaticFiles(directory=images_directory), name="images")

@@ -16,7 +16,7 @@ class UserNeeds(sql_alchemy_lib.Base):
     __tablename__ = "user_needs"
     
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
-    title = Column(String(100), unique=True, index=True)
+    title = Column(String(100))
     description = Column(Text)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())

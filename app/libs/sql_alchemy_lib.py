@@ -10,20 +10,15 @@ load_dotenv()
 """
 APP_DEVELOPMENT = os.getenv("APP_DEVELOPMENT", True)
 engine: Engine
-if APP_DEVELOPMENT == "True":
-    SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app.db"
-    engine = create_engine(
-        SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-    )
-else:
-    SQLALCHEMY_DATABASE_URL = "sqlite:///./prod_app.db"
-    engine = create_engine(
-        SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-    )
 
-    # letter we will use postgrest for easier service
-    # MYSQL_CONNECTOR = os.getenv("SQLALCHEMY_DATABASE_URL", "mysql+pymysql://root:password@localhost/MYDB")
-    # engine = create_engine(MYSQL_CONNECTOR)
+SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app.db"
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+)
+
+# letter we will use postgrest for easier service
+# MYSQL_CONNECTOR = os.getenv("SQLALCHEMY_DATABASE_URL", "mysql+pymysql://root:password@localhost/MYDB")
+# engine = create_engine(MYSQL_CONNECTOR)
 
 # SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app.db"
 # engine = create_engine(

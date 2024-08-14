@@ -48,17 +48,17 @@ COPY . /usr/src/app
 # See https://docs.docker.com/go/dockerfile-user-best-practices/
 ARG UID=10001
 # Add a non-privileged user
-RUN adduser \
-    --disabled-password \
-    --gecos "" \
-    --home "/nonexistent" \
-    --shell "/sbin/nologin" \
-    --no-create-home \
-    --uid "${UID}" \
-    appuser
+#RUN adduser \
+#    --disabled-password \
+#    --gecos "" \
+#    --home "/nonexistent" \
+#    --shell "/sbin/nologin" \
+#    --no-create-home \
+#    --uid "${UID}" \
+#    appuser
 
 # Switch to the non-privileged user
-USER appuser
+#USER appuser
 
 # Expose the port the app runs on
 EXPOSE 8000

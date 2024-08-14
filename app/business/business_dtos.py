@@ -30,6 +30,7 @@ class BusinessResponse(BaseModel):
     category: Optional[str] = None
     owner: Optional[str] = None
     rating: Optional[int] = None
+    total_rater: Optional[int] = None
     rating_list: List[BusinessRatingDto]
 
     class Config:

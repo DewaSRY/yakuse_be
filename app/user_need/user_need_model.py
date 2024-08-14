@@ -4,7 +4,7 @@ from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, T
 from sqlalchemy.dialects.mysql import CHAR
 
 from app.libs import sql_alchemy_lib
-from .user_need_dtos import UserNeedsUserInfoDto
+from .user_need_dtos import UserNeedUserInfoDto, UserNeedBusinessCategoryDto
 
 """
     owner_username: str
@@ -32,10 +32,23 @@ class UserNeeds(sql_alchemy_lib.Base):
         user_model: UserModel = session.query(UserModel) \
             .filter(UserModel.id == self.fk_user_id).first()
 
-        return UserNeedsUserInfoDto(
+        return UserNeedUserInfoDto(
             user_id=user_model.id,
             owner_username=user_model.username,
             user_profile_url=user_model.photo_url
+        ).model_dump()
+    
+    @property
+    def category(self):
+        from app.business_category.business_category_model import BusinessCategory
+        session = next(sql_alchemy_lib.get_db())
+
+        business_category_model: BusinessCategory = session.query(BusinessCategory) \
+            .filter(BusinessCategory.id == self.fk_business_category_id).first()
+        
+        return UserNeedBusinessCategoryDto(
+            id=business_category_model.id,
+            name=business_category_model.name
         ).model_dump()
 
     def __repr__(self):

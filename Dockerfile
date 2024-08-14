@@ -40,7 +40,6 @@ ENV VIRTUAL_ENV=/usr/src/app/.venv \
 WORKDIR /usr/src/app
 #copy the dependency
 COPY --from=build /usr/src/app/.venv .venv
-
 # Copy the application code to the container
 COPY . /usr/src/app
 

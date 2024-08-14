@@ -52,5 +52,5 @@ if business_category_seed.get_business_category_length() == 0:
     business_category_seed.init_business_category()
 
 root_directory = os.getcwd()  # Gets the current working directory
-images_directory = os.path.join(root_directory, "images")
+images_directory = os.path.join(root_directory, "app/images")
 app.mount("/images", StaticFiles(directory=images_directory), name="images")

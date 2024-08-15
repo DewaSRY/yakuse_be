@@ -9,11 +9,11 @@ from app.user.user_model import UserModel
 from app.utils import optional, find_errr_from_args
 
 
-def get_user_profile(db: Session, user_id: str) -> optional.Optional[Type[UserModel], HTTPException]:
+def get_user_profile_by_id(db: Session, user_id: str) -> optional.Optional:
     try:
-        user_model: Type[UserModel] = db.query(UserModel) \
+        user_model=db.query(UserModel) \
             .filter(UserModel.id == user_id).first()
-        if not user_model:
+        if user_model is None:
             return optional.build(error=HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="User not found"))
         return optional.build(data=user_model)
@@ -22,4 +22,3 @@ def get_user_profile(db: Session, user_id: str) -> optional.Optional[Type[UserMo
         db.rollback()
         return optional.build(error=HTTPException(
             status_code=409, detail="Database conflict: " + str(e)))
-

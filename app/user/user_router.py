@@ -8,6 +8,7 @@ from app.libs.jwt_lib import jwt_service, jwt_dto
 
 from . import user_services, user_dtos, user_firebase_services
 
+
 router = APIRouter(
     prefix="/user",
     tags=["user"]
@@ -38,6 +39,16 @@ async def get_user_profile_by_id(
         db: Session = Depends(get_db)):
     """get user profile by id"""
     return user_services.get_user_profile(db, jwt_token.id).unwrap()
+
+
+# get-other-user-profile-by-id
+@router.get("/profile/{user_id}", response_model=user_dtos.UserCreateResponseDto)
+async def get_other_profile_by_user_id(
+        user_id: str,
+        jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
+        db: Session = Depends(get_db)):
+    """get other user profile by user_id"""
+    return user_services.get_user_profile_by_id(db, user_id).unwrap()
 
 
 # edit-profile-user

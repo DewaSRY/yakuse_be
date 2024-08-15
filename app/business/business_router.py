@@ -17,7 +17,7 @@ router = APIRouter(
 )
 
 # create-business-with-photo
-@router.post("/create-business", response_model=business_dtos.BusinessCreateWithPhotoDto)
+@router.post("/create", response_model=business_dtos.BusinessCreateWithPhotoDto)
 async def create_my_profile_business(
     business: business_dtos.BusinessCreateDto = Depends(),
     file: UploadFile = File(...), 
@@ -34,14 +34,23 @@ async def create_my_profile_business(
     return result.data
 
 
-# edit-profile-business
-@router.put("/edit", response_model=business_dtos.BusinessEdiDto)
+@router.put("/edit/{business_id}", response_model=business_dtos.BusinessEditWithPhotoDto)
 async def update_my_profile_business(
-        business: business_dtos.BusinessEdiDto,
-        jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
-        db: Session = Depends(get_db)):
-    """This method use to update user profile"""
-    return business_services.business_edit(db, business, jwt_token.id).unwrap()
+    business_id: str,
+    business: business_dtos.BusinessEditDto = Depends(),
+    file: UploadFile = File(...),
+    jwt_token: jwt_service.TokenPayLoad = Depends(jwt_service.get_jwt_pyload),
+    db: Session = Depends(get_db)
+):
+    """This method is used to update a business profile"""
+    result = await business_services.edit_business_by_business_id(db, business_id, business, jwt_token.id, file)
+
+    # Jika optional berisi error, raise HTTPException
+    if result.error:
+        raise result.error
+
+    # Return data yang valid sesuai dengan DTO
+    return result.data
 
 
 # get-all-business-by-login-user-id
@@ -51,12 +60,14 @@ def get_all_my_business(
         db: Session = Depends(get_db)):
     return business_services.get_business_by_user_id(db, jwt_token.id).unwrap()
 
-# @router.get("/{user_id}", response_model=list[business_dtos.BusinessResponse])
-# def get_profile_business_by_use_id(
-#         user_id:str,
-#         jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
-#         db: Session = Depends(get_db)):
-#     return business_services.get_business_by_user_id(db, user_id).unwrap()
+# get-all-business-user-by-user-id
+@router.get("/user/{user_id}", response_model=list[business_dtos.BusinessAllPost])
+def get_list_business_user_by_user_id(
+    user_id: str,
+    jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
+    db: Session = Depends(get_db)
+):
+    return business_services.get_all_business_by_user_id(db, user_id).unwrap()
 
 
 # get-all-business-public
@@ -67,7 +78,7 @@ def get_all_public_business_latest(
     return business_services.get_all_business(db).unwrap()
 
 
-@router.get("/detail/{business_id}", response_model=business_dtos.BusinessResponse)
+@router.get("/{business_id}", response_model=business_dtos.BusinessResponse)
 def get_detail_business_by_business_id(
         business_id: UUID,
         jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
@@ -75,6 +86,7 @@ def get_detail_business_by_business_id(
     return business_services.get_detail_business_by_business_id(db, business_id).unwrap()
 
 
+# --code--trial
 
 # create-bisnis
 # @router.post("/", response_model=business_dtos.BusinessResponse)
@@ -106,3 +118,13 @@ def get_detail_business_by_business_id(
 #     """This Method use to upload and update the photo profile of a business (file in png or jpg)"""
 #     business = await business_services.upload_photo_business(db, jwt_token.id, file)
 #     return business_dtos.BusinessPhotoProfileDto(photo_url=business.photo_url)
+
+
+# edit-profile-business
+# @router.put("/edit", response_model=business_dtos.BusinessEdiDto)
+# async def update_my_profile_business(
+#         business: business_dtos.BusinessEdiDto,
+#         jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
+#         db: Session = Depends(get_db)):
+#     """This method use to update user profile"""
+#     return business_services.business_edit(db, business, jwt_token.id).unwrap()

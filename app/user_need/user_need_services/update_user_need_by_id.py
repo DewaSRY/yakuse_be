@@ -19,6 +19,7 @@ def update_user_need_by_id(db: Session, user_id: str, user_need_id: str,
             raise HTTPException(status_code=404, detail='User need not found.')
         user_need_model.title = user_need_update.title
         user_need_model.description = user_need_update.description
+        user_need_model.fk_business_category_id = user_need_update.fk_business_category_id
         user_need_model.is_visible = user_need_update.is_visible
         db.add(user_need_model)
         db.commit()

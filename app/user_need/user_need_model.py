@@ -2,6 +2,7 @@ import uuid
 
 from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, Text, func
 from sqlalchemy.dialects.mysql import CHAR
+from sqlalchemy.orm import relationship, backref
 
 from app.libs import sql_alchemy_lib
 from app.user_need import user_need_dtos
@@ -23,6 +24,8 @@ class UserNeeds(sql_alchemy_lib.Base):
     is_visible = Column(Boolean, default=True)
     fk_business_category_id = Column(Integer, ForeignKey('business_category.id'))
     fk_user_id = Column(CHAR(36), ForeignKey('users.id'))
+
+    business_category = relationship("BusinessCategory", backref=backref("user_need", lazy=True))
 
     @property
     def user_info(self) -> dict[str, str]:

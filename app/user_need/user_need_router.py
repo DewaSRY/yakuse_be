@@ -29,7 +29,23 @@ def get_all_public_user_needs(
     db: Session = Depends(get_db)
 ):
     return user_need_services.get_all_user_needs(db).unwrap()
-    
+
+@router.get("/search/{keyword}", response_model=list[user_need_dtos.UserNeedResponseDto], status_code=status.HTTP_200_OK)
+def search_user_needs(
+    keyword: str,
+    jwt_token: Annotated[TokenPayLoad, Depends(get_jwt_pyload)],
+    db: Session = Depends(get_db)
+):
+    return user_need_services.search_user_needs_by_keyword(db, keyword).unwrap()
+
+@router.get("/category/{category_name}", response_model=list[user_need_dtos.UserNeedResponseDto], status_code=status.HTTP_200_OK)
+def get_user_needs_by_category_name(
+    category_name: str,
+    jwt_token: Annotated[TokenPayLoad, Depends(get_jwt_pyload)],
+    db: Session = Depends(get_db)
+):
+    return user_need_services.get_user_needs_by_category_name(db, category_name).unwrap()
+
 @router.get("/my-needs", response_model=list[user_need_dtos.UserNeedResponseDto], status_code=status.HTTP_200_OK)
 def get_all_my_user_needs(
     jwt_token: Annotated[TokenPayLoad, Depends(get_jwt_pyload)],

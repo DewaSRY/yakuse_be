@@ -1,6 +1,6 @@
 from typing import List, Type
 import uuid
-from sqlalchemy import desc, func
+from sqlalchemy import desc, func, or_
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy.exc import SQLAlchemyError
 from fastapi import HTTPException, UploadFile, status
@@ -108,6 +108,32 @@ def get_business_by_user_id(db: Session, user_id: str, skip: int = 0, limit: int
         db.rollback()
         raise optional.build(error=HTTPException(status_code=409, detail="Database conflict: " + str(e)))
 
+# delete-my-business
+async def delete_business_by_id(db: Session, business_id: str, user_id: str) -> optional.Optional[None, Exception]:
+    try:
+        # Langkah 1: Mencari bisnis yang ada
+        business_model = db.query(Business).filter(Business.id == business_id, Business.fk_owner_id == user_id).first()
+        if not business_model:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Business not found")
+        
+        # Langkah 2: Hapus bisnis dari database
+        db.delete(business_model)
+        db.commit()
+        
+        return optional.build(data=None)
+    
+    except SQLAlchemyError as e:
+        db.rollback()
+        return optional.build(error=HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=f"Database conflict: {str(e)}"
+        ))
+
+    except Exception as e:
+        return optional.build(error=HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"An error occurred: {str(e)}"
+        ))
 
 # all-list-business-by-userid
 def get_all_business_by_user_id(db: Session, user_id: str, skip: int = 0, limit: int = 100) -> optional.Optional[Business, Exception]:
@@ -168,6 +194,54 @@ def get_all_business(db: Session, skip: int = 0, limit: int = 100) -> optional.O
     except SQLAlchemyError as e:
         db.rollback()
         raise optional.build(error=HTTPException(status_code=409, detail="Database conflict: " + str(e)))
+
+# get-all-business-by-business-category
+def get_all_business_by_category_id(db: Session, category_id: int) -> optional.Optional[List[Business], Exception]:
+    try:
+        # Mencari semua bisnis berdasarkan kategori
+        businesses = db.query(Business).filter(Business.fk_business_category_id == category_id).all()
+        
+        return optional.build(data=businesses)
+    
+    except SQLAlchemyError as e:
+        return optional.build(error=HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=f"Database conflict: {str(e)}"
+        ))
+
+    except Exception as e:
+        return optional.build(error=HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"An error occurred: {str(e)}"
+        ))
+
+# get-list-businees-by-search-keyword
+def search_business_by_keyword(db: Session, keyword: str) -> optional.Optional[List[Business], Exception]:
+    try:
+        search_query = f"%{keyword}%"
+        businesses = db.query(Business).filter((Business.name.ilike(search_query))).all()
+
+        
+        if not businesses:
+            return optional.build(error=HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="No businesses found matching the keyword"
+            ))
+        
+        return optional.build(data=businesses)
+
+    except SQLAlchemyError as e:
+        return optional.build(error=HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=f"Database conflict: {str(e)}"
+        ))
+
+    except Exception as e:
+        return optional.build(error=HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"An error occurred: {str(e)}"
+        ))
+
 
 
 # ---code-triall--

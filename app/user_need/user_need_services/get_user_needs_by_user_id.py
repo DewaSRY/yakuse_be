@@ -13,10 +13,11 @@ from app.utils.optional import Optional, build
 
 def get_user_needs_by_user_id(db: Session, user_id: str) -> Optional:
     try:
-        user_needs = db.query(UserNeeds).filter(UserNeeds.fk_user_id == user_id).order_by(desc(UserNeeds.created_at)).all()
+        user_needs = db.query(UserNeeds).filter(UserNeeds.fk_user_id == user_id).order_by(
+            desc(UserNeeds.created_at)).all()
 
-        user_need_dtos = [user_need.to_response_dto() for user_need in user_needs]
+        # user_need_dtos = [user_need.to_response_dto() for user_need in user_needs]
 
-        return build(data=user_need_dtos)
+        return build(data=user_needs)
     except SQLAlchemyError as e:
         return build(error=HTTPException(detail=f"{e}"))

@@ -8,6 +8,7 @@ from app.rating.rating_dtos import BusinessRatingDto
 
 from app.libs import sql_alchemy_lib
 from app.business import business_dtos
+import re
 
 
 class Business(sql_alchemy_lib.Base):
@@ -15,7 +16,7 @@ class Business(sql_alchemy_lib.Base):
     id = Column(CHAR(36), primary_key=True, default=lambda: str(uuid.uuid4()), unique=True, index=True)
     name = Column(String(50), unique=True, index=True)
     price = Column(String(50))
-    description = Column(Text)
+    description: str = Column(Text)
     photo_url = Column(String(255))
     location = Column(Text)
     contact = Column(CHAR(36))
@@ -30,15 +31,22 @@ class Business(sql_alchemy_lib.Base):
 
     # New relationship to BusinessCategory
     business_category = relationship("BusinessCategory", backref=backref("business", lazy=True))
-    
 
     def __repr__(self):
         return f"{self.name} {self.id}"
 
     @property
+    def description_list(self):
+        if self.description is None:
+            return []
+        d_list = re.split("\\s{4,}", self.description)
+
+        return [d for d in d_list if len(d) != 0]
+
+    @property
     def category(self):
         return self.business_category.name if self.business_category else ""
-    
+
     @property
     def owner(self):
         from app.user.user_model import UserModel
@@ -56,7 +64,7 @@ class Business(sql_alchemy_lib.Base):
             .filter(UserModel.id.like(f"%{self.fk_owner_id}%")) \
             .first()
         return user_models.id if user_models else ""
-    
+
     @property
     def user_info(self) -> dict[str, str]:
         from app.user.user_model import UserModel
@@ -77,7 +85,7 @@ class Business(sql_alchemy_lib.Base):
 
         total_rating = sum(rating.rating_count for rating in self.ratings)
         return total_rating / len(self.ratings)
-    
+
     @property
     def total_rater(self):
         if not self.ratings:
@@ -91,40 +99,3 @@ class Business(sql_alchemy_lib.Base):
     def rating_list(self):
         # Menggunakan relasi ratings langsung
         return [BusinessRatingDto.from_orm(rating) for rating in self.ratings]
-
-
-    # @property
-    # def rating(self):
-    #     session = next(sql_alchemy_lib.get_db())
-        
-    #     average_rating = session.query(func.avg(Rating.rating_count)).filter(Rating.fk_business_id == self.id).scalar()
-        
-    #     return average_rating if average_rating is not None else 0
-
-    # @property
-    # def rating(self):
-    #     from app.rating.rating_model import Rating
-    #     session = next(sql_alchemy_lib.get_db())
-    #     ratting_list: list[Rating] = session.query(Rating) \
-    #         .filter(Rating.fk_business_id.like(f"%{self.id}%")) \
-    #         .all()
-    #     if len(ratting_list) == 0:
-    #         return 0
-
-    #     total_ratting = 0
-    #     for ratting in ratting_list:
-    #         total_ratting += ratting.rating_count
-
-    #     return total_ratting / len(ratting_list)
-
-    # @property
-    # def rating_list(self):
-    #     from app.rating.rating_model import Rating
-    #     session = next(sql_alchemy_lib.get_db())
-        
-    #     rating_list: list[Rating] = session.query(Rating) \
-    #         .filter(Rating.fk_business_id == self.id) \
-    #         .all()
-
-    #     # Konversi setiap Rating ke dalam RatingDto
-    #     return [BusinessRatingDto.from_orm(rating) for rating in rating_list]

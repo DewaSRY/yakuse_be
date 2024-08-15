@@ -23,8 +23,8 @@ def create_user_need(db: Session, user_need: user_need_dtos.UserNeedCreateDto, u
         db.commit()
         db.refresh(user_need_model)
 
-        user_need_dto = user_need_model.to_response_dto()
-
-        return build(data=user_need_dto)
+        # user_need_dto = user_need_model.to_response_dto()
+        return build(data=user_need_model)
     except SQLAlchemyError as e:
-        return build(error=HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Failed to create user need. {e}"))
+        return build(
+            error=HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Failed to create user need. {e}"))

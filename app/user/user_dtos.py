@@ -20,6 +20,7 @@ class UserCreateResponseDto(BaseModel):
     address: Optional[str] = None
     photo_url: Optional[str] = None
     about_me: Optional[str] = None
+    about_me_list: list[str]
     created_at: datetime
     updated_at: datetime
 

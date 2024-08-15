@@ -20,7 +20,8 @@ def get_all_business(db: Session, skip: int = 0, limit: int = 100) \
         -> optional.Optional[List[Type[Business]], Exception]:
     try:
         business_model = db.query(Business) \
-            .order_by(desc(Business.created_at)).offset(skip).limit(limit).all()
+            .order_by(desc(Business.created_at)) \
+            .offset(skip).limit(limit).all()
 
         if business_model is None:
             return optional.build(error=HTTPException(
@@ -29,6 +30,7 @@ def get_all_business(db: Session, skip: int = 0, limit: int = 100) \
             ))
         return optional.build(data=business_model)
     except SQLAlchemyError as e:
+        print(e)
         db.rollback()
         raise optional.build(
             error=HTTPException(status_code=409, detail="Database conflict: " + str(e)))

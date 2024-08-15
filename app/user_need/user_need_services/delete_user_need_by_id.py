@@ -16,7 +16,9 @@ def delete_user_need_by_id(db: Session, user_id: str, user_need_id: str):
             UserNeeds.id == user_need_id).first()
         if user_need_model is None:
             raise HTTPException(status_code=404, detail='User need not found.')
-        db.query(UserNeeds).filter(UserNeeds.fk_user_id == user_id).filter(UserNeeds.id == user_need_id).delete()
+        db.query(UserNeeds) \
+            .filter(UserNeeds.fk_user_id == user_id) \
+            .filter(UserNeeds.id == user_need_id).delete()
         db.commit()
         return
     except SQLAlchemyError as e:

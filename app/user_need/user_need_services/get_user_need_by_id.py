@@ -14,8 +14,8 @@ def get_user_need_by_id(db: Session, user_need_id: int) -> Optional:
     try:
         user_need = db.query(UserNeeds).filter(UserNeeds.id == user_need_id).first()
 
-        user_need_dto = user_need.to_response_dto()
+        # user_need_dto = user_need.to_response_dto()
 
-        return build(data=user_need_dto)
+        return build(data=user_need)
     except SQLAlchemyError as e:
-        return build(error=HTTPException(detail=f"{e}"))
+        return build(error=HTTPException(detail=f"{e}", status_code=status.HTTP_404_NOT_FOUND))

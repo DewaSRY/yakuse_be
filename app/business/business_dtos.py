@@ -18,9 +18,12 @@ class BusinessCreateDto(BaseModel):
 class BusinessPhotoProfileDto(BaseModel):
     photo_url: Optional[str]
 
+
 class OwnerBusinessInfoDto(BaseModel):
     user_id: str
     fullname: str
+
+
 class BusinessResponse(BaseModel):
     id: str
     name: str
@@ -36,6 +39,7 @@ class BusinessResponse(BaseModel):
     rating: Optional[int] = None
     total_rater: Optional[int] = None
     rating_list: List[BusinessRatingDto]
+    description_list: list[str]
 
     class Config:
         from_attributes = True
@@ -62,8 +66,10 @@ class BusinessAllPost(BaseModel):
     rating: Optional[int] = None
     created_at: datetime
 
+
 class BusinessEdiDto(BaseModel):
     fk_business_category_id: int
+
 
 class BusinessEditDto(BaseModel):
     name: str = Field(default="someBusiness")
@@ -71,6 +77,8 @@ class BusinessEditDto(BaseModel):
     location: str = Field(default="some where on earth")
     contact: str = Field(default="0000 0000 0000")
     fk_business_category_id: int = Field(default=1)
+
+
 class BusinessEditWithPhotoDto(BaseModel):
     id: Optional[str]  # Bisa None
     name: str
@@ -80,4 +88,3 @@ class BusinessEditWithPhotoDto(BaseModel):
     contact: str
     fk_business_category_id: int = Field(default=1)
     updated_at: Optional[datetime] = None  # Bisa None
-

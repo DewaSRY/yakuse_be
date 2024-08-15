@@ -118,6 +118,6 @@ def test_get_user_needs_by_user_id(get_db, get_user_model, get_user_model_2):
             db=get_db, user_need=user_need, user_id=get_user_model_2.id
         )
 
-    assert len(user_need_services.get_user_need_by_id(get_db, get_user_model.id).data) == total_user_need_1
+    assert len(user_need_services.get_user_needs_by_user_id(get_db, get_user_model.id).data) == total_user_need_1
     assert len(
-        user_need_services.get_user_need_by_id(get_db, get_user_model_2.id).data) == total_user_need_2
+        user_need_services.get_user_needs_by_user_id(get_db, get_user_model_2.id).data) == total_user_need_2

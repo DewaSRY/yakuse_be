@@ -10,13 +10,13 @@ def get_user_model(get_db):
 
 
 def test_update_user_need_by_id(get_db, get_user_model):
-    user_need_create = user_need_services.create_user_need_service(
+    user_need_create = user_need_services.create_user_need(
         db=get_db,
         user_need=user_need_dtos.UserNeedCreateDto(),
         user_id=get_user_model.id
     ).data
 
-    actual = user_need_services.update_user_need_by_id_service(
+    actual = user_need_services.update_user_need_by_id(
         db=get_db,
         user_id=get_user_model.id,
         user_need_id=user_need_create.id,
@@ -25,4 +25,3 @@ def test_update_user_need_by_id(get_db, get_user_model):
 
     assert user_need_create == actual.data
     assert actual.error is None
-    

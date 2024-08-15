@@ -14,7 +14,8 @@ from app.utils.optional import Optional, build
 
 def get_user_needs_by_category_name(db: Session, category_name: str) -> Optional:
     try:
-        user_needs = db.query(UserNeeds).join(UserNeeds.business_category).filter(BusinessCategory.name == category_name).order_by(desc(UserNeeds.created_at)).all()
+        user_needs = db.query(UserNeeds).join(UserNeeds.business_category).filter(
+            BusinessCategory.name == category_name).order_by(desc(UserNeeds.created_at)).all()
 
         if not user_needs:
             return build(
@@ -24,10 +25,10 @@ def get_user_needs_by_category_name(db: Session, category_name: str) -> Optional
                 )
             )
 
-        user_need_dtos = [user_need.to_response_dto() for user_need in user_needs]
+        # user_need_dtos = [user_need.to_response_dto() for user_need in user_needs]
 
-        return build(data=user_need_dtos)
+        return build(data=user_needs)
     except SQLAlchemyError as e:
-        return build(error=HTTPException(detail=f"{e}"))
+        return build(error=HTTPException(detail=f"{e}", status_code=status.HTTP_404_NOT_FOUND))
     except Exception as e:
         return build(error=HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"E: {e}"))

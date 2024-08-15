@@ -1,5 +1,5 @@
 import uuid
-
+import re
 from sqlalchemy import Column, DateTime, String, Text, func
 from sqlalchemy.dialects.mysql import CHAR
 
@@ -19,6 +19,14 @@ class UserModel(sql_alchemy_lib.Base):
     photo_url = Column(String(100))
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
+    @property
+    def about_me_list(self):
+        if self.about_me is None:
+            return []
+        d_list = re.split("\\s{4,}", self.description)
+
+        return [d for d in d_list if len(d) != 0]
 
     def __repr__(self):
         return f"{self.id} {self.username}"

@@ -104,13 +104,13 @@ def get_detail_business_by_business_id(
     return business_services.get_detail_business_by_business_id(db, business_id).unwrap()
 
 # get-list-business-by-category
-@router.get("/category/{category_id}", response_model=list[business_dtos.BusinessAllPost])
-def get_list_business_by_category_id(
-    category_id: int,
+@router.get("/category/{category_name}", response_model=list[business_dtos.BusinessAllPost])
+def get_list_business_by_category_name(
+    category_name: str,
     jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
     db: Session = Depends(get_db)
 ):
-    return business_services.get_all_business_by_category_id(db, category_id).unwrap()
+    return business_services.get_all_business_by_category(db, category_name).unwrap()
 
 # get-list-business-by-keyword-search
 @router.get("/search/{keyword}", response_model=list[business_dtos.BusinessAllPost])

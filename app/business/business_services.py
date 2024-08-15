@@ -196,11 +196,16 @@ def get_all_business(db: Session, skip: int = 0, limit: int = 100) -> optional.O
         raise optional.build(error=HTTPException(status_code=409, detail="Database conflict: " + str(e)))
 
 # get-all-business-by-business-category
-def get_all_business_by_category_id(db: Session, category_id: int) -> optional.Optional[List[Business], Exception]:
+def get_all_business_by_category(db: Session, category_name: str) -> optional.Optional[List[Business], Exception]:
     try:
         # Mencari semua bisnis berdasarkan kategori
-        businesses = db.query(Business).filter(Business.fk_business_category_id == category_id).all()
+        businesses = db.query(Business).join(Business.business_category).filter(BusinessCategory.name == category_name).all()
         
+        if businesses is None:
+            return optional.build(error=HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="No businesses found for this category"
+            ))
         return optional.build(data=businesses)
     
     except SQLAlchemyError as e:

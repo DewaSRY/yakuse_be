@@ -59,3 +59,19 @@ class BusinessAllPost(BaseModel):
 
 class BusinessEdiDto(BaseModel):
     fk_business_category_id: int
+
+class BusinessEditDto(BaseModel):
+    name: str = Field(default="someBusiness")
+    description: str = Field(default="this is coll business")
+    location: str = Field(default="some where on earth")
+    contact: str = Field(default="0000 0000 0000")
+    fk_business_category_id: int = Field(default=1)
+class BusinessEditWithPhotoDto(BaseModel):
+    id: Optional[str]  # Bisa None
+    name: str
+    description: str
+    photo_url: Optional[str] = None  # Bisa None
+    location: str
+    contact: str
+    fk_business_category_id: int = Field(default=1)
+    updated_at: Optional[datetime] = None  # Bisa None

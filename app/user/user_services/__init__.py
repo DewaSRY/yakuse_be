@@ -8,3 +8,4 @@ from .service_access_token import service_access_token
 from .update_user_photo import update_user_photo
 from .user_edit import user_edit
 from .user_login import user_login
+from .get_user_profile_by_id import get_user_profile_by_id

@@ -53,7 +53,7 @@ def get_user_need_detail_by_id(
 ):
     return user_need_services.get_user_need_by_id(db, user_need_id).unwrap()
 
-@router.put("/{user_need_id}", response_model=user_need_dtos.UserNeedResponseDto, status_code=status.HTTP_200_OK)
+@router.put("/my-need/{user_need_id}", response_model=user_need_dtos.UserNeedResponseDto, status_code=status.HTTP_200_OK)
 async def update_user_need_by_id(
     user_need_id: str,
     user_need_update: user_need_dtos.UserNeedUpdateDto,
@@ -62,7 +62,7 @@ async def update_user_need_by_id(
 ):
     return user_need_services.update_user_need_by_id(db, jwt_token.id, user_need_id, user_need_update).unwrap()
 
-@router.delete("/hide/{user_need_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/hide/my-need/{user_need_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_to_hide_user_need_by_id(
     user_need_id: str,
     jwt_token: Annotated[TokenPayLoad, Depends(get_jwt_pyload)],

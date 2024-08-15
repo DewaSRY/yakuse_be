@@ -105,7 +105,7 @@ def get_detail_business_by_business_id(
 
 # get-list-business-by-category
 @router.get("/category/{category_name}", response_model=list[business_dtos.BusinessAllPost])
-def get_list_business_by_category_id(
+def get_list_business_by_category_name(
     category_name: str,
     jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
     db: Session = Depends(get_db)

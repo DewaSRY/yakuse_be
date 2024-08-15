@@ -66,7 +66,7 @@ class Business(sql_alchemy_lib.Base):
         return user_models.id if user_models else ""
 
     @property
-    def user_info(self) -> dict[str, str]:
+    def user_info(self):
         from app.user.user_model import UserModel
         session = next(sql_alchemy_lib.get_db())
 
@@ -76,6 +76,7 @@ class Business(sql_alchemy_lib.Base):
         return business_dtos.OwnerBusinessInfoDto(
             user_id=user_model.id,
             fullname=user_model.fullname,
+            photo_url=user_model.photo_url
         ).model_dump()
 
     @property

@@ -60,7 +60,7 @@ def get_all_my_business(
 
 
 # get-all-business-user-by-user-id
-@router.get("/user/{user_id}", response_model=list[business_dtos.BusinessAllPost])
+@router.get("/user/{user_id}", response_model=list[business_dtos.BusinessResponse])
 def get_list_business_user_by_user_id(
         user_id: str,
         jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],

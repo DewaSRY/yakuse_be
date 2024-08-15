@@ -22,6 +22,7 @@ class BusinessPhotoProfileDto(BaseModel):
 class OwnerBusinessInfoDto(BaseModel):
     user_id: str
     fullname: str
+    photo_url: Optional[str] = None
 
 
 class BusinessResponse(BaseModel):

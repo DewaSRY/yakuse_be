@@ -13,7 +13,8 @@ from app.utils.optional import Optional, build
 
 def get_all_user_needs(db: Session, skip: int = 0, limit: int = 100) -> Optional:
     try:
-        user_needs = db.query(UserNeeds).order_by(desc(UserNeeds.created_at)).offset(skip).limit(limit).all()
+        user_needs: list[Type[UserNeeds]] = db.query(UserNeeds).order_by(desc(UserNeeds.created_at)).offset(skip).limit(
+            limit).all()
 
         user_need_dtos = [user_need.to_response_dto() for user_need in user_needs]
 

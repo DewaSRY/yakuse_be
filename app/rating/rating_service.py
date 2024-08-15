@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session, joinedload
 from sqlalchemy.exc import SQLAlchemyError
 from fastapi import HTTPException, UploadFile, status
 
-from app.business.business_model import Business
+#
 from app.user.user_model import UserModel
 
 from . import rating_dtos
@@ -27,29 +27,30 @@ def create_rating_business(db: Session, rating: rating_dtos.BusinessRatingCreate
             status_code=status.HTTP_404_NOT_FOUND,
             detail="failed to create rating business"
         ))
-    
+
+
 def get_rating_business(db: Session, skip: int = 0, limit: int = 100) -> list[Type[Rating]]:
     return db.query(Rating) \
         .offset(skip) \
         .limit(limit) \
         .all()
 
+
 # detail-rating-business
-def get_businesses_by_user_id(db: Session, user_id:str, skip: int = 0, limit: int = 100):
+def get_businesses_by_user_id(db: Session, user_id: str, skip: int = 0, limit: int = 100):
+    from app.business.business_model import Business
     return db.query(
-            Rating.id, 
-            Rating.rating_count,
-            Rating.review_description,
-            Rating.created_at,
-            Rating.updated_at,
-            Business.name.label('business_name'),
-            UserModel.fullname.label('rater_name')
-        )\
+        Rating.id,
+        Rating.rating_count,
+        Rating.review_description,
+        Rating.created_at,
+        Rating.updated_at,
+        Business.name.label('business_name'),
+        UserModel.fullname.label('rater_name')
+    ) \
         .join(Business, Rating.fk_business_id == Business.id) \
         .join(UserModel, Rating.fk_rater_id == UserModel.id) \
-        .filter(Rating.fk_rater_id == user_id)\
+        .filter(Rating.fk_rater_id == user_id) \
         .offset(skip) \
         .limit(limit) \
         .all()
-        
-

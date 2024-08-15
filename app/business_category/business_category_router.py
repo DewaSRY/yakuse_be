@@ -15,13 +15,13 @@ router = APIRouter(
 )
 
 # create-bisnis-category
-@router.post("/", response_model=business_category_dtos.BusinessCategoryCreateDto)
-def create_business_category(
-        business_category: business_category_dtos.BusinessCategoryCreateDto,
-        jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
-        db: Session = Depends(get_db),
-):
-    return business_category_service.create_business_category(db, business_category).unwrap()
+# @router.post("/", response_model=business_category_dtos.BusinessCategoryCreateDto)
+# def create_business_category(
+#         business_category: business_category_dtos.BusinessCategoryCreateDto,
+#         jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
+#         db: Session = Depends(get_db),
+# ):
+#     return business_category_service.create_business_category(db, business_category).unwrap()
 
 
 # get-all-business-category-public

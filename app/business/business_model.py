@@ -7,12 +7,14 @@ from sqlalchemy.orm import relationship, backref
 from app.rating.rating_dtos import BusinessRatingDto
 
 from app.libs import sql_alchemy_lib
+from app.business import business_dtos
 
 
 class Business(sql_alchemy_lib.Base):
     __tablename__ = "business"
     id = Column(CHAR(36), primary_key=True, default=lambda: str(uuid.uuid4()), unique=True, index=True)
     name = Column(String(50), unique=True, index=True)
+    price = Column(String(50))
     description = Column(Text)
     photo_url = Column(String(255))
     location = Column(Text)
@@ -45,6 +47,28 @@ class Business(sql_alchemy_lib.Base):
             .filter(UserModel.id.like(f"%{self.fk_owner_id}%")) \
             .first()
         return user_models.username if user_models else ""
+
+    @property
+    def owner_id(self):
+        from app.user.user_model import UserModel
+        session = next(sql_alchemy_lib.get_db())
+        user_models: UserModel = session.query(UserModel) \
+            .filter(UserModel.id.like(f"%{self.fk_owner_id}%")) \
+            .first()
+        return user_models.id if user_models else ""
+    
+    @property
+    def user_info(self) -> dict[str, str]:
+        from app.user.user_model import UserModel
+        session = next(sql_alchemy_lib.get_db())
+
+        user_model: UserModel = session.query(UserModel) \
+            .filter(UserModel.id == self.fk_owner_id).first()
+
+        return business_dtos.OwnerBusinessInfoDto(
+            user_id=user_model.id,
+            fullname=user_model.fullname,
+        ).model_dump()
 
     @property
     def rating(self):

@@ -136,7 +136,7 @@ async def delete_business_by_id(db: Session, business_id: str, user_id: str) -> 
         ))
 
 # all-list-business-by-userid
-def get_all_business_by_user_id(db: Session, user_id: str, skip: int = 0, limit: int = 100) -> optional.Optional[Business, Exception]:
+def get_all_business_by_user_id(db: Session, user_id: str, skip: int = 0, limit: int = 100) -> optional.Optional[List[Business], Exception]:
     try:
         business_model = db.query(Business) \
             .order_by(desc(Business.created_at)).filter(Business.fk_owner_id == user_id).offset(skip).limit(limit).all()
@@ -155,7 +155,7 @@ def get_all_business_by_user_id(db: Session, user_id: str, skip: int = 0, limit:
 
 
 # detail-business-by-business-uuid
-def get_detail_business_by_business_id(db: Session, business_id: uuid.UUID) -> optional.Optional:
+def get_detail_business_by_business_id(db: Session, business_id: uuid.UUID) -> optional.Optional[Business, Exception]:
     business_id_str = str(business_id)
     try:
         business_model = db.query(Business) \

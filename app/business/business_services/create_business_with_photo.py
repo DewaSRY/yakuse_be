@@ -32,7 +32,6 @@ async def create_business_with_photo(db: Session, business: business_dtos.Busine
         # Jika upload berhasil, update `photo_url` dalam `business_model`
         business_model.photo_url = opt_content.data
 
-        # Simpan bisnis ke dalam database
         db.add(business_model)
         db.commit()
         db.refresh(business_model)

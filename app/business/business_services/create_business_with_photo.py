@@ -15,6 +15,8 @@ from app.rating.rating_model import Rating
 
 from app.utils import optional
 
+from app.utils.error_parser import find_errr_from_args
+
 
 # create-business-with-photo
 async def create_business_with_photo(db: Session, business: business_dtos.BusinessCreateDto, user_id: str,
@@ -30,7 +32,6 @@ async def create_business_with_photo(db: Session, business: business_dtos.Busine
         # Jika upload berhasil, update `photo_url` dalam `business_model`
         business_model.photo_url = opt_content.data
 
-        # Simpan bisnis ke dalam database
         db.add(business_model)
         db.commit()
         db.refresh(business_model)
@@ -41,11 +42,11 @@ async def create_business_with_photo(db: Session, business: business_dtos.Busine
         db.rollback()
         return optional.build(error=HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail=f"Database conflict: {str(e)}"
+            detail=f"Database conflict: {find_errr_from_args("business", str(e.args))}"
         ))
 
     except Exception as e:
         return optional.build(error=HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"An error occurred: {str(e)}"
+            detail=f"An error occurred: {find_errr_from_args("business", str(e.args))}"
         ))

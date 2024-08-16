@@ -53,6 +53,7 @@ app.add_middleware(
     allow_origins=origins,
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE"],
+    allow_headers=['*'],
 )
 
 if business_category_seed.get_business_category_length() == 0:

@@ -2,7 +2,6 @@ from typing import Annotated, Type
 from uuid import UUID
 from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
-
 from app.business.business_model import Business
 from app.libs.sql_alchemy_lib import get_db
 from app.libs.jwt_lib import jwt_dto, jwt_service
@@ -19,13 +18,14 @@ router = APIRouter(
 # create-business-with-photo
 @router.post("/create", response_model=business_dtos.BusinessCreateWithPhotoDto)
 async def create_my_profile_business(
+        file: UploadFile,
         business: business_dtos.BusinessCreateDto = Depends(),
-        file: UploadFile = File(...),
         jwt_token: jwt_service.TokenPayLoad = Depends(jwt_service.get_jwt_pyload),
         db: Session = Depends(get_db)
 ):
-    result = await business_services.create_business_with_photo(db, business, jwt_token.id, file)
-
+    print(file)
+    result = await business_services \
+        .create_business_with_photo(db, business, jwt_token.id, file)
     if result.error:
         raise result.error
     return result.data
@@ -35,8 +35,8 @@ async def create_my_profile_business(
 @router.put("/edit/{business_id}", response_model=business_dtos.BusinessEditWithPhotoDto)
 async def update_my_profile_business(
         business_id: str,
+        file: UploadFile,
         business: business_dtos.BusinessEditDto = Depends(),
-        file: UploadFile = File(...),
         jwt_token: jwt_service.TokenPayLoad = Depends(jwt_service.get_jwt_pyload),
         db: Session = Depends(get_db)
 ):

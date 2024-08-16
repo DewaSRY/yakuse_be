@@ -37,7 +37,7 @@ class BusinessResponse(BaseModel):
     created_at: datetime
     updated_at: datetime
     category: Optional[str] = None
-    user_info: OwnerBusinessInfoDto
+    owner_info: OwnerBusinessInfoDto
     rating: Optional[float] = None
     total_rater: Optional[int] = None
     rating_list: List[BusinessRatingDto]

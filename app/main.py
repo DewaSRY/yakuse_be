@@ -43,7 +43,7 @@ app.include_router(article.article_router.router)
 
 origins = [
     "http://localhost",
-    "https://localhost:3000",
+    "http://localhost:3000",
     "https://tools.slingacademy.com",
     "https://www.slingacademy.com",
     "https://yakuse.vercel.app"

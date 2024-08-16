@@ -40,9 +40,18 @@ app.include_router(rating.rating_router.router)
 app.include_router(user_need.user_need_router.router)
 app.include_router(article.article_router.router)
 
+origins = [
+    "http://localhost",
+    "https://localhost:3000",
+    "https://tools.slingacademy.com",
+    "https://www.slingacademy.com",
+    "https://yakuse.vercel.app"
+]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=['*']
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "DELETE"],
 )
 
 if business_category_seed.get_business_category_length() == 0:

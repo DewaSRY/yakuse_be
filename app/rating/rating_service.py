@@ -15,17 +15,34 @@ from app.rating.rating_model import Rating
 from app.utils import optional
 
 
-def create_rating_business(db: Session, rating: rating_dtos.BusinessRatingCreateDto, user_id) -> optional.Optional:
+# def create_rating_business(db: Session, rating: rating_dtos.BusinessRatingCreateDto, user_id) -> optional.Optional:
+#     try:
+#         rating_model = Rating(**rating.model_dump())
+#         rating_model.fk_rater_id = user_id
+#         db.add(rating_model)
+#         db.commit()
+#         return optional.build(data=rating_model)
+#     except SQLAlchemyError as e:
+#         return optional.build(error=HTTPException(
+#             status_code=status.HTTP_404_NOT_FOUND,
+#             detail="failed to create rating business"
+#         ))
+
+def create_rating_business(db: Session, business_id: str, rating: rating_dtos.BusinessRatingCreateDto, user_id: str) -> optional.Optional:
     try:
-        rating_model = Rating(**rating.model_dump())
+        # Pastikan rating adalah instance dari DTO yang benar
+        rating_model = Rating(**rating.dict())  # Gunakan .dict() untuk mengubah Pydantic model ke dict
         rating_model.fk_rater_id = user_id
+        rating_model.fk_business_id = business_id
+
         db.add(rating_model)
         db.commit()
+        db.refresh(rating_model)
         return optional.build(data=rating_model)
     except SQLAlchemyError as e:
         return optional.build(error=HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="failed to create rating business"
+            detail="Failed to create rating for the business"
         ))
 
 

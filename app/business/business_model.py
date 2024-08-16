@@ -82,10 +82,12 @@ class Business(sql_alchemy_lib.Base):
     @property
     def rating(self):
         if not self.ratings:  # Menggunakan relasi ratings langsung
-            return 0
+            return 0.0
 
         total_rating = sum(rating.rating_count for rating in self.ratings)
-        return total_rating / len(self.ratings)
+        average_rating = total_rating / len(self.ratings)
+        return round(average_rating, 1)  # Membulatkan ke 1 angka di belakang koma
+
 
     @property
     def total_rater(self):

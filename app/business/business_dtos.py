@@ -8,7 +8,7 @@ from app.rating.rating_dtos import BusinessRatingDto
 
 class BusinessCreateDto(BaseModel):
     name: str = Field(default="someBusiness")
-    price: str = Field(default="Rp 14.000/kg")
+    omset: float = Field(default="Rp 5000.000/minggu")
     description: str = Field(default="this is coll business")
     location: str = Field(default="some where on earth")
     contact: str = Field(default="0000 0000 0000")
@@ -28,7 +28,7 @@ class OwnerBusinessInfoDto(BaseModel):
 class BusinessResponse(BaseModel):
     id: str
     name: str
-    price: str
+    omset: float
     # description: str
     description_list: list[str]
     photo_url: Optional[str] = None
@@ -50,7 +50,7 @@ class BusinessResponse(BaseModel):
 class BusinessCreateWithPhotoDto(BaseModel):
     id: Optional[str]  # Bisa None
     name: str
-    price: str
+    omset: float
     description: str
     photo_url: Optional[str] = None  # Bisa None
     location: str

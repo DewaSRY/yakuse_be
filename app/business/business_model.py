@@ -1,6 +1,6 @@
 import uuid
 
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Text, func
+from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, String, Text, func
 from sqlalchemy.dialects.mysql import CHAR
 from sqlalchemy.orm import relationship, backref
 
@@ -15,7 +15,7 @@ class Business(sql_alchemy_lib.Base):
     __tablename__ = "business"
     id = Column(CHAR(36), primary_key=True, default=lambda: str(uuid.uuid4()), unique=True, index=True)
     name = Column(String(50), unique=True, index=True)
-    price = Column(String(50))
+    omset = Column(Float)
     description: str = Column(Text)
     photo_url = Column(String(255))
     location = Column(Text)

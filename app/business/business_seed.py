@@ -2,10 +2,10 @@ from sqlalchemy.orm import Session
 from .business_model import Business
 from app.libs.sql_alchemy_lib import get_db
 
-def get_business_length(session: Session) -> int:
+def get_business_length(session: Session= next(get_db())) -> int:
     return session.query(Business).count()
 
-def init_business(session: Session):
+def init_business(session: Session= next(get_db())):
     pertanian = Business(
         name="Bijih Kopi",
         omset="Rp50,000,000 per bulan",

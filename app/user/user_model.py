@@ -24,7 +24,7 @@ class UserModel(sql_alchemy_lib.Base):
     def about_me_list(self):
         if self.about_me is None:
             return []
-        d_list = re.split("\\s{4,}", self.description)
+        d_list = re.split("\\s{4,}", self.about_me)
 
         return [d for d in d_list if len(d) != 0]
 

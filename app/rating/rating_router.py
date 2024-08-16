@@ -1,3 +1,4 @@
+
 from typing import Annotated
 
 from sqlalchemy.orm import Session
@@ -16,13 +17,23 @@ router = APIRouter(
 
 
 # create-bisnis
-@router.post("/", response_model=rating_dtos.BusinessRatingCreateDto)
+# @router.post("/", response_model=rating_dtos.BusinessRatingCreateDto)
+# def create_rating_business(
+#         rating_business: rating_dtos.BusinessRatingCreateDto,
+#         jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
+#         db: Session = Depends(get_db),
+# ):
+#     return rating_service.create_rating_business(db, rating_business, jwt_token.id).unwrap()
+
+@router.post("/{busines_id}", response_model=rating_dtos.BusinessRatingCreateResponseDto)
 def create_rating_business(
-        rating_business: rating_dtos.BusinessRatingCreateDto,
+        busines_id: str,
+        rating_business: rating_dtos.BusinessRatingCreateDto,  # Pastikan ini adalah Pydantic model
         jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
         db: Session = Depends(get_db),
 ):
-    return rating_service.create_rating_business(db, rating_business, jwt_token.id).unwrap()
+    return rating_service.create_rating_business(db, busines_id, rating_business, jwt_token.id).unwrap()
+
 
 # get-all-business-by-login-user-id
 @router.get("/", response_model=list[rating_dtos.BusinessRatingAllResponseDto])

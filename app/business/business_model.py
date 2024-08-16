@@ -66,7 +66,7 @@ class Business(sql_alchemy_lib.Base):
         return user_models.id if user_models else ""
 
     @property
-    def user_info(self) -> dict[str, str]:
+    def user_info(self):
         from app.user.user_model import UserModel
         session = next(sql_alchemy_lib.get_db())
 
@@ -76,15 +76,18 @@ class Business(sql_alchemy_lib.Base):
         return business_dtos.OwnerBusinessInfoDto(
             user_id=user_model.id,
             fullname=user_model.fullname,
+            photo_url=user_model.photo_url
         ).model_dump()
 
     @property
     def rating(self):
         if not self.ratings:  # Menggunakan relasi ratings langsung
-            return 0
+            return 0.0
 
         total_rating = sum(rating.rating_count for rating in self.ratings)
-        return total_rating / len(self.ratings)
+        average_rating = total_rating / len(self.ratings)
+        return round(average_rating, 1)  # Membulatkan ke 1 angka di belakang koma
+
 
     @property
     def total_rater(self):

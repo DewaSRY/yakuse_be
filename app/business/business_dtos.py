@@ -22,13 +22,15 @@ class BusinessPhotoProfileDto(BaseModel):
 class OwnerBusinessInfoDto(BaseModel):
     user_id: str
     fullname: str
+    photo_url: Optional[str] = None
 
 
 class BusinessResponse(BaseModel):
     id: str
     name: str
     price: str
-    description: str
+    # description: str
+    description_list: list[str]
     photo_url: Optional[str] = None
     location: str
     contact: str
@@ -36,10 +38,10 @@ class BusinessResponse(BaseModel):
     updated_at: datetime
     category: Optional[str] = None
     user_info: OwnerBusinessInfoDto
-    rating: Optional[int] = None
+    rating: Optional[float] = None
     total_rater: Optional[int] = None
     rating_list: List[BusinessRatingDto]
-    description_list: list[str]
+    
 
     class Config:
         from_attributes = True
@@ -63,7 +65,7 @@ class BusinessAllPost(BaseModel):
     name: str
     photo_url: Optional[str] = None
     category: Optional[str] = None
-    rating: Optional[int] = None
+    rating: Optional[float] = None
     created_at: datetime
 
 

@@ -23,7 +23,6 @@ async def create_my_profile_business(
         jwt_token: jwt_service.TokenPayLoad = Depends(jwt_service.get_jwt_pyload),
         db: Session = Depends(get_db)
 ):
-    print(file)
     result = await business_services \
         .create_business_with_photo(db, business, jwt_token.id, file)
     if result.error:

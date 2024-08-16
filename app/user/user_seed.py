@@ -18,7 +18,7 @@ def init_user(session: Session = next(get_db())):
         hash_password="password",
         phone="+623454321",
         address="Jalan Sudirman No. 15, RT 01/01, Cinere Jaya, Banyuwangi, Bali",
-        about_me="Saya sedang merintis usaha es doger",
+        about_me="Saya memulai beberapa bidang bisnis setelah resign",
         photo_url=""
     )
     user_2 = UserModel(
@@ -29,7 +29,7 @@ def init_user(session: Session = next(get_db())):
         hash_password="password",
         phone="+6234543210",
         address="Jalan Juanda No. 15, RT 01/01, Cinere Jaya, Banyuwangi, Bali",
-        about_me="Saya sedang merintis bimbel untuk SD-SMP-SMA",
+        about_me="Saya sedang merintis bimbel untuk SD-SMP-SMA dan bidang usaha rintisan sodara yaitu kuliner",
         photo_url=""
     )
     user_3 = UserModel(
@@ -40,7 +40,7 @@ def init_user(session: Session = next(get_db())):
         hash_password="password",
         phone="+62345432101",
         address="Jalan Gatot No. 15, RT 01/01, Cinere Jaya, Banyuwangi, Bali",
-        about_me="Saya sedang memulai usaha dalam bidang pertanian",
+        about_me="Saya sedang memulai usaha dalam bidang pertanian dan kesehatan",
         photo_url=""
     )
 

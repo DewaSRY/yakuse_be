@@ -7,6 +7,7 @@ from . import user, health_check, business, user_need, article
 from .libs import sql_alchemy_lib
 
 from .business_category import business_category_seed
+from .business import business_seed
 
 from fastapi.staticfiles import StaticFiles
 
@@ -50,6 +51,9 @@ app.add_middleware(
 
 if business_category_seed.get_business_category_length() == 0:
     business_category_seed.init_business_category()
+
+if business_seed.get_business_length() == 0:
+    business_seed.init_business()
 
 root_directory = os.getcwd()  # Gets the current working directory
 images_directory = os.path.join(root_directory, "images")

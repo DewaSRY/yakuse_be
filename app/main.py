@@ -8,6 +8,7 @@ from .libs import sql_alchemy_lib
 
 from .business_category import business_category_seed
 from .business import business_seed
+
 from fastapi.staticfiles import StaticFiles
 
 import os

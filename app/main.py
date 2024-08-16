@@ -8,6 +8,8 @@ from .libs import sql_alchemy_lib
 
 from .business_category import business_category_seed
 from .business import business_seed
+from .user import user_seed
+from .user_need import user_need_seed
 
 from fastapi.staticfiles import StaticFiles
 
@@ -61,6 +63,10 @@ if business_category_seed.get_business_category_length() == 0:
 
 if business_seed.get_business_length() == 0:
     business_seed.init_business()
+if user_seed.get_user_length() == 0:
+    user_seed.init_user()
+if user_need_seed.get_user_need_length() == 0:
+    user_need_seed.init_user_need()
 
 root_directory = os.getcwd()  # Gets the current working directory
 images_directory = os.path.join(root_directory, "images")

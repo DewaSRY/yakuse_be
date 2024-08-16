@@ -16,7 +16,7 @@ def init_business(session: Session = next(get_db())):
         location="Jl. Merdeka No. 45, Jakarta",
         contact="+62 812-3456-7890",
         fk_business_category_id=5,
-        fk_owner_id="987e6543-e21b-65c3-b123-456789abcdef"
+        fk_owner_id="98b6e7b3-910f-426d-a930-c7a37d1874dc"
     )
     kuliner = Business(
         name="Warung Sate Pak Joko",
@@ -26,7 +26,7 @@ def init_business(session: Session = next(get_db())):
         location="Jl. Kebon Jeruk No. 21, Jakarta",
         contact="+62 812-9876-5432",
         fk_business_category_id=1,
-        fk_owner_id="123e4567-e89b-12d3-a456-426614174001"
+        fk_owner_id="98b6e7b3-910f-426d-a930-c7a37d1874db"
     )
     kreatif = Business(
         name="Batik Nusantara",
@@ -36,7 +36,7 @@ def init_business(session: Session = next(get_db())):
         location="Jl. Batik Indah No. 7, Yogyakarta",
         contact="+62 812-9876-5432",
         fk_business_category_id=3,
-        fk_owner_id="789e6543-e21b-65c3-b123-456789abcdef"
+        fk_owner_id="98b6e7b3-910f-426d-a930-c7a37d1874da"
     )
     jasa = Business(
         name="Laundry Express",
@@ -46,7 +46,7 @@ def init_business(session: Session = next(get_db())):
         location="Jl. Sudirman No. 12, Bandung",
         contact="+62 812-1234-5678",
         fk_business_category_id=4,
-        fk_owner_id="789e6543-e21b-65c3-b123-456789abcdef"
+        fk_owner_id="98b6e7b3-910f-426d-a930-c7a37d1874da"
     )
     pendidikan = Business(
         name="Bimbingan Belajar Cerdas",
@@ -56,7 +56,7 @@ def init_business(session: Session = next(get_db())):
         location="Jl. Pendidikan No. 15, Surabaya",
         contact="+62 812-3456-7890",
         fk_business_category_id=7,
-        fk_owner_id="321e4567-e89b-12d3-a456-426614174000"
+        fk_owner_id="98b6e7b3-910f-426d-a930-c7a37d1874db"
     )
 
     session.add_all([pertanian, kuliner, kreatif, jasa, pendidikan])

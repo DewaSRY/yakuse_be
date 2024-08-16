@@ -17,13 +17,32 @@ from app.utils import optional
 
 from app.utils.error_parser import find_errr_from_args
 
+"""
+    name: str = Field(default="someBusiness")
+    omset: str = Field(default="Rp 5000.000/minggu")
+    description: str = Field(default="this is coll business")
+    location: str = Field(default="some where on earth")
+    contact: str = Field(default="0000 0000 0000")
+    fk_business_category_id: int = Field(default=1)
+
+
+
+"""
+
 
 # create-business-with-photo
 async def create_business_with_photo(db: Session, business: business_dtos.BusinessCreateDto, user_id: str,
                                      file: UploadFile) -> optional.Optional[Business, Exception]:
     try:
         # Langkah 1: Membuat bisnis
-        business_model = Business(**business.model_dump())
+        business_model = Business()
+        business_model.name = business.name
+        business_model.omset = float(business.omset if business.omset else "0")
+        business_model.description = business.description
+        business_model.location = business.location
+        business_model.contact = business.contact
+        business_model.fk_business_category_id = business.fk_business_category_id
+
         business_model.fk_owner_id = user_id
 
         # Langkah 2: Upload foto

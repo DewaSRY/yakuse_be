@@ -50,6 +50,7 @@ origins = [
     "https://www.slingacademy.com",
     "https://yakuse.vercel.app"
 ]
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,

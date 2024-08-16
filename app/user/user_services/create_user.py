@@ -8,7 +8,7 @@ from app.user.user_model import UserModel
 from app.user import user_dtos
 
 from app.libs import password_lib
-from app.utils import optional
+from app.utils import optional, error_parser
 
 
 def create_user(db: Session, user: user_dtos.UserCreateDto) -> optional.Optional[UserModel, Exception]:
@@ -23,7 +23,7 @@ def create_user(db: Session, user: user_dtos.UserCreateDto) -> optional.Optional
         db.commit()
         return optional.build(data=user_model)
     except SQLAlchemyError as e:
-        # print(e)
         return optional.build(error=HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail="email already use"))
+            detail=f"{error_parser.find_errr_from_args("users", str(e.args))} already use"
+        ))

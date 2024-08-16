@@ -8,7 +8,7 @@ from app.rating.rating_dtos import BusinessRatingDto
 
 class BusinessCreateDto(BaseModel):
     name: str = Field(default="someBusiness")
-    omset: float = Field(default= 50000000.0)
+    omset: float = Field(default=50000000.0)
     description: str = Field(default="this is coll business")
     location: str = Field(default="some where on earth")
     contact: str = Field(default="0000 0000 0000")

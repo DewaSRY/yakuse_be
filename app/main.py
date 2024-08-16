@@ -42,10 +42,7 @@ app.include_router(article.article_router.router)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=['*'],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=['*']
 )
 
 if business_category_seed.get_business_category_length() == 0:

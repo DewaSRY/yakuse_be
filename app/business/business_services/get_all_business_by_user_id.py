@@ -29,7 +29,7 @@ def get_all_business_by_user_id(db: Session, user_id: str, skip: int = 0, limit:
         else:
             return optional.build(
                 error=HTTPException(
-                    status_code=404, detail="you not to access all data busines from this user_id"))
+                    status_code=404, detail="You don't have a business list yet, create your business first!!"))
 
     except SQLAlchemyError as e:
         return optional.build(error=HTTPException(

@@ -19,8 +19,8 @@ from app.utils import optional
 def get_all_business_by_category(db: Session, category_name: str) \
         -> optional.Optional[List[Type[Business]], Exception]:
     try:
-        # Mencari semua bisnis berdasarkan kategori
-        businesses = db.query(Business).join(Business.business_category) \
+        businesses = db.query(Business) \
+            .join(Business.business_category) \
             .filter(BusinessCategory.name == category_name).all()
 
         if businesses is None:

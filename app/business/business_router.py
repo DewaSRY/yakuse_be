@@ -108,7 +108,8 @@ def get_list_business_by_category_name(
         jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
         db: Session = Depends(get_db)
 ):
-    return business_services.get_all_business_by_category(db, category_name).unwrap()
+    return business_services \
+        .get_all_business_by_category(db, category_name).unwrap()
 
 
 # get-list-business-by-keyword-search

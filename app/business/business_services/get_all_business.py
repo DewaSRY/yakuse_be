@@ -16,7 +16,7 @@ from app.rating.rating_model import Rating
 from app.utils import optional
 
 
-def get_all_business(db: Session, skip: int = 0, limit: int = 100) \
+def get_all_business(db: Session, skip: int = 0, limit: int = 10) \
         -> optional.Optional[List[Type[Business]], Exception]:
     try:
         business_model = db.query(Business) \

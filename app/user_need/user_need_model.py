@@ -15,9 +15,9 @@ from app.user_need import user_need_dtos
 
 class UserNeeds(sql_alchemy_lib.Base):
     __tablename__ = "user_needs"
-    
+
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
-    title = Column(String(100))
+    title = Column(String(100), index=True)
     description = Column(Text)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
@@ -25,7 +25,7 @@ class UserNeeds(sql_alchemy_lib.Base):
     fk_business_category_id = Column(Integer, ForeignKey('business_category.id'))
     fk_user_id = Column(CHAR(36), ForeignKey('users.id'))
 
-    business_category = relationship("BusinessCategory", backref=backref("user_need", lazy=True))
+    # business_category = relationship("BusinessCategory", backref=backref("user_need", lazy=True))
 
     @property
     def user_info(self) -> dict[str, str]:
@@ -41,7 +41,7 @@ class UserNeeds(sql_alchemy_lib.Base):
             username=user_model.username,
             user_profile_url=user_model.photo_url
         ).model_dump()
-    
+
     @property
     def category(self):
         from app.business_category.business_category_model import BusinessCategory
@@ -49,12 +49,12 @@ class UserNeeds(sql_alchemy_lib.Base):
 
         business_category_model: BusinessCategory = session.query(BusinessCategory) \
             .filter(BusinessCategory.id == self.fk_business_category_id).first()
-        
+
         return user_need_dtos.UserNeedBusinessCategoryDto(
             id=business_category_model.id,
             name=business_category_model.name
         ).model_dump()
-    
+
     def to_response_dto(self) -> user_need_dtos.UserNeedResponseDto:
         return user_need_dtos.UserNeedResponseDto(
             id=self.id,

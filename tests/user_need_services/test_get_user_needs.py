@@ -18,14 +18,6 @@ def get_user_model_2(get_db):
     ).data
 
 
-# def test_get_user_need_by_id(get_db, get_user_model):
-#     user_need_create = user_need_services.create_user_need_service(
-#         db=get_db, user_need=user_need_dtos.UserNeedCreateDto(), user_id=get_user_model.id).data
-#
-#     return user_services.create_user(
-#         get_db, user_dtos.UserCreateDto()).data
-
-
 @pytest.fixture()
 def get_user_needs_model(get_db, get_user_model):
     return user_need_services.create_user_need(

@@ -13,7 +13,6 @@ def test_get_all_business(get_db, get_user_model):
     business = business_services.create_business(
         db=get_db, business=business_dtos.BusinessCreateDto(), user_id=get_user_model.id
     )
-    # business_services.get_all_business(get_db)
     all_business = business_services.get_all_business(get_db)
     assert len(all_business.data) == 1
 

@@ -2,7 +2,7 @@ import uuid
 
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Text, func
 from sqlalchemy.dialects.mysql import CHAR
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, Mapped
 
 from app.libs import sql_alchemy_lib
 
@@ -18,25 +18,17 @@ class Rating(sql_alchemy_lib.Base):
     fk_business_id = Column(CHAR(36), ForeignKey('business.id'))
     fk_rater_id = Column(CHAR(36), ForeignKey('users.id'))
 
-    # Relationship to Business
-    # business = relationship("Business", back_populates="ratings")
+    business: Mapped["Business"] = relationship(back_populates="ratings")
+    user: Mapped["UserModel"] = relationship(back_populates="")
 
     @property
     def business_name(self) -> str:
         from app.business.business_model import Business
-        session = next(sql_alchemy_lib.get_db())
-        business_model: Business = session.query(Business) \
-            .filter(Business.id.like(f"%{self.fk_business_id}%")) \
-            .first()
-
+        business_model: Business = self.business
         return business_model.name if business_model else ""
 
     @property
     def rater_name(self) -> str:
         from app.user.user_model import UserModel
-        session = next(sql_alchemy_lib.get_db())
-        user_models: UserModel = session.query(UserModel) \
-            .filter(UserModel.id.like(f"%{self.fk_rater_id}%")) \
-            .first()
-
+        user_models: UserModel = self.user
         return user_models.username if user_models else ""

@@ -2,9 +2,7 @@ import uuid
 from typing import Type
 from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, String, Text, func
 from sqlalchemy.dialects.mysql import CHAR
-from sqlalchemy.orm import relationship, backref
-
-from app.rating.rating_dtos import BusinessRatingDto
+from sqlalchemy.orm import relationship, backref, Mapped
 
 from app.libs import sql_alchemy_lib
 from app.business import business_dtos
@@ -26,11 +24,10 @@ class Business(sql_alchemy_lib.Base):
     fk_business_category_id = Column(Integer, ForeignKey('business_category.id'))
     fk_owner_id = Column(CHAR(36), ForeignKey('users.id'))
 
-    # # Relationship to Rating
-    # ratings = relationship("Rating", back_populates="business")
-    #
-    # # New relationship to BusinessCategory
-    # business_category = relationship("BusinessCategory", backref=backref("business", lazy=True))
+    ratings: Mapped[list["Rating"]] = relationship(back_populates="business")
+
+    user: Mapped["UserModel"] = relationship(viewonly=True)
+    business_category: Mapped["BusinessCategory"] = relationship(viewonly=True)
 
     def __repr__(self):
         return f"{self.name} {self.id}"
@@ -40,7 +37,6 @@ class Business(sql_alchemy_lib.Base):
         if self.description is None:
             return []
         d_list = re.split("\\s{4,}", self.description)
-
         return [d for d in d_list if len(d) != 0]
 
     @property
@@ -50,29 +46,19 @@ class Business(sql_alchemy_lib.Base):
     @property
     def owner(self):
         from app.user.user_model import UserModel
-        session = next(sql_alchemy_lib.get_db())
-        user_models: UserModel = session.query(UserModel) \
-            .filter(UserModel.id.like(f"%{self.fk_owner_id}%")) \
-            .first()
+        user_models: UserModel = self.user
         return user_models.username if user_models else ""
 
     @property
     def owner_id(self):
         from app.user.user_model import UserModel
-        session = next(sql_alchemy_lib.get_db())
-        user_models: UserModel = session.query(UserModel) \
-            .filter(UserModel.id.like(f"%{self.fk_owner_id}%")) \
-            .first()
+        user_models: UserModel = self.user
         return user_models.id if user_models else ""
 
     @property
     def owner_info(self):
         from app.user.user_model import UserModel
-        session = next(sql_alchemy_lib.get_db())
-
-        user_model: UserModel = session.query(UserModel) \
-            .filter(UserModel.id == self.fk_owner_id).first()
-
+        user_model: UserModel = self.user
         return business_dtos.OwnerBusinessInfoDto(
             user_id=user_model.id,
             fullname=user_model.fullname,
@@ -81,7 +67,7 @@ class Business(sql_alchemy_lib.Base):
 
     @property
     def rating(self):
-        rating_list = self.rating_list
+        rating_list = self.ratings
         if len(rating_list) == 0:  # Menggunakan relasi ratings langsung
             return 0
         total_rating = sum(rating.rating_count for rating in rating_list)
@@ -90,25 +76,18 @@ class Business(sql_alchemy_lib.Base):
 
     @property
     def total_rater(self):
-        from app.rating.rating_model import Rating
-        session = next(sql_alchemy_lib.get_db())
-
-        # rating_list: list[Type[Rating]] = session.query(Rating) \
-        #     .filter(Rating.fk_business_id.like(f"%{self.id}%")).all()
-
-        return len(self.rating_list)
-
-        # # Hitung jumlah unik user_id dari ratings
-        # unique_raters = {rating.fk_rater_id for rating in self.ratings}
-        # return len(unique_raters)
+        return len(self.ratings)
 
     @property
     def rating_list(self):
         from app.rating.rating_model import Rating
-        session = next(sql_alchemy_lib.get_db())
-
-        rating_list: list[Type[Rating]] = session.query(Rating) \
-            .filter(Rating.fk_business_id.like(f"%{self.id}%")).all()
-
-        return rating_list
-        # return [BusinessRatingDto.from_orm(rating) for rating in rating_list]
+        ratting_dtos = []
+        ratting_list: list[Rating] = self.ratings
+        for ratting in ratting_list:
+            ratting_dto = business_dtos.BusinessRatingDto(
+                id=ratting.id,
+                rating_count=ratting.rating_count,
+                review_description=ratting.review_description,
+                rater_name=ratting.rater_name).model_dump()
+            ratting_dtos.append(ratting_dto)
+        return ratting_dtos

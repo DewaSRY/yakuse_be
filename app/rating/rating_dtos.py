@@ -36,8 +36,7 @@ class BusinessRatingDto(BaseModel):
     id: str
     rating_count: int
     review_description: str
-    # business_name: Optional[str] = None
     rater_name: Optional[str] = None
 
-    class Config:
-        from_attributes = True
+    # class Config:
+    #     from_attributes = True

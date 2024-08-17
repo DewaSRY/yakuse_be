@@ -42,8 +42,8 @@ class BusinessResponse(BaseModel):
     total_rater: Optional[int] = None
     rating_list: List[BusinessRatingDto]
 
-    class Config:
-        from_attributes = True
+    # class Config:
+    #     from_attributes = True
 
 
 class BusinessCreateWithPhotoDto(BaseModel):

@@ -18,5 +18,4 @@ def test_find_error():
 
 def test_find_error_from_bigger_test():
     actual = find_errr_from_args("users", TEXT_ERROR)
-    print(f"actual i s{actual}")
     assert actual == "email"

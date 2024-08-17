@@ -30,7 +30,6 @@ def get_all_business(db: Session, skip: int = 0, limit: int = 10) \
             ))
         return optional.build(data=business_model)
     except SQLAlchemyError as e:
-        print(e)
         db.rollback()
         raise optional.build(
             error=HTTPException(status_code=409, detail="Database conflict: " + str(e)))

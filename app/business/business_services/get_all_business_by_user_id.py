@@ -16,12 +16,12 @@ from app.rating.rating_model import Rating
 from app.utils import optional
 
 
-def get_all_business_by_user_id(db: Session, user_id: str, skip: int = 0, limit: int = 100) \
+def get_all_business_by_user_id(db: Session, user_id: str, skip: int = 0, limit: int = 10) \
         -> optional.Optional[List[Type[Business]], HTTPException]:
     try:
         business_model = db.query(Business) \
             .order_by(desc(Business.created_at)) \
-            .filter(Business.fk_owner_id == user_id) \
+            .filter(Business.fk_owner_id.like(f"%{user_id}%")) \
             .offset(skip).limit(limit).all()
 
         if business_model:  # if the bisniss is not zero

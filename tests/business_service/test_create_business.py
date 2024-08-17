@@ -23,6 +23,8 @@ def test_create_business(get_db, get_user_model):
     )
     # print(len(business.data.description_list))
     # business_services.get_all_business(get_db)
+    print(business.data.rating_list)
     all_business = business_services.get_all_business(get_db)
+
     assert len(all_business.data) == 1
     assert len(business.data.description_list) > 0

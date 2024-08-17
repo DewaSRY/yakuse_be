@@ -12,14 +12,14 @@ class Rating(sql_alchemy_lib.Base):
     id = Column(CHAR(36), primary_key=True, default=lambda: str(uuid.uuid4()), unique=True, index=True)
     rating_count = Column(Integer, index=True)
     review_description = Column(Text)
-    created_at = Column(DateTime(timezone=True), server_default=func.now()) 
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
     fk_business_id = Column(CHAR(36), ForeignKey('business.id'))
     fk_rater_id = Column(CHAR(36), ForeignKey('users.id'))
 
     # Relationship to Business
-    business = relationship("Business", back_populates="ratings")
-
+    # business = relationship("Business", back_populates="ratings")
 
     @property
     def business_name(self) -> str:

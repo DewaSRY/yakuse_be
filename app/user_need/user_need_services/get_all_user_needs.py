@@ -21,7 +21,8 @@ def get_all_user_needs(db: Session, skip: int = 0, limit: int = 10) -> Optional:
     try:
         user_needs: list[Type[UserNeeds]] = db.query(UserNeeds) \
             .filter(UserNeeds.is_visible) \
-            .order_by(desc(UserNeeds.created_at)).offset(skip) \
+            .order_by(desc(UserNeeds.created_at)) \
+            .offset(skip) \
             .limit(limit).all()
 
         # user_need_dtos = [user_need.to_response_dto() for user_need in user_needs]

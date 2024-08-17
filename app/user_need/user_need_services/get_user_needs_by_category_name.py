@@ -24,6 +24,7 @@ def get_user_needs_by_category_name(db: Session, category_name: str) -> Optional
     try:
         business_category_model = db.query(BusinessCategory) \
             .filter(BusinessCategory.name.like(f"%{category_name}%")).first()
+
         if business_category_model is None:
             return build(error=HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                                              detail=f"{category_name} is not valid category"))

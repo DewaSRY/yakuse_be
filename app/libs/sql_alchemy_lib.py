@@ -12,8 +12,12 @@ APP_DEVELOPMENT = os.getenv("APP_DEVELOPMENT", True)
 engine: Engine
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app.db"
+#     connect_args={"check_same_thread": False},
 engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+    SQLALCHEMY_DATABASE_URL,
+    pool_size=10,  # Increase the pool size
+    max_overflow=20,  # Adjust overflow size
+    pool_timeout=30,
 )
 
 # letter we will use postgrest for easier service

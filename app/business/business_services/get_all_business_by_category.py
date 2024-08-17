@@ -15,13 +15,26 @@ from app.rating.rating_model import Rating
 
 from app.utils import optional
 
+"""
+    business_category_model = db.query(BusinessCategory) \
+            .filter(BusinessCategory.name.like(f"%{category_name}%")).first()
+        
+
+"""
+
 
 def get_all_business_by_category(db: Session, category_name: str) \
         -> optional.Optional[List[Type[Business]], Exception]:
+    from app.business_category.business_category_model import BusinessCategory
+
     try:
+        business_category_model = db.query(BusinessCategory) \
+            .filter(BusinessCategory.name.like(f"%{category_name}%")) \
+            .first()
+
         businesses = db.query(Business) \
-            .join(Business.business_category) \
-            .filter(BusinessCategory.name == category_name).all()
+            .filter(Business.fk_business_category_id.like(f"%{business_category_model.id}%")) \
+            .all()
 
         if businesses is None:
             return optional.build(error=HTTPException(

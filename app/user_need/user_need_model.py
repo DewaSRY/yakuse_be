@@ -7,11 +7,6 @@ from sqlalchemy.orm import relationship, backref
 from app.libs import sql_alchemy_lib
 from app.user_need import user_need_dtos
 
-"""
-    owner_username: str
-    user_profile_url: str
-"""
-
 
 class UserNeeds(sql_alchemy_lib.Base):
     __tablename__ = "user_needs"

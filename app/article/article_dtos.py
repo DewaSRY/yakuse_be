@@ -9,7 +9,7 @@ class ArticleCreateDto(BaseModel):
     image_url: str = Field(default="xxx")
 
 
-class ArticleCreateDto(BaseModel):
+class ArticleUpdateDto(BaseModel):
     title: str = Field("article title from hot guy")
     description: str = Field("some descriptionss")
     image_url: str = Field("yyy")

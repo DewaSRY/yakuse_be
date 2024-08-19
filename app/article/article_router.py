@@ -23,7 +23,8 @@ def create_article(
     jwt_token: Annotated[TokenPayLoad, Depends(get_jwt_pyload)],
     db: Session = Depends(get_db),
 ):
-    return
+    return article_services \
+        .create_article(db, article, jwt_token.id).unwrap()
 
 
 @router.get("/all",
@@ -31,9 +32,12 @@ def create_article(
             status_code=status.HTTP_200_OK)
 def get_all_articles(
     jwt_token: Annotated[TokenPayLoad, Depends(get_jwt_pyload)],
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    skip: int = 0,
+    limit: int = 10
 ):
-    return
+    return article_services \
+        .get_all_articles(db, skip, limit).unwrap()
 
 
 @router.get("/search/{keyword}",
@@ -44,7 +48,7 @@ def search_articles(
     jwt_token: Annotated[TokenPayLoad, Depends(get_jwt_pyload)],
     db: Session = Depends(get_db)
 ):
-    return
+    return article_services.search_articles_by_title(db, keyword).unwrap()
 
 
 @router.get("/category/{category_name}",
@@ -55,7 +59,9 @@ def get_articles_by_category_name(
     jwt_token: Annotated[TokenPayLoad, Depends(get_jwt_pyload)],
     db: Session = Depends(get_db)
 ):
-    return
+    return article_services \
+        .get_articles_by_category_name(db, category_name).unwrap()
+        
 
 
 @router.get("/my-articles",
@@ -65,7 +71,8 @@ def get_all_my_articles(
     jwt_token: Annotated[TokenPayLoad, Depends(get_jwt_pyload)],
     db: Session = Depends(get_db)
 ):
-    return
+    return article_services \
+        .get_my_articles(db, jwt_token.id).unwrap()
 
 
 @router.get("/{author_id}/articles",
@@ -76,7 +83,8 @@ def get_articles_by_author_id(
     jwt_token: Annotated[TokenPayLoad, Depends(get_jwt_pyload)],
     db: Session = Depends(get_db)
 ):
-    return
+    return article_services \
+        .get_articles_by_author_id(db, author_id).unwrap()
 
 
 @router.get("detail/{article_id}",
@@ -87,7 +95,8 @@ def get_article_detail_by_id(
     jwt_token: Annotated[TokenPayLoad, Depends(get_jwt_pyload)],
     db: Session = Depends(get_db)
 ):
-    return
+    return article_services \
+        .get_article_by_id(db, article_id).unwrap()
 
 
 @router.put("/my-article/{article_id}",
@@ -99,7 +108,8 @@ async def update_article_by_id(
     jwt_token: Annotated[TokenPayLoad, Depends(get_jwt_pyload)],
     db: Session = Depends(get_db)
 ):
-    return
+    return article_services \
+        .update_article_by_id(db, jwt_token.id, article_id, article_update).unwrap()
 
 
 @router.delete("/delete/my-article/{article_id}",
@@ -109,4 +119,5 @@ def delete_article_by_id(
     jwt_token: Annotated[TokenPayLoad, Depends(get_jwt_pyload)],
     db: Session = Depends(get_db)
 ):
-    return
+    return article_services \
+        .delete_article_by_id(db, jwt_token.id, article_id)

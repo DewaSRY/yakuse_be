@@ -13,10 +13,11 @@ from app.utils.optional import Optional, build
 def update_user_need_by_id(
         db: Session, user_id: str, user_need_id: str, user_need_update: UserNeedUpdateDto) -> Optional:
     try:
-        user_need_model = db.query(UserNeeds).filter(UserNeeds.fk_user_id == user_id).filter(
-            UserNeeds.id == user_need_id).first()
+        user_need_model = db.query(UserNeeds) \
+            .filter(UserNeeds.fk_user_id == user_id) \
+            .filter(UserNeeds.id == user_need_id).first()
         if user_need_model is None:
-            raise HTTPException(status_code=404, detail='User need not found.')
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='User need not found.')
         user_need_model.title = user_need_update.title
         user_need_model.description = user_need_update.description
         user_need_model.fk_business_category_id = user_need_update.fk_business_category_id

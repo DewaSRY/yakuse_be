@@ -38,7 +38,8 @@ def get_all_public_user_needs(
         .get_all_user_needs(db).unwrap()
 
 
-@router.get("/search/{keyword}", response_model=list[user_need_dtos.UserNeedResponseDto],
+@router.get("/search/{keyword}",
+            response_model=list[user_need_dtos.UserNeedResponseDto],
             status_code=status.HTTP_200_OK)
 def search_user_needs(
         keyword: str,
@@ -100,7 +101,7 @@ def get_user_need_detail_by_id(
             response_model=user_need_dtos.UserNeedResponseDto,
             status_code=status.HTTP_200_OK)
 async def update_user_need_by_id(
-        user_need_id: str,
+        user_need_id: int,
         user_need_update: user_need_dtos.UserNeedUpdateDto,
         jwt_token: Annotated[TokenPayLoad, Depends(get_jwt_pyload)],
         db: Session = Depends(get_db)
@@ -112,7 +113,7 @@ async def update_user_need_by_id(
 @router.delete("/hide/my-need/{user_need_id}",
                status_code=status.HTTP_204_NO_CONTENT)
 def delete_to_hide_user_need_by_id(
-        user_need_id: str,
+        user_need_id: int,
         jwt_token: Annotated[TokenPayLoad, Depends(get_jwt_pyload)],
         db: Session = Depends(get_db)
 ):

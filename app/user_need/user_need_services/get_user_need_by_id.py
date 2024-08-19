@@ -12,7 +12,8 @@ from app.utils.optional import Optional, build
 
 def get_user_need_by_id(db: Session, user_need_id: int) -> Optional:
     try:
-        user_need = db.query(UserNeeds).filter(UserNeeds.id == user_need_id).first()
+        user_need = db.query(UserNeeds) \
+            .filter(UserNeeds.id==user_need_id).first()
 
         # user_need_dto = user_need.to_response_dto()
 

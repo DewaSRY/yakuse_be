@@ -1,6 +1,6 @@
 from typing import Type
 
-from sqlalchemy import desc
+from sqlalchemy import desc, or_
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 from fastapi import HTTPException, status
@@ -15,7 +15,12 @@ from app.utils.optional import Optional, build
 def search_user_needs_by_keyword(db: Session, keyword: str) -> Optional:
     try:
         user_needs = db.query(UserNeeds) \
-            .filter(UserNeeds.title.like(f"%{keyword}%")) \
+            .filter(
+                or_(
+                    UserNeeds.title.like(f"%{keyword}%"),
+                    UserNeeds.description.like(f"%{keyword}%")
+                )
+            ) \
             .order_by(desc(UserNeeds.created_at)).all()
 
         if len(user_needs) == 0:

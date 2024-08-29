@@ -3,6 +3,7 @@ import re
 from sqlalchemy import Column, DateTime, String, Text, func
 from sqlalchemy.dialects.mysql import CHAR
 from sqlalchemy.orm import relationship, backref, Mapped
+
 from app.libs import sql_alchemy_lib
 
 
@@ -20,9 +21,8 @@ class UserModel(sql_alchemy_lib.Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
-    user_need: Mapped[list["UserNeeds"]] = relationship(back_populates="user")
-    business: Mapped[list["Business"]] = relationship(back_populates="user")
-
+    user_need: Mapped[list["UserNeeds"]] = relationship("UserNeeds", back_populates="user")
+    business: Mapped[list["Business"]] = relationship("Business", back_populates="user")
     @property
     def about_me_list(self):
         if self.about_me is None:

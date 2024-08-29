@@ -38,7 +38,7 @@ class BusinessResponse(BaseModel):
     updated_at: datetime
     category: Optional[str] = None
     owner_info: OwnerBusinessInfoDto
-    rating: Optional[float] = None
+    avg_rating: Optional[float] = None
     total_rater: Optional[int] = None
     rating_list: List[BusinessRatingDto]
 
@@ -64,7 +64,7 @@ class BusinessAllPost(BaseModel):
     name: str
     photo_url: Optional[str] = None
     category: Optional[str] = None
-    rating: Optional[float] = None
+    avg_rating: Optional[float] = None
     created_at: datetime
 
 

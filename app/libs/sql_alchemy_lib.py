@@ -11,14 +11,33 @@ load_dotenv()
 APP_DEVELOPMENT = os.getenv("APP_DEVELOPMENT", True)
 engine: Engine
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app.db"
-#     connect_args={"check_same_thread": False},
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL,
-    pool_size=10,  # Increase the pool size
-    max_overflow=20,  # Adjust overflow size
-    pool_timeout=30,
-)
+# SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app.db"
+# #     connect_args={"check_same_thread": False},
+
+# # Konfigurasi basis data dari variabel lingkungan
+# DB_TYPE = os.getenv("DB_TYPE")
+# DB_NAME = os.getenv("DB_NAME")
+# DB_USER = os.getenv("DB_USER")
+# DB_PASSWORD = os.getenv("DB_PASSWORD")
+# DB_HOST = os.getenv("DB_HOST")
+# DB_PORT = os.getenv("DB_PORT")
+
+# # Update the SQLALCHEMY_DATABASE_URL to use PostgreSQL
+SQLALCHEMY_DATABASE_URL = os.getenv('DATABASE_URI')
+
+# Pastikan DATABASE_URL diatur
+if not SQLALCHEMY_DATABASE_URL:
+    raise ValueError("DATABASE_URI is not set in the environment variables")
+
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
+
+# # Membuat engine SQLAlchemy
+# engine = create_engine(
+#     SQLALCHEMY_DATABASE_URL,
+#     pool_size=10,  # Increase the pool size
+#     max_overflow=20,  # Adjust overflow size
+#     pool_timeout=30,
+# )
 
 # letter we will use postgrest for easier service
 # MYSQL_CONNECTOR = os.getenv("SQLALCHEMY_DATABASE_URL", "mysql+pymysql://root:password@localhost/MYDB")

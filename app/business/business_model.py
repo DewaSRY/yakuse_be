@@ -4,6 +4,7 @@ from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, String, Tex
 from sqlalchemy.dialects.mysql import CHAR
 from sqlalchemy.orm import relationship, backref, Mapped
 
+from app.business_category.business_category_model import BusinessCategory
 from app.libs import sql_alchemy_lib
 from app.business import business_dtos
 import re
@@ -65,14 +66,22 @@ class Business(sql_alchemy_lib.Base):
             photo_url=user_model.photo_url
         ).model_dump()
 
+    # @property
+    # def avg_rating(self):
+    #     rating_list = self.ratings
+    #     if len(rating_list) == 0:  # Menggunakan relasi ratings langsung
+    #         return 0
+    #     total_rating = sum(rating.rating_count for rating in rating_list)
+    #     average_rating = total_rating / len(rating_list)
+    #     return round(average_rating, 1)  # Membulatkan ke 1 angka di belakang koma
+
     @property
-    def rating(self):
-        rating_list = self.ratings
-        if len(rating_list) == 0:  # Menggunakan relasi ratings langsung
+    def avg_rating(self):
+        if not self.ratings:  # Menggunakan relasi ratings langsung
             return 0
-        total_rating = sum(rating.rating_count for rating in rating_list)
-        average_rating = total_rating / len(rating_list)
-        return round(average_rating, 1)  # Membulatkan ke 1 angka di belakang koma
+        total_rating = sum(rating.rating_count for rating in self.ratings)
+        average_rating = total_rating / len(self.ratings)
+        return round(average_rating, 1)
 
     @property
     def total_rater(self):

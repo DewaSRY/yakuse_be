@@ -61,15 +61,18 @@ app.add_middleware(
 
 if business_category_seed.get_business_category_length() == 0:
     business_category_seed.init_business_category()
-#
-if business_seed.get_business_length() == 0:
-    business_seed.init_business()
 
-if user_seed.get_user_length() == 0:
-    user_seed.init_user()
+#mockdata
+# if user_seed.get_user_length() == 0:
+#     user_seed.init_user()
 
-if user_need_seed.get_user_need_length() == 0:
-    user_need_seed.init_user_need()
+# if business_seed.get_business_length() == 0:
+#     business_seed.init_business()
+
+
+
+# if user_need_seed.get_user_need_length() == 0:
+#     user_need_seed.init_user_need()
 
 root_directory = os.getcwd()  # Gets the current working directory
 images_directory = os.path.join(root_directory, "images")

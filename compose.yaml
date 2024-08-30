@@ -15,21 +15,21 @@ services:
       timeout: 5s
       retries: 5
 
-#  yasuke_db:
-#    build: .
-#    ports:
-#      - 8000:8000
-#    environment:
-#      - SQLALCHEMY_DATABASE_URL=mysql+pymysql://root:58390788@localhost/MYDB
-#      - PORT=8000
-#      - JSON_CONFIG=${JSON_CONFIG}
-#      - DATABASE_URL=postgresql://root:password123@localhost:5432/devdb
-#
-#    volumes:
-#      - ./app:/app  # Mount current directory to /app in the container
-#    restart: unless-stopped
-#    depends_on:
-#      - postgresDb
+  yasuke_db:
+    build: .
+    ports:
+      - 8000:8000
+    environment:
+      - SQLALCHEMY_DATABASE_URL=mysql+pymysql://root:58390788@localhost/MYDB
+      - PORT=8000
+      - JSON_CONFIG=${JSON_CONFIG}
+      - DATABASE_URL=postgresql://root:password123@localhost:5432/devdb
+
+    volumes:
+      - ./app:/app  # Mount current directory to /app in the container
+    restart: unless-stopped
+    depends_on:
+      - postgresDb
 
 
 volumes:

@@ -26,9 +26,10 @@ COPY pyproject.toml poetry.lock* ./
 # Create a virtual environment and install Poetry
 RUN python3 -m venv .venv\
     &&pip install -U pip setuptools \
+    &&pip uninstall psycopg2\
     &&pip install poetry==${POETRY_VERSION} \
     &&poetry install --without dev --no-root\
-    &&poetry add psycopg2
+
 
 # Final stage
 FROM base AS final

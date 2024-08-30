@@ -11,18 +11,24 @@ ENV POETRY_VERSION=1.8
 # Install Poetry and dependencies in a build stage
 FROM base AS build
 
+# Install dependencies required for building Python packages
+RUN apk add --update --no-cache \
+    build-base \
+    postgresql-dev \
+    musl-dev \
+    zlib-dev \
+    jpeg-dev \
+    linux-headers
 # Set working directory
 WORKDIR /usr/src/app
-
-
 # Copy the pyproject.toml and poetry.lock files to the container
 COPY pyproject.toml poetry.lock* ./
 # Create a virtual environment and install Poetry
 RUN python3 -m venv .venv\
+    &&pip install psycopg2\
     &&pip install -U pip setuptools \
     &&pip install poetry==${POETRY_VERSION} \
-    &&poetry install --no-root
-
+    &&poetry install --no-root  --without dev
 
 # Final stage
 FROM base AS final

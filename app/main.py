@@ -23,15 +23,16 @@ Dewa Wont to change database to use SQLite along development
 """
 INIT ALL Database Here
 """
-from app.user.user_model import UserModel
-from app.health_check.health_check_model import HealthCheckModel
-from app.business_category.business_category_model import BusinessCategory
-from app.business.business_model import Business
-from app.rating.rating_model import Rating
-from app.user_need.user_need_model import UserNeeds
-from app.article.article_model import Article
 
-sql_alchemy_lib.Base.metadata.create_all(bind=sql_alchemy_lib.engine)
+# from app.user.user_model import UserModel
+# from app.health_check.health_check_model import HealthCheckModel
+# from app.business_category.business_category_model import BusinessCategory
+# from app.business.business_model import Business
+# from app.rating.rating_model import Rating
+# from app.user_need.user_need_model import UserNeeds
+# from app.article.article_model import Article
+#
+# sql_alchemy_lib.Base.metadata.create_all(bind=sql_alchemy_lib.engine)
 
 app = FastAPI()
 
@@ -62,13 +63,12 @@ app.add_middleware(
 if business_category_seed.get_business_category_length() == 0:
     business_category_seed.init_business_category()
 
-#mockdata
+# mockdata
 # if user_seed.get_user_length() == 0:
 #     user_seed.init_user()
 
 # if business_seed.get_business_length() == 0:
 #     business_seed.init_business()
-
 
 
 # if user_need_seed.get_user_need_length() == 0:

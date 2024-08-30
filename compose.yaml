@@ -1,28 +1,36 @@
 services:
-  #  mysqlDB:
-  #    image: mysql:latest
-  #    environment:
-  #      - MYSQL_DATABASE=MYDB
-  #      - MYSQL_ROOT_PASSWORD=password
-  #    ports:
-  #      - 3306:3306
-  #    volumes:
-  #      - db-data:/var/lib/mysql
-
-
-  yasuke_db:
-    build: .
-    ports:
-      - 8000:8000
-    environment:
-      - SQLALCHEMY_DATABASE_URL=mysql+pymysql://root:58390788@localhost/MYDB
-      - PORT=8000
-      - JSON_CONFIG=${JSON_CONFIG}
-
+  postgresDb:
+    image: postgres:13-alpine
     volumes:
-      - ./app:/app  # Mount current directory to /app in the container
-    restart: unless-stopped
+      - dev-db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=devdb # The PostgreSQL default database (automatically created at first launch)
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=password123
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+#  yasuke_db:
+#    build: .
+#    ports:
+#      - 8000:8000
+#    environment:
+#      - SQLALCHEMY_DATABASE_URL=mysql+pymysql://root:58390788@localhost/MYDB
+#      - PORT=8000
+#      - JSON_CONFIG=${JSON_CONFIG}
+#      - DATABASE_URL=postgresql://root:password123@localhost:5432/devdb
+#
+#    volumes:
+#      - ./app:/app  # Mount current directory to /app in the container
+#    restart: unless-stopped
+#    depends_on:
+#      - postgresDb
 
 
 volumes:
-  db-data:
+  dev-db-data:

@@ -13,6 +13,7 @@ venv.bak/
 sql_app.db
 test_app.db
 poetry.lock
+*\\d.*.py
 
 # Byte-compiled / optimized / DLL files
 serviceAccountKey.json
@@ -46,6 +47,7 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+
 
 # PyInstaller
 #  Usually these files are written by a python script from a template

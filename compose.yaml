@@ -23,7 +23,7 @@ services:
       - SQLALCHEMY_DATABASE_URL=mysql+pymysql://root:58390788@localhost/MYDB
       - PORT=8000
       - JSON_CONFIG=${JSON_CONFIG}
-      - DATABASE_URL=postgresql://root:password123@localhost:5432/devdb
+      - DATABASE_URL=postgresql://root:password123@postgresDb:5432/devdb
 
     volumes:
       - ./app:/app  # Mount current directory to /app in the container

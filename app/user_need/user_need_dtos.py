@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field
 class UserNeedCreateDto(BaseModel):
     title: str = Field(default="some needs from cool guy")
     description: str = Field(default="he is handsome and needs a girl friends")
-    fk_business_category_id: Optional[int] = Field(default=None)
+    fk_business_category_id: int
 
 
 class UserNeedUpdateDto(BaseModel):

@@ -51,18 +51,18 @@ async def get_other_profile_by_user_id(
     return user_services.get_user_profile_by_id(db, user_id).unwrap()
 
 
-# edit-profile-user
-@router.put("/edit", response_model=user_dtos.UserCreateResponseDto)
-async def update_user_profile(
-        user: user_dtos.UserEditProfileDto,
-        jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
-        db: Session = Depends(get_db)):
-    """This method use to update user profile"""
-    return user_services.user_edit(db, user, jwt_token.id).unwrap()
+# # edit-profile-user
+# @router.put("/edit", response_model=user_dtos.UserCreateResponseDto)
+# async def update_user_profile(
+#         user: user_dtos.UserEditProfileDto,
+#         jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
+#         db: Session = Depends(get_db)):
+#     """This method use to update user profile"""
+#     return user_services.user_edit(db, user, jwt_token.id).unwrap()
 
 
 # edit-post-user-photo-profile
-@router.put("/edit/photo", response_model=user_dtos.UserCreateResponseDto)
+@router.put("/edit/photo-profile", response_model=user_dtos.UserCreateResponseDto)
 async def update_user_photo_profile(
         file: UploadFile = File(...),  # Untuk menerima file upload
         jwt_token: jwt_dto.TokenPayLoad = Depends(jwt_service.get_jwt_pyload),
@@ -73,6 +73,22 @@ async def update_user_photo_profile(
     if user_optional.error:
         raise user_optional.error
     return user_optional.data
+
+# edit-user-with-photo
+@router.put("/edit-profile", response_model=user_dtos.UserCreateResponseDto)
+async def edit_profile(
+        user: user_dtos.UserEditProfileDto = Depends(),
+        jwt_token: jwt_service.TokenPayLoad = Depends(jwt_service.get_jwt_pyload),
+        file: UploadFile = None,  # Mark file as optional if not always required
+        db: Session = Depends(get_db)
+):
+    result = await user_services.edit_user_by_user_id_login(db, jwt_token.id, user, file)
+    
+    if result.error:
+        raise result.error
+    
+    return result.data
+
 
 # @router.post("/login/firebase", response_model=jwt_dto.AccessTokenDto)
 # async def firebase_login(data: user_dtos.FirebaseLoginDto, db: Session = Depends(get_db)):

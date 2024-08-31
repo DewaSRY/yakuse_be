@@ -40,6 +40,17 @@ class UserEditResponseDto(BaseModel):
 class UserEditPhotoProfileDto(BaseModel):
     photo_url: str
 
+# class UserEditWithPhotoDto(BaseModel):
+#     id: Optional[str]  # Bisa None
+#     name: str
+#     omset: float
+#     description: str
+#     photo_url: Optional[str] = None  # Bisa None
+#     location: str
+#     contact: str
+#     fk_business_category_id: int = Field(default=1)
+#     created_at: Optional[datetime] = None  # Bisa None
+#     updated_at: Optional[datetime] = None  # Bisa None
 
 # class UserGetProfileDto(BaseModel):
 #     id: str

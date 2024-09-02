@@ -75,19 +75,39 @@ async def update_user_photo_profile(
     return user_optional.data
 
 # edit-user-with-photo
+# @router.put("/edit-profile", response_model=user_dtos.UserCreateResponseDto)
+# async def edit_profile(
+#         user: user_dtos.UserEditProfileDto = Depends(),
+#         jwt_token: jwt_service.TokenPayLoad = Depends(jwt_service.get_jwt_pyload),
+#         file: UploadFile = None,  # Mark file as optional if not always required
+#         db: Session = Depends(get_db)
+# ):
+#     result = await user_services.edit_user_by_user_id_login(db, jwt_token.id, user, file)
+    
+#     if result.error:
+#         raise result.error
+    
+#     return result.data
+
+# --
+# == memanfaatkan storage yg disediakan supabase== #
+# == memanfaatkan storage yg disediakan supabase== #
 @router.put("/edit-profile", response_model=user_dtos.UserCreateResponseDto)
-async def edit_profile(
+async def create_my_profile_user(
+        file: UploadFile = None,  # Jika opsional, tetap `None`; jika wajib, gunakan `File(...)`
         user: user_dtos.UserEditProfileDto = Depends(),
         jwt_token: jwt_service.TokenPayLoad = Depends(jwt_service.get_jwt_pyload),
-        file: UploadFile = None,  # Mark file as optional if not always required
         db: Session = Depends(get_db)
 ):
+    # Pastikan untuk menangani kasus di mana `file` adalah None di dalam layanan Anda
     result = await user_services.edit_user_by_user_id_login(db, jwt_token.id, user, file)
     
     if result.error:
         raise result.error
     
     return result.data
+
+
 
 
 # @router.post("/login/firebase", response_model=jwt_dto.AccessTokenDto)

@@ -19,6 +19,8 @@ python-dotenv = "^1.0.1"
 firebase-admin = "^6.5.0"
 python-multipart = "^0.0.9"
 google-auth = "^2.33.0"
+supabase = "^2.7.3"
+psycopg2 = "^2.9.9"
 
 
 [tool.poetry.group.dev.dependencies]

@@ -17,7 +17,7 @@ class UserModel(sql_alchemy_lib.Base):
     phone = Column(String(50))
     address = Column(Text)
     about_me = Column(Text)
-    photo_url = Column(String(100))
+    photo_url = Column(String(255))
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 

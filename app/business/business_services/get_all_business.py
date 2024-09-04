@@ -23,10 +23,10 @@ def get_all_business(db: Session, skip: int = 0, limit: int = 10) \
             .order_by(desc(Business.created_at)) \
             .offset(skip).limit(limit).all()
 
-        if business_model is None:
+        if not business_model:
             return optional.build(error=HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"all business not access"
+                detail="No businesses found"
             ))
         return optional.build(data=business_model)
     except SQLAlchemyError as e:

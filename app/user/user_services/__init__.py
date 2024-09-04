@@ -5,7 +5,7 @@ from .get_user import get_user
 from .get_user_by_property import get_user_by_property
 from .get_user_profile import get_user_profile
 from .service_access_token import service_access_token
-from .update_user_photo import update_user_photo
+from .update_user_photo import update_my_photo
 from .user_edit import user_edit
 from .edit_user_by_user_id import edit_user_by_user_id_login
 from .user_login import user_login

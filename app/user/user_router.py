@@ -51,28 +51,42 @@ async def get_other_profile_by_user_id(
     return user_services.get_user_profile_by_id(db, user_id).unwrap()
 
 
-# # edit-profile-user
-# @router.put("/edit", response_model=user_dtos.UserCreateResponseDto)
-# async def update_user_profile(
-#         user: user_dtos.UserEditProfileDto,
-#         jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
-#         db: Session = Depends(get_db)):
-#     """This method use to update user profile"""
-#     return user_services.user_edit(db, user, jwt_token.id).unwrap()
+# edit-profile-user
+@router.put("/edit", response_model=user_dtos.UserCreateResponseDto)
+async def update_user_profile_without_photo(
+        user: user_dtos.UserEditProfileDto,
+        jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
+        db: Session = Depends(get_db)):
+    """This method use to update user profile"""
+    return user_services.user_edit(db, user, jwt_token.id).unwrap()
 
 
 # edit-post-user-photo-profile
+# @router.put("/edit/photo-profile", response_model=user_dtos.UserCreateResponseDto)
+# async def update_user_photo_profile(
+#         file: UploadFile = File(...),  # Untuk menerima file upload
+#         jwt_token: jwt_dto.TokenPayLoad = Depends(jwt_service.get_jwt_pyload),
+#         db: Session = Depends(get_db)
+# ):
+#     """This Method use to Update Photo Profile of User"""
+#     user_optional = await user_services.update_user_photo(db, jwt_token.id, file)
+#     if user_optional.error:
+#         raise user_optional.error
+#     return user_optional.data
+
 @router.put("/edit/photo-profile", response_model=user_dtos.UserCreateResponseDto)
-async def update_user_photo_profile(
-        file: UploadFile = File(...),  # Untuk menerima file upload
-        jwt_token: jwt_dto.TokenPayLoad = Depends(jwt_service.get_jwt_pyload),
+async def update_only_photo(
+        file: UploadFile = None,  # Jika opsional, tetap `None`; jika wajib, gunakan `File(...)`
+        jwt_token: jwt_service.TokenPayLoad = Depends(jwt_service.get_jwt_pyload),
         db: Session = Depends(get_db)
 ):
-    """This Method use to Update Photo Profile of User"""
-    user_optional = await user_services.update_user_photo(db, jwt_token.id, file)
-    if user_optional.error:
-        raise user_optional.error
-    return user_optional.data
+    # Pastikan untuk menangani kasus di mana `file` adalah None di dalam layanan Anda
+    result = await user_services.update_my_photo(db, jwt_token.id, file)
+    
+    if result.error:
+        raise result.error
+    
+    return result.data
 
 # edit-user-with-photo
 # @router.put("/edit-profile", response_model=user_dtos.UserCreateResponseDto)
@@ -93,7 +107,7 @@ async def update_user_photo_profile(
 # == memanfaatkan storage yg disediakan supabase== #
 # == memanfaatkan storage yg disediakan supabase== #
 @router.put("/edit-profile", response_model=user_dtos.UserCreateResponseDto)
-async def create_my_profile_user(
+async def update_user_profile_with_photo(
         file: UploadFile = None,  # Jika opsional, tetap `None`; jika wajib, gunakan `File(...)`
         user: user_dtos.UserEditProfileDto = Depends(),
         jwt_token: jwt_service.TokenPayLoad = Depends(jwt_service.get_jwt_pyload),

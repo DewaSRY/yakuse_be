@@ -1,7 +1,7 @@
 from typing import Annotated, Type
 from uuid import UUID
 from sqlalchemy.orm import Session
-from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile
 from app.business.business_model import Business
 from app.libs.sql_alchemy_lib import get_db
 from app.libs.jwt_lib import jwt_dto, jwt_service
@@ -85,11 +85,28 @@ async def delete_my_business(
 
 
 # get-all-business-public
+# @router.get("/all", response_model=list[business_dtos.BusinessAllPost])
+# def get_all_public_business_latest(
+#         jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
+#         db: Session = Depends(get_db)):
+#     return business_services.get_all_business(db).unwrap()
+
 @router.get("/all", response_model=list[business_dtos.BusinessAllPost])
 def get_all_public_business_latest(
         jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
+        skip: int = Query(0, description="Number of items to skip"),
+        limit: int = Query(10, description="Max number of items to return"),
         db: Session = Depends(get_db)):
-    return business_services.get_all_business(db).unwrap()
+    
+    # Mengambil hasil dari service dengan skip dan limit
+    result = business_services.get_all_business(db, skip=skip, limit=limit)
+
+    # Cek apakah hasil berupa error
+    # if result.is_error():
+    #     raise result.error
+
+    # Jika tidak ada error, unwrap dan kembalikan datanya
+    return result.unwrap()
 
 
 # get-detail-business-by-business_id

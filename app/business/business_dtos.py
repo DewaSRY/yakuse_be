@@ -9,7 +9,16 @@ from app.rating.rating_dtos import BusinessRatingDto
 class BusinessCreateDto(BaseModel):
     name: str = Field(default="someBusiness")
     omset: float = Field(default=50000000.0)
-    description_list: list[str]
+    description: str = Field(default="this is coll business")
+    location: str = Field(default="some where on earth")
+    contact: str = Field(default="0000 0000 0000")
+    fk_business_category_id: int = Field(default=1)
+
+
+class BusinessEditDto(BaseModel):
+    name: str = Field(default="someBusiness")
+    omset: float = Field(default=50000000.0)
+    description: str = Field(default="this is coll business")
     location: str = Field(default="some where on earth")
     contact: str = Field(default="0000 0000 0000")
     fk_business_category_id: int = Field(default=1)
@@ -72,12 +81,6 @@ class BusinessEdiDto(BaseModel):
     fk_business_category_id: int
 
 
-class BusinessEditDto(BaseModel):
-    name: str = Field(default="someBusiness")
-    description: str = Field(default="this is coll business")
-    location: str = Field(default="some where on earth")
-    contact: str = Field(default="0000 0000 0000")
-    fk_business_category_id: int = Field(default=1)
 
 
 class BusinessEditWithPhotoDto(BaseModel):

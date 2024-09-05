@@ -33,12 +33,20 @@ class Business(sql_alchemy_lib.Base):
     def __repr__(self):
         return f"{self.name} {self.id}"
 
+    # @property
+    # def description_list(self):
+    #     if self.description is None:
+    #         return []
+    #     d_list = re.split("\\s{4,}", self.description)
+    #     return [d for d in d_list if len(d) != 0]
+    
     @property
     def description_list(self):
         if self.description is None:
             return []
-        d_list = re.split("\\s{4,}", self.description)
-        return [d for d in d_list if len(d) != 0]
+        # Memecah deskripsi berdasarkan paragraf yang dipisahkan oleh baris baru
+        d_list = re.split(r"\n+", self.description)
+        return [d.strip() for d in d_list if d.strip()]  # Menghapus spasi kosong di awal/akhir paragraf
 
     @property
     def category(self):

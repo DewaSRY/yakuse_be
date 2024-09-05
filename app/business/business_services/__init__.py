@@ -3,6 +3,7 @@ from .create_business_with_photo import create_business_with_photo
 from .delete_business_by_id import delete_business_by_id
 from .edit_business_by_business_id import edit_business_by_business_id
 from .get_all_business import get_all_business
+from .get_all_business_pagination import get_all_business_pagination
 from .get_all_business_by_category import get_all_business_by_category
 from .get_all_business_by_user_id import get_all_business_by_user_id
 from .get_detail_business_by_business_id import get_detail_business_by_business_id

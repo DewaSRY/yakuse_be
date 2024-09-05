@@ -81,8 +81,6 @@ class BusinessEdiDto(BaseModel):
     fk_business_category_id: int
 
 
-
-
 class BusinessEditWithPhotoDto(BaseModel):
     id: Optional[str]  # Bisa None
     name: str
@@ -93,3 +91,24 @@ class BusinessEditWithPhotoDto(BaseModel):
     contact: str
     fk_business_category_id: int = Field(default=1)
     updated_at: Optional[datetime] = None  # Bisa None
+
+
+# coba implemen pagination #
+class BusinessAllPost(BaseModel):
+    id: str
+    name: str
+    photo_url: Optional[str] = None
+    category: Optional[str] = None
+    avg_rating: Optional[float] = None
+    created_at: datetime
+
+class PaginationDto(BaseModel):
+    total_records: int
+    current_page: int
+    total_pages: int
+    next_page: Optional[int]
+    prev_page: Optional[int]
+
+class PaginatedResponseDto(BaseModel):
+    data: List[BusinessAllPost]
+    pagination: PaginationDto

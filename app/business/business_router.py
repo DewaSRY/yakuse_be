@@ -85,28 +85,33 @@ async def delete_my_business(
 
 
 # get-all-business-public
-# @router.get("/all", response_model=list[business_dtos.BusinessAllPost])
-# def get_all_public_business_latest(
-#         jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
-#         db: Session = Depends(get_db)):
-#     return business_services.get_all_business(db).unwrap()
-
 @router.get("/all", response_model=list[business_dtos.BusinessAllPost])
 def get_all_public_business_latest(
         jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
-        skip: int = Query(0, description="Number of items to skip"),
-        limit: int = Query(10, description="Max number of items to return"),
         db: Session = Depends(get_db)):
+    return business_services.get_all_business(db).unwrap()
+
+# @router.get("/all", response_model=list[business_dtos.BusinessAllPost])
+# def get_all_public_business_latest(
+#         jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
+#         skip: int = Query(0, description="Number of items to skip"),
+#         limit: int = Query(10, description="Max number of items to return"),
+#         db: Session = Depends(get_db)):
     
-    # Mengambil hasil dari service dengan skip dan limit
-    result = business_services.get_all_business(db, skip=skip, limit=limit)
+#     # Mengambil hasil dari service dengan skip dan limit
+#     result = business_services.get_all_business(db, skip=skip, limit=limit)
 
-    # Cek apakah hasil berupa error
-    # if result.is_error():
-    #     raise result.error
+#     # Jika tidak ada error, unwrap dan kembalikan datanya
+#     return result.unwrap()
 
-    # Jika tidak ada error, unwrap dan kembalikan datanya
-    return result.unwrap()
+@router.get("/all/pagination", response_model=business_dtos.PaginatedResponseDto)
+def get_all_public_business_latest_pagination(
+        jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
+        db: Session = Depends(get_db),
+        page: int = 1,
+        limit: int = 10):
+    return business_services.get_all_business_pagination(db, skip=(page-1)*limit, limit=limit, page=page)
+
 
 
 # get-detail-business-by-business_id

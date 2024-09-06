@@ -46,7 +46,7 @@ async def edit_business_by_business_id(
                 file, 
                 "YakuseProject-storage", 
                 user_id, 
-                folder_name="images/business", 
+                folder_name="images/edit_business", 
                 old_file_url=business_model.photo_url
                 )
             

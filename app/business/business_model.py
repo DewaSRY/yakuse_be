@@ -27,7 +27,9 @@ class Business(sql_alchemy_lib.Base):
 
     ratings: Mapped[list["Rating"]] = relationship(back_populates="business")
 
-    user: Mapped["UserModel"] = relationship(viewonly=True)
+    # user: Mapped["UserModel"] = relationship(viewonly=True)
+    user: Mapped["UserModel"] = relationship(back_populates="business")
+
     business_category: Mapped["BusinessCategory"] = relationship(viewonly=True)
 
     def __repr__(self):

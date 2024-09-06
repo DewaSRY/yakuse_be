@@ -7,7 +7,7 @@ from app.libs.images_service import create_image_service
 
 from app.user.user_model import UserModel
 
-from app.user.user_services.upload_image_to_supabase import upload_image_to_supabase
+from app.libs.upload_image_to_supabase import upload_image_to_supabase, validate_file
 from app.utils import optional, find_errr_from_args
 
 
@@ -29,33 +29,32 @@ from app.utils import optional, find_errr_from_args
 #         return optional.build(error=HTTPException(status_code=409, detail="Database conflict: " + str(e)))
 
 
+# Daftar format file yang diizinkan dan batas ukuran file dalam byte (contoh 500KB)
+# ALLOWED_EXTENSIONS = ['png', 'jpeg', 'jpg', 'webp']
+# MAX_FILE_SIZE = 500 * 1024  # Maksimum ukuran file 500KB
 
+# def validate_file(file: UploadFile):
+#     # Langkah 1: Periksa format file
+#     filename = file.filename
+#     file_extension = filename.split('.')[-1].lower()
 
-# Tambahkan daftar format file yang diizinkan dan batas ukuran file dalam byte (contoh 2MB = 2 * 1024 * 1024)
-ALLOWED_EXTENSIONS = ['png', 'jpeg', 'jpg', 'webp']
-MAX_FILE_SIZE = 500 * 1024  # Maksimum ukuran file 500KB
+#     if file_extension not in ALLOWED_EXTENSIONS:
+#         raise HTTPException(
+#             status_code=status.HTTP_400_BAD_REQUEST, 
+#             detail=f"File format not allowed. Please upload one of the following formats: {', '.join(ALLOWED_EXTENSIONS)}"
+#         )
 
-def validate_file(file: UploadFile):
-    # Langkah 1: Periksa format file
-    filename = file.filename
-    file_extension = filename.split('.')[-1].lower()
+#     # Langkah 2: Periksa ukuran file
+#     file.file.seek(0, 2)  # Pindahkan pointer ke akhir file untuk mendapatkan ukuran
+#     file_size = file.file.tell()  # Dapatkan ukuran file
+#     file.file.seek(0)  # Kembalikan pointer ke awal agar file bisa dibaca kembali setelah validasi
 
-    if file_extension not in ALLOWED_EXTENSIONS:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, 
-            detail=f"File format not allowed. Please upload one of the following formats: {', '.join(ALLOWED_EXTENSIONS)}"
-        )
+#     if file_size > MAX_FILE_SIZE:
+#         raise HTTPException(
+#             status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+#             detail=f"File too large. Maximum allowed size is {MAX_FILE_SIZE / 1024} KB"
+#         )
 
-    # Langkah 2: Periksa ukuran file
-    file_size = file.file.seek(0, 2)  # Pindahkan pointer ke akhir file untuk mendapatkan ukuran
-    if file_size > MAX_FILE_SIZE:
-        raise HTTPException(
-            status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
-            detail=f"File too large. Maximum allowed size is {MAX_FILE_SIZE / 1024} KB"
-        )
-
-    # Kembalikan pointer ke awal agar file bisa dibaca setelah validasi
-    file.file.seek(0)
 
 async def update_my_photo(db: Session, user_id: str, file: UploadFile) -> optional.Optional[UserModel, HTTPException]:
     try:
@@ -72,7 +71,14 @@ async def update_my_photo(db: Session, user_id: str, file: UploadFile) -> option
             print(f"File diterima untuk upload: {file.filename}")
 
             # Upload gambar ke Supabase atau storage lain
-            public_url = await upload_image_to_supabase(file, 'YakuseProject-storage')
+            public_url = await upload_image_to_supabase(
+                file, 
+                "YakuseProject-storage", 
+                user_id, 
+                folder_name="images/only_photo_profile", 
+                old_file_url=user_model.photo_url
+                )
+            
             print(f"Public URL dari file yang diupload: {public_url}")
             
             if public_url is None:
@@ -101,55 +107,4 @@ async def update_my_photo(db: Session, user_id: str, file: UploadFile) -> option
             detail=f"An error occurred: {str(e)}"
         )
 
-
-
-
-
-
-# == memanfaatkan storage yg disediakan supabase untuk post photo == #
-# async def update_my_photo(db: Session, user_id: str, file: UploadFile) -> optional.Optional[UserModel, HTTPException]:
-#     try:
-#         # Langkah 1: Mencari user yang ada
-#         user_model = db.query(UserModel).filter(UserModel.id == user_id).first()
-#         if not user_model:
-#             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
-
-#         # Langkah 2: Upload foto jika file ada
-#         if file:
-#             # Debugging: Cek apakah file diterima
-#             print(f"File diterima untuk upload: {file.filename}")
-
-#             # Validasi file type jika diperlukan
-#             if not file.content_type.startswith("image/"):
-#                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Uploaded file is not an image.")
-
-#             # Upload gambar ke Supabase atau storage lain
-#             public_url = await upload_image_to_supabase(file, 'YakuseProject-storage')
-#             print(f"Public URL dari file yang diupload: {public_url}")
-            
-#             if public_url is None:
-#                 raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to upload image.")
-            
-#             # Update photo_url pada user
-#             user_model.photo_url = public_url           
-
-#         # Simpan perubahan ke dalam database
-#         db.add(user_model)
-#         db.commit()
-#         db.refresh(user_model)
-
-#         return optional.build(data=user_model)
-
-#     except SQLAlchemyError as e:
-#         db.rollback()
-#         raise HTTPException(
-#             status_code=status.HTTP_409_CONFLICT,
-#             detail=f"Database conflict: {str(e)}"
-#         )
-
-#     except Exception as e:
-#         raise HTTPException(
-#             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-#             detail=f"An error occurred: {str(e)}"
-#         )
 

@@ -22,7 +22,9 @@ class UserNeeds(sql_alchemy_lib.Base):
     fk_user_id = Column(CHAR(36), ForeignKey('users.id'))
 
     business_category: Mapped["BusinessCategory"] = relationship(viewonly=True)
-    user: Mapped["UserModel"] = relationship(viewonly=True)
+    # user: Mapped["UserModel"] = relationship(viewonly=True)
+    # Relasi ke model UserModel
+    user: Mapped["UserModel"] = relationship(back_populates="user_need")
 
     @property
     def user_info(self) -> dict[str, str]:

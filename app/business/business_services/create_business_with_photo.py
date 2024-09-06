@@ -7,6 +7,7 @@ from fastapi import HTTPException, UploadFile, status
 
 from app.business_category.business_category_model import BusinessCategory
 from app.libs.images_service import create_image_service
+from app.libs.upload_image_to_supabase import upload_image_to_supabase
 from app.user.user_model import UserModel
 
 from app.business import business_dtos
@@ -45,11 +46,30 @@ async def create_business_with_photo(db: Session, business: business_dtos.Busine
 
         business_model.fk_owner_id = user_id
 
-        # Langkah 2: Upload foto
-        opt_content = await create_image_service(upload_file=file, domain="business")
+        # # Langkah 2: Upload foto
+        # opt_content = await create_image_service(upload_file=file, domain="business")
 
-        # Jika upload berhasil, update `photo_url` dalam `business_model`
-        business_model.photo_url = opt_content.data
+        # # Jika upload berhasil, update `photo_url` dalam `business_model`
+        # business_model.photo_url = opt_content.data
+
+        # Langkah 2: Upload foto jika file ada
+        if file is not None:
+            # Debugging: Cek apakah file diterima
+            print(f"File diterima untuk upload: {file.filename}")
+            # bucket_name = 'YakuseProject-storage'
+            
+            public_url = await upload_image_to_supabase(
+                file, 
+                "YakuseProject-storage", 
+                user_id, 
+                folder_name="images/business"
+                )
+            
+            print(f"Public URL dari file yang diupload: {public_url}")
+            
+            if public_url is None:
+                raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to upload image.")
+            business_model.photo_url = public_url
 
         db.add(business_model)
         db.commit()

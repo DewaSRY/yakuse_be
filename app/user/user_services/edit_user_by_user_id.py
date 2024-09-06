@@ -7,7 +7,7 @@ from fastapi import HTTPException, UploadFile, status
 
 from app.business_category.business_category_model import BusinessCategory
 from app.libs.images_service import create_image_service
-from app.user.user_services.upload_image_to_supabase import upload_image_to_supabase
+from app.libs.upload_image_to_supabase import upload_image_to_supabase
 from app.user.user_model import UserModel
 from app.user import user_dtos
 
@@ -83,7 +83,14 @@ async def edit_user_by_user_id_login(
             print(f"File diterima untuk upload: {file.filename}")
             # bucket_name = 'YakuseProject-storage'
             
-            public_url = await upload_image_to_supabase(file, 'YakuseProject-storage')
+            public_url = await upload_image_to_supabase(
+                file, 
+                "YakuseProject-storage", 
+                user_id, 
+                folder_name="images/profile", 
+                old_file_url=user_model.photo_url
+                )
+            
             print(f"Public URL dari file yang diupload: {public_url}")
             
             if public_url is None:

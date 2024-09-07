@@ -29,26 +29,6 @@ async def create_my_profile_business(
         raise result.error
     return result.data
 
-
-# edit-my-business
-@router.put("/edit/{business_id}", response_model=business_dtos.BusinessEditWithPhotoDto)
-async def update_my_profile_business(
-        business_id: str,
-        file: UploadFile,
-        business: business_dtos.BusinessEditDto = Depends(),
-        jwt_token: jwt_service.TokenPayLoad = Depends(jwt_service.get_jwt_pyload),
-        db: Session = Depends(get_db)
-):
-    """This method is used to update a business profile"""
-    result = await business_services \
-        .edit_business_by_business_id(db, business_id, business, jwt_token.id, file)
-
-    if result.error:
-        raise result.error
-
-    return result.data
-
-
 # get-all-business-by-login-user-id
 @router.get("/my-business", response_model=list[business_dtos.BusinessResponse])
 def get_all_my_business(
@@ -66,23 +46,6 @@ def get_list_business_user_by_user_id(
         db: Session = Depends(get_db)
 ):
     return business_services.get_all_business_by_user_id(db, user_id).unwrap()
-
-
-# delete-my-business
-@router.delete("/delete/{business_id}")
-async def delete_my_business(
-        business_id: str,
-        jwt_token: jwt_service.TokenPayLoad = Depends(jwt_service.get_jwt_pyload),
-        db: Session = Depends(get_db)
-):
-    """This method is used to delete a business profile"""
-    result = await business_services.delete_business_by_id(db, business_id, jwt_token.id)
-
-    if result.error:
-        raise result.error
-
-    return {"detail": "Business deleted successfully"}
-
 
 # get-all-business-public
 @router.get("/all", response_model=list[business_dtos.BusinessAllPost])
@@ -143,3 +106,39 @@ def search_business(
 ):
     """Search businesses by keyword"""
     return business_services.search_business_by_keyword(db, keyword).unwrap()
+
+
+# edit-my-business
+@router.put("/edit/{business_id}", response_model=business_dtos.BusinessEditWithPhotoDto)
+async def update_my_profile_business(
+        business_id: str,
+        file: UploadFile,
+        business: business_dtos.BusinessEditDto = Depends(),
+        jwt_token: jwt_service.TokenPayLoad = Depends(jwt_service.get_jwt_pyload),
+        db: Session = Depends(get_db)
+):
+    """This method is used to update a business profile"""
+    result = await business_services \
+        .edit_business_by_business_id(db, business_id, business, jwt_token.id, file)
+
+    if result.error:
+        raise result.error
+
+    return result.data
+
+# delete-my-business
+@router.delete("/delete/{business_id}")
+async def delete_my_business(
+        business_id: str,
+        jwt_token: jwt_service.TokenPayLoad = Depends(jwt_service.get_jwt_pyload),
+        db: Session = Depends(get_db)
+):
+    """This method is used to delete a business profile"""
+    result = await business_services.delete_business_by_id(db, business_id, jwt_token.id)
+
+    if result.error:
+        raise result.error
+
+    return {"detail": "Business deleted successfully"}
+
+

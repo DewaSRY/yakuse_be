@@ -121,6 +121,31 @@ async def update_user_profile_with_photo(
     
     return result.data
 
+@router.put("/change-password", response_model=user_dtos.ChangePasswordResponseDto)
+async def change_password(
+        user: user_dtos.ChangePasswordDto,
+        jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
+        db: Session = Depends(get_db)):
+    """This method allows a user to change their password"""
+    result = await user_services.change_password(
+        db, 
+        jwt_token.id, 
+        user.old_password, 
+        user.new_password
+    )
+
+    if result.error:
+        raise result.error
+
+    return {
+        "message": "Password has been changed successfully",
+        "data": {
+            "old_password": user.old_password,
+            "new_password": user.new_password
+        }
+    }
+
+
 # delete-my-account-user
 @router.delete("/delete")
 async def delete_my_user_account(

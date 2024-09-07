@@ -9,5 +9,6 @@ from .update_user_photo import update_my_photo
 from .user_edit import user_edit
 from .edit_user_by_user_id import edit_user_by_user_id_login
 from .user_login import user_login
+from .change_password import change_password
 from .get_user_profile_by_id import get_user_profile_by_id
 from .delete_user_by_user_id import delete_user_by_user_id

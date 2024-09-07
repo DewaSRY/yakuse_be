@@ -83,5 +83,15 @@ class UserLoginPayloadDto(BaseModel):
     email: EmailStr = Field(default="Example@Example.com")
     password: str = Field(default="somePassword")
 
+
+# DTO untuk menangkap data dari JSON
+class ChangePasswordDto(BaseModel):
+    old_password: str
+    new_password: str
+
+class ChangePasswordResponseDto(BaseModel):
+    message : str = Field(default="Password has been changed successfully")
+    data: ChangePasswordDto
+
 # class FirebaseLoginDto(BaseModel):
 #     id_token: str

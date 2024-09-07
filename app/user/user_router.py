@@ -123,7 +123,7 @@ async def update_user_profile_with_photo(
 
 # delete-my-account-user
 @router.delete("/delete")
-async def delete_my_account_user(
+async def delete_my_user_account(
         jwt_token: jwt_service.TokenPayLoad = Depends(jwt_service.get_jwt_pyload),
         db: Session = Depends(get_db)
 ):

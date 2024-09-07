@@ -121,6 +121,20 @@ async def update_user_profile_with_photo(
     
     return result.data
 
+# delete-my-account-user
+@router.delete("/delete")
+async def delete_my_account_user(
+        jwt_token: jwt_service.TokenPayLoad = Depends(jwt_service.get_jwt_pyload),
+        db: Session = Depends(get_db)
+):
+    """This method is used to delete a user account profile"""
+    result = await user_services.delete_user_by_user_id(db, jwt_token.id)
+
+    if result.error:
+        raise result.error
+
+    return {"detail": "Your user account has been deleted successfully"}
+
 
 
 

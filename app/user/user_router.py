@@ -158,8 +158,12 @@ async def delete_my_user_account(
     if result.error:
         raise result.error
 
-    return {"detail": "Your user account has been deleted successfully"}
-
+    return {
+        "detail": "Your user account has been deleted successfully",
+        "user_id": result.data["user_id"],
+        "username": result.data["username"],
+        "email": result.data["email"]
+    }
 
 
 

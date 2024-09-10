@@ -12,9 +12,8 @@ class UserNeedCreateDto(BaseModel):
 class UserNeedUpdateDto(BaseModel):
     title: str = Field("some needs from hot guy")
     description: str = Field("he is handsome and needs a woman")
-    fk_business_category_id: int = Field(2)
-    is_visible: bool = Field(False)
-
+    fk_business_category_id: int
+    is_visible: bool
 
 class UserNeedUserInfoDto(BaseModel):
     user_id: str

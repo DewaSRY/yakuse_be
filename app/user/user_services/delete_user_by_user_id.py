@@ -23,11 +23,19 @@ async def delete_user_by_user_id(db: Session, user_id: str) \
         if not user_model:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User account not found")
 
+        # Simpan informasi pengguna sebelum dihapus
+        user_info = {
+            "user_id": user_model.id,
+            "username": user_model.username,
+            "email": user_model.email
+        }
+
         # Langkah 2: Hapus user dari database
         db.delete(user_model)
         db.commit()
 
-        return optional.build(data=None)
+        return optional.build(data=user_info) # Mengembalikan ID pengguna yang dihapus
+        # return optional.build(data=None)
 
     except SQLAlchemyError as e:
         db.rollback()

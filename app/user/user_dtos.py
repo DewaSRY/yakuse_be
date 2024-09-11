@@ -95,3 +95,9 @@ class ChangePasswordResponseDto(BaseModel):
 
 # class FirebaseLoginDto(BaseModel):
 #     id_token: str
+
+class DeleteUserResponseDto(BaseModel):
+    detail: str = Field(default="Your user account has been deleted successfully")
+    user_id: str
+    username: str
+    email: str

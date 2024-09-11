@@ -147,24 +147,34 @@ async def change_password(
 
 
 # delete-my-account-user
-@router.delete("/delete")
+# @router.delete("/delete", response_model= user_dtos.DeleteUserResponseDto)
+# async def delete_my_user_account(
+#         jwt_token: jwt_service.TokenPayLoad = Depends(jwt_service.get_jwt_pyload),
+#         db: Session = Depends(get_db)
+# ):
+#     """This method is used to delete a user account profile"""
+#     result = await user_services.delete_user_by_user_id(db, jwt_token.id)
+
+#     if result.error:
+#         raise result.error
+
+#     return {
+#         "detail": "Your user account has been deleted successfully",
+#         "user_id": result.data["user_id"],
+#         "username": result.data["username"],
+#         "email": result.data["email"]
+#     }
+
+@router.delete("/delete", response_model=user_dtos.DeleteUserResponseDto)
 async def delete_my_user_account(
         jwt_token: jwt_service.TokenPayLoad = Depends(jwt_service.get_jwt_pyload),
         db: Session = Depends(get_db)
 ):
     """This method is used to delete a user account profile"""
     result = await user_services.delete_user_by_user_id(db, jwt_token.id)
-
     if result.error:
-        raise result.error
-
-    return {
-        "detail": "Your user account has been deleted successfully",
-        "user_id": result.data["user_id"],
-        "username": result.data["username"],
-        "email": result.data["email"]
-    }
-
+        raise result.error  # Pastikan error di-handle sesuai dengan implementasi Anda
+    return result.unwrap() 
 
 
 # @router.post("/login/firebase", response_model=jwt_dto.AccessTokenDto)

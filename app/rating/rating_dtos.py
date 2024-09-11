@@ -19,6 +19,7 @@ class BusinessRatingCreateResponseDto(BaseModel):
     rating_count: Optional[int] = None
     review_description: str
     fk_business_id: str
+    rater_name: Optional[str] = None
     created_at: datetime
 
 
@@ -37,6 +38,18 @@ class BusinessRatingDto(BaseModel):
     rating_count: int
     review_description: str
     rater_name: Optional[str] = None
-
+    created_at: datetime
     # class Config:
     #     from_attributes = True
+
+class RatingDto(BaseModel):
+    id: str
+    rating_count: int
+    review_description: str
+    created_at: datetime
+    updated_at: datetime
+    business_name: str
+    rater_name: str
+
+    class Config:
+        from_attributes = True

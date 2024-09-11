@@ -36,7 +36,7 @@ def create_rating_business(
 
 
 # get-all-business-by-login-user-id
-@router.get("/all", response_model=list[rating_dtos.BusinessRatingDto])
+@router.get("/all", response_model=list[rating_dtos.RatingDto])
 def get_all_rating_business(
         jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
         db: Session = Depends(get_db)):
@@ -54,11 +54,3 @@ def get_my_rating_business(
     """Get ratings for a business by business_id"""
     ratings = rating_service.get_rating_by_user_id(db, jwt_token.id)  # Assuming this gets the business_id
     return ratings.unwrap()
-
-# @router.get("/business/{business_id}", response_model=rating_dtos.BusinessRatingAllResponseDto)
-# async def get_rating_business_by_business_id(
-#         business_id: str,
-#         jwt_token: Annotated[jwt_dto.TokenPayLoad, Depends(jwt_service.get_jwt_pyload)],
-#         db: Session = Depends(get_db)):
-#     """Get ratings for a business by business_id, filtered by user from jwt_token"""
-#     return rating_service.get_rating_by_business_id(db, business_id, jwt_token.id).unwrap()

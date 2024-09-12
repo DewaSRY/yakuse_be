@@ -2,7 +2,7 @@
 from typing import Annotated
 from uuid import UUID
 from sqlalchemy.orm import Session
-from fastapi import APIRouter, Depends, File, UploadFile
+from fastapi import APIRouter, Depends, File, UploadFile, status
 
 from app.libs.sql_alchemy_lib import get_db
 from app.libs.jwt_lib import jwt_dto, jwt_service
@@ -25,7 +25,7 @@ router = APIRouter(
 # ):
 #     return rating_service.create_rating_business(db, rating_business, jwt_token.id).unwrap()
 
-@router.post("/{busines_id}", response_model=rating_dtos.BusinessRatingCreateResponseDto)
+@router.post("/{busines_id}", response_model=rating_dtos.BusinessRatingCreateResponseDto, status_code=status.HTTP_201_CREATED)
 def create_rating_business(
         busines_id: str,
         rating_business: rating_dtos.BusinessRatingCreateDto,  # Pastikan ini adalah Pydantic model

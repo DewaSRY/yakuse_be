@@ -16,20 +16,60 @@ router = APIRouter(
 
 
 # user--register
-@router.post("/register", response_model=user_dtos.UserCreateResponseDto)
+# @router.post("/register", response_model=user_dtos.UserCreateResponseDto)
+# def create_user(user: user_dtos.UserCreateDto, db: Session = Depends(get_db)):
+#     """This method use to create user"""
+#     return user_services.create_user(db, user).unwrap()
+@router.post("/register", response_model=user_dtos.UserCreateResponseDto, status_code=status.HTTP_201_CREATED)
 def create_user(user: user_dtos.UserCreateDto, db: Session = Depends(get_db)):
-    """This method use to create user"""
-    return user_services.create_user(db, user).unwrap()
+    """This method is used to create a user"""
+    result = user_services.create_user(db, user)
+    
+    # Jika terdapat error, raise HTTPException
+    if result.error:
+        raise result.error
+
+    # Mengembalikan data user yang berhasil dibuat dengan status 201 Created
+    return result.unwrap()
 
 
 # user-login
+# @router.post("/login", response_model=jwt_dto.AccessTokenDto)
+# async def user_login(user: user_dtos.UserLoginPayloadDto, db: Session = Depends(get_db)):
+#     """use to get all users"""
+#     user_optional = user_services.user_login(db=db, user=user)
+#     if user_optional.error:
+#         raise user_optional.error
+#     return user_services.service_access_token(user_optional.data.id).unwrap()
+
 @router.post("/login", response_model=jwt_dto.AccessTokenDto)
-async def user_login(user: user_dtos.UserLoginPayloadDto, db: Session = Depends(get_db)):
-    """use to get all users"""
+def user_login(user: user_dtos.UserLoginPayloadDto, db: Session = Depends(get_db)):
+    """This method is used for user login"""
+    
+    # Memanggil service untuk login user
     user_optional = user_services.user_login(db=db, user=user)
+    
+    # Jika ada error, raise HTTPException dari user_optional
     if user_optional.error:
         raise user_optional.error
-    return user_services.service_access_token(user_optional.data.id)
+    
+    # Generate access token berdasarkan user ID
+    access_token = user_services.service_access_token(user_optional.data.id)
+    
+    # Return the generated access token
+    return access_token
+
+# @router.post("/login", response_model=user_dtos.LoginUserResponseDto, status_code=status.HTTP_201_CREATED)
+# def login_user(user: user_dtos.UserLoginPayloadDto, db: Session = Depends(get_db)):
+#     """This method is used for user login"""
+#     result = user_services.user_login(db, user)
+    
+#     # Jika ada error, raise HTTPException
+#     if result.error:
+#         raise result.error
+
+#     # Mengembalikan data user jika login berhasil
+#     return result.unwrap()
 
 
 # get-user-profile

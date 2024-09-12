@@ -1,7 +1,7 @@
 from typing import Annotated, Type
 from uuid import UUID
 from sqlalchemy.orm import Session
-from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile
+from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile, status
 from app.business.business_model import Business
 from app.libs.sql_alchemy_lib import get_db
 from app.libs.jwt_lib import jwt_dto, jwt_service
@@ -16,7 +16,7 @@ router = APIRouter(
 
 
 # create-business-with-photo
-@router.post("/create", response_model=business_dtos.BusinessCreateWithPhotoDto)
+@router.post("/create", response_model=business_dtos.BusinessCreateWithPhotoDto, status_code=status.HTTP_201_CREATED)
 async def create_my_profile_business(
         file: UploadFile,
         business: business_dtos.BusinessCreateDto = Depends(),

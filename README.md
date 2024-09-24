@@ -1,7 +1,7 @@
 # Yasuke Be
 
 ## What is the app about ?
-
+[URL API : https://revou-finalproject-backend-production.up.railway.app/docs](https://revou-finalproject-backend-production.up.railway.app/docs)
 ...
 
 ## Gimana cara running appnya ?
